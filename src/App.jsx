@@ -39,15 +39,9 @@ const products = [
 ];
 
 const benefits = [
-  {
-    text: "Perfect for birthdays, anniversaries, graduations, and milestones.",
-  },
-  {
-    text: "Made from reference photos and reviewed before printing.",
-  },
-  {
-    text: "Premium resin print with careful hand-painted finishing.",
-  },
+  "Perfect for birthdays, anniversaries, graduations, and milestones.",
+  "Made from reference photos and reviewed before printing.",
+  "Premium resin print with careful hand-painted finishing.",
 ];
 
 const whyMiiniiItems = [
@@ -82,14 +76,14 @@ const faqs = [
 ];
 
 const collageItems = [
-  { title: "Figure Close-up", size: "lg:col-span-2 lg:row-span-2 aspect-[4/5]" },
-  { title: "Gift Box", size: "aspect-square" },
-  { title: "Client Figure", size: "aspect-[4/5]" },
-  { title: "Pet Figure", size: "aspect-square" },
-  { title: "Packaging", size: "lg:col-span-2 aspect-[16/9]" },
-  { title: "Couple Figure", size: "aspect-[4/5]" },
-  { title: "Mini Display", size: "aspect-square" },
-  { title: "Studio Shot", size: "aspect-[4/5]" },
+  { title: "Hero Figure", className: "col-span-2 row-span-2 md:col-span-2 md:row-span-2" },
+  { title: "Gift Box", className: "col-span-1 row-span-1" },
+  { title: "Pet Figure", className: "col-span-1 row-span-1" },
+  { title: "Client Figure", className: "col-span-1 row-span-1" },
+  { title: "Packaging Shot", className: "col-span-1 row-span-1 md:col-span-2" },
+  { title: "Couple Figure", className: "col-span-1 row-span-1" },
+  { title: "Studio Shot", className: "col-span-1 row-span-1" },
+  { title: "Close-up Detail", className: "col-span-1 row-span-1" },
 ];
 
 const requiredSections = ["home", "process", "products", "gallery", "faq", "contact"];
@@ -99,8 +93,8 @@ function validateWebsiteContent() {
     hasAllSections: requiredSections.length === 6 && requiredSections.every(Boolean),
     hasProcessSteps: processSteps.length >= 4,
     hasProducts: products.length === 4,
-    hasFaqs: faqs.length >= 5,
     hasBenefits: benefits.length >= 3,
+    hasFaqs: faqs.length >= 5,
     hasCollageItems: collageItems.length >= 6,
     hasExactProductOptions: ["Miinii Pop", "Miinii Me", "Miinii Pet", "Miinii Request"].every((title) =>
       products.some((product) => product.title === title)
@@ -111,8 +105,8 @@ function validateWebsiteContent() {
 console.assert(validateWebsiteContent().hasAllSections, "Website should include all standard landing page sections.");
 console.assert(validateWebsiteContent().hasProcessSteps, "Website should include at least 4 process steps.");
 console.assert(validateWebsiteContent().hasProducts, "Website should include exactly 4 product categories.");
-console.assert(validateWebsiteContent().hasFaqs, "Website should include at least 5 FAQs.");
 console.assert(validateWebsiteContent().hasBenefits, "Website should include at least 3 benefits.");
+console.assert(validateWebsiteContent().hasFaqs, "Website should include at least 5 FAQs.");
 console.assert(validateWebsiteContent().hasCollageItems, "Website should include at least 6 collage items.");
 console.assert(validateWebsiteContent().hasExactProductOptions, "Website should include Miinii Pop, Miinii Me, Miinii Pet, and Miinii Request.");
 
@@ -131,6 +125,79 @@ function IconPlaceholder({ className = "h-6 w-6" }) {
       <rect x="3" y="3" width="18" height="18" rx="4" />
       <path d="M7 15l3-3a1.5 1.5 0 0 1 2.1 0L17 17" />
       <circle cx="9" cy="9" r="1.2" />
+    </svg>
+  );
+}
+
+function SparkleIcon({ className = "h-5 w-5" }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 3l1.6 5.1L18.8 10l-5.2 1.9L12 17l-1.6-5.1L5.2 10l5.2-1.9L12 3z" />
+      <path d="M5 3v4" />
+      <path d="M3 5h4" />
+      <path d="M19 17v4" />
+      <path d="M17 19h4" />
+    </svg>
+  );
+}
+
+function StarIcon({ className = "h-4 w-4" }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 2l3.1 6.3l6.9 1l-5 4.9l1.2 6.8L12 17.8L5.8 21L7 14.2L2 9.3l6.9-1L12 2z" />
+    </svg>
+  );
+}
+
+function ArrowIcon({ className = "h-5 w-5" }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M5 12h14" />
+      <path d="M13 5l7 7l-7 7" />
+    </svg>
+  );
+}
+
+function HeartIcon({ className = "h-5 w-5" }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6l1-1a5.5 5.5 0 0 0 0-7.8z" />
     </svg>
   );
 }
@@ -204,23 +271,9 @@ function ImagePlaceholder({
   );
 }
 
-function SectionHeader({ eyebrow, title, text, dark = false }) {
-  return (
-    <Reveal className="mx-auto mb-10 max-w-2xl text-center">
-      <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">{eyebrow}</p>
-      <h2 className={`text-3xl font-black tracking-tight sm:text-4xl md:text-5xl ${dark ? "text-white" : "text-slate-950"}`}>
-        {title}
-      </h2>
-      <p className={`mt-4 text-base leading-7 sm:text-lg ${dark ? "text-slate-300" : "text-slate-600"}`}>
-        {text}
-      </p>
-    </Reveal>
-  );
-}
 function PngHeroPlaceholder() {
   return (
     <div className="relative flex h-full items-center justify-center overflow-hidden rounded-[1.5rem] bg-[radial-gradient(circle_at_top,_#ffffff_0%,_#f8fafc_45%,_#eef2f7_100%)]">
-      {/* soft glow */}
       <div className="absolute left-1/2 top-[18%] h-40 w-40 -translate-x-1/2 rounded-full bg-[#ff6f31]/10 blur-3xl" />
       <div className="absolute bottom-10 left-1/2 h-10 w-40 -translate-x-1/2 rounded-full bg-slate-300/40 blur-2xl" />
 
@@ -257,42 +310,27 @@ function PngHeroPlaceholder() {
   );
 }
 
-function PremiumCollageCard({ title, subtitle = "Image placeholder", className = "", delay = "" }) {
+function PremiumCollageCard({ title, subtitle = "Replace with your image", className = "" }) {
   return (
     <div
-      className={`group relative overflow-hidden rounded-[1.75rem] bg-white p-2 shadow-[0_18px_50px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:shadow-[0_22px_60px_rgba(15,23,42,0.14)] ${delay} ${className}`}
+      className={`group relative overflow-hidden rounded-[1.75rem] bg-white p-2 shadow-[0_18px_50px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:shadow-[0_22px_60px_rgba(15,23,42,0.14)] ${className}`}
     >
-      <div className="absolute inset-0 rounded-[1.75rem] bg-gradient-to-br from-white via-transparent to-[#ff6f31]/5 pointer-events-none" />
+      <div className="pointer-events-none absolute inset-0 rounded-[1.75rem] bg-gradient-to-br from-white via-transparent to-[#ff6f31]/5" />
       <div className="relative flex h-full flex-col overflow-hidden rounded-[1.2rem] bg-[linear-gradient(145deg,#ffffff,#f8fafc)]">
-        <div className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_top_right,_rgba(255,111,49,0.12),_transparent_35%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,111,49,0.12),_transparent_35%)] opacity-0 transition duration-500 group-hover:opacity-100" />
 
-        <div className="flex flex-1 items-center justify-center p-6">
+        <div className="relative flex flex-1 items-center justify-center p-5 sm:p-6">
           <div className="text-center">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#fff3ec] text-[#ff6f31] shadow-sm">
-              <svg
-                className="h-7 w-7"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <rect x="3" y="3" width="18" height="18" rx="4" />
-                <path d="M7 15l3-3a1.5 1.5 0 0 1 2.1 0L17 17" />
-                <circle cx="9" cy="9" r="1.2" />
-              </svg>
+              <IconPlaceholder className="h-7 w-7" />
             </div>
             <p className="text-sm font-bold text-slate-900 sm:text-base">{title}</p>
             <p className="mt-1 text-xs text-slate-500 sm:text-sm">{subtitle}</p>
           </div>
         </div>
 
-        <div className="flex items-center justify-between border-t border-slate-100 px-4 py-3">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
-            Miinii
-          </span>
+        <div className="relative flex items-center justify-between border-t border-slate-100 px-4 py-3">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">Miinii</span>
           <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">
             Photo Slot
           </span>
@@ -301,6 +339,19 @@ function PremiumCollageCard({ title, subtitle = "Image placeholder", className =
     </div>
   );
 }
+
+function SectionHeader({ eyebrow, title, text, dark = false }) {
+  return (
+    <Reveal className="mx-auto mb-10 max-w-2xl text-center">
+      <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">{eyebrow}</p>
+      <h2 className={`text-3xl font-black tracking-tight sm:text-4xl md:text-5xl ${dark ? "text-white" : "text-slate-950"}`}>
+        {title}
+      </h2>
+      <p className={`mt-4 text-base leading-7 sm:text-lg ${dark ? "text-slate-300" : "text-slate-600"}`}>{text}</p>
+    </Reveal>
+  );
+}
+
 export default function App() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#fff8f3] text-slate-900 [scroll-behavior:smooth]">
@@ -323,17 +374,7 @@ export default function App() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <a href="#home" className="flex items-center gap-2" aria-label="Go to Miinii home section">
             <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#ff6f31] shadow-lg shadow-orange-200">
-              <svg
-                className="h-5 w-5 text-white"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M12 3l1.6 5.1L18.8 10l-5.2 1.9L12 17l-1.6-5.1L5.2 10l5.2-1.9L12 3z" />
-              </svg>
+              <SparkleIcon className="h-5 w-5 text-white" />
             </div>
             <div className="leading-tight">
               <p className="text-lg font-black tracking-tight">Miinii</p>
@@ -365,17 +406,7 @@ export default function App() {
           <div className="text-center lg:text-left">
             <Reveal>
               <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-orange-100 bg-white px-4 py-2 text-sm font-bold text-[#ff6f31] shadow-sm lg:mx-0">
-                <svg
-                  className="h-4 w-4 fill-[#ff6f31]"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 2l3.1 6.3l6.9 1l-5 4.9l1.2 6.8L12 17.8L5.8 21L7 14.2L2 9.3l6.9-1L12 2z" />
-                </svg>
+                <StarIcon className="h-4 w-4 fill-[#ff6f31]" />
                 Custom mini figures made from your photos
               </div>
             </Reveal>
@@ -400,18 +431,7 @@ export default function App() {
                   className="group inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-base font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20]"
                 >
                   Start Your Miinii
-                  <svg
-                    className="ml-2 h-5 w-5 transition group-hover:translate-x-1"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M5 12h14" />
-                    <path d="M13 5l7 7l-7 7" />
-                  </svg>
+                  <ArrowIcon className="ml-2 h-5 w-5 transition group-hover:translate-x-1" />
                 </a>
                 <a
                   href="#process"
@@ -427,7 +447,7 @@ export default function App() {
             <div className="relative overflow-hidden rounded-[2.5rem] border-8 border-white bg-gradient-to-br from-[#ff6f31] via-[#ff8d5c] to-[#16C1C1] p-4 shadow-2xl shadow-orange-200 sm:p-5 animate-[floatSoft_5s_ease-in-out_infinite]">
               <div className="rounded-[2rem] bg-white/95 p-4 sm:p-7">
                 <div className="aspect-[4/5] rounded-[1.75rem] bg-[#f2f4f7] p-3 shadow-inner sm:p-4">
-                 <PngHeroPlaceholder />
+                  <PngHeroPlaceholder />
                 </div>
               </div>
             </div>
@@ -435,17 +455,7 @@ export default function App() {
             <div className="absolute -left-1 bottom-8 rounded-3xl bg-white p-4 shadow-xl sm:-left-6">
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#16C1C1]/15 text-[#16C1C1]">
-                  <svg
-                    className="h-5 w-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6l1-1a5.5 5.5 0 0 0 0-7.8z" />
-                  </svg>
+                  <HeartIcon className="h-5 w-5" />
                 </div>
                 <div>
                   <p className="text-sm font-black">Made with care</p>
@@ -461,12 +471,12 @@ export default function App() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-4 sm:grid-cols-3">
             {benefits.map((benefit, index) => (
-              <Reveal key={benefit.text} className={`[animation-delay:${index * 0.08}s]`}>
+              <Reveal key={benefit} className={`[animation-delay:${index * 0.08}s]`}>
                 <div className="flex h-full gap-4 rounded-3xl border border-slate-100 bg-[#fff8f3] p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-[#16C1C1] shadow-sm">
                     <IconPlaceholder className="h-6 w-6" />
                   </div>
-                  <p className="text-sm font-semibold leading-6 text-slate-700 sm:text-base">{benefit.text}</p>
+                  <p className="text-sm font-semibold leading-6 text-slate-700 sm:text-base">{benefit}</p>
                 </div>
               </Reveal>
             ))}
@@ -541,21 +551,23 @@ export default function App() {
           <SectionHeader
             eyebrow="Gallery"
             title="Showcase your best Miinii photos"
-            text="A modern collage-style section for your product shots, packaging photos, client figures, and social proof."
+            text="A premium collage-style section for product shots, packaging, client figures, and social proof."
           />
 
           <Reveal>
-            <div className="grid auto-rows-[180px] grid-cols-2 gap-4 sm:auto-rows-[220px] lg:grid-cols-4">
-              const collageItems = [
-                { title: "Hero Figure", className: "col-span-1 row-span-2 md:col-span-2 md:row-span-2" },
-                { title: "Gift Box", className: "col-span-1 row-span-1" },
-                { title: "Pet Figure", className: "col-span-1 row-span-1" },
-                { title: "Client Figure", className: "col-span-1 row-span-1" },
-                { title: "Packaging Shot", className: "col-span-1 row-span-1 md:col-span-2" },
-                { title: "Couple Figure", className: "col-span-1 row-span-1" },
-                { title: "Studio Shot", className: "col-span-1 row-span-1" },
-                { title: "Close-up Detail", className: "col-span-1 row-span-1" },
-              ];
+            <div className="grid auto-rows-[150px] grid-cols-2 gap-4 sm:auto-rows-[190px] md:grid-cols-3 lg:auto-rows-[220px] lg:grid-cols-4">
+              {collageItems.map((item, index) => (
+                <PremiumCollageCard
+                  key={item.title}
+                  title={item.title}
+                  subtitle="Replace with your image"
+                  className={`${item.className} ${
+                    index % 2 === 0
+                      ? "animate-[floatSoft_6s_ease-in-out_infinite]"
+                      : "animate-[floatSoft_7s_ease-in-out_infinite]"
+                  }`}
+                />
+              ))}
             </div>
           </Reveal>
         </div>
@@ -591,30 +603,24 @@ export default function App() {
         </div>
       </section>
 
-      <section id="gallery" className="py-16 sm:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section id="faq" className="py-16 sm:py-24">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <SectionHeader
-            eyebrow="Gallery"
-            title="Showcase your best Miinii photos"
-            text="A premium collage-style section for product shots, packaging, client figures, and social proof."
+            eyebrow="FAQ"
+            title="Common questions"
+            text="Here are simple answers your customers may want to know before placing an order."
           />
-      
-          <Reveal>
-            <div className="grid auto-rows-[170px] grid-cols-2 gap-4 sm:auto-rows-[190px] md:grid-cols-3 lg:auto-rows-[220px] lg:grid-cols-4">
-              {collageItems.map((item, index) => (
-                <PremiumCollageCard
-                  key={item.title}
-                  title={item.title}
-                  subtitle="Replace with your image"
-                  className={`${item.className} ${
-                    index % 2 === 0
-                      ? "animate-[floatSoft_6s_ease-in-out_infinite]"
-                      : "animate-[floatSoft_7s_ease-in-out_infinite]"
-                  }`}
-                />
-              ))}
-            </div>
-          </Reveal>
+
+          <div className="grid gap-4">
+            {faqs.map((faq, index) => (
+              <Reveal key={faq.q} className={`[animation-delay:${index * 0.08}s]`}>
+                <article className="rounded-3xl bg-white p-6 shadow-lg shadow-orange-100/60">
+                  <h3 className="text-lg font-black text-slate-950">{faq.q}</h3>
+                  <p className="mt-3 leading-7 text-slate-600">{faq.a}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
