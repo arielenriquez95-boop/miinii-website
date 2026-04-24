@@ -441,18 +441,16 @@ export default function App() {
           </div>
 
           <Reveal className="relative mx-auto w-full max-w-md sm:max-w-lg lg:max-w-none [animation-delay:.18s]">
-            <div className="relative overflow-hidden rounded-[2.5rem] border-8 border-white bg-gradient-to-br from-[#ff6f31] via-[#ff8d5c] to-[#16C1C1] p-4 shadow-2xl shadow-orange-200 sm:p-5 animate-[floatSoft_5s_ease-in-out_infinite]">
-              <div className="rounded-[2rem] bg-white/95 p-4 sm:p-7">
-                <div className="aspect-[4/5] rounded-[1.75rem] bg-[#f2f4f7] p-3 shadow-inner sm:p-4">
-                  <img
-                    src="/hero-image.png"
-                    alt="Miinii custom 3D mini figure"
-                    className="h-full w-full object-contain"
-                  />
-                </div>
+            <div className="relative overflow-hidden rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]">
+              <div className="aspect-[4/5]">
+                <img
+                  src="/hero-image.png"
+                  alt="Miinii custom 3D mini figure"
+                  className="h-full w-full object-contain"
+                />
               </div>
             </div>
-
+          
             <div className="absolute -left-1 bottom-8 rounded-3xl bg-white p-4 shadow-xl sm:-left-6">
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#16C1C1]/15 text-[#16C1C1]">
