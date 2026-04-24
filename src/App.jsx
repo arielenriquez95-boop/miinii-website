@@ -38,12 +38,6 @@ const products = [
   },
 ];
 
-const benefits = [
-  "Perfect for birthdays, anniversaries, graduations, and milestones.",
-  "Made from reference photos and reviewed before printing.",
-  "Premium resin print with careful hand-painted finishing.",
-];
-
 const whyMiiniiItems = [
   "Custom-made from real references",
   "Preview before production",
@@ -82,9 +76,6 @@ const collageItems = [
   "Client Figure",
   "Packaging Shot",
   "Couple Figure",
-  "Studio Shot",
-  "Close-up Detail",
-  "Finished Miinii",
 ];
 
 const requiredSections = ["home", "process", "products", "gallery", "faq", "contact"];
