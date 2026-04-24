@@ -372,13 +372,11 @@ export default function App() {
       <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/60 bg-white/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <a href="#home" className="flex items-center gap-2" aria-label="Go to Miinii home section">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#ff6f31] shadow-lg shadow-orange-200">
-              <SparkleIcon className="h-5 w-5 text-white" />
-            </div>
-            <div className="leading-tight">
-              <p className="text-lg font-black tracking-tight">Miinii</p>
-              <p className="hidden text-xs font-medium text-slate-500 sm:block">3D custom mini figures</p>
-            </div>
+            <img
+              src="/miinii-logo.png"
+              alt="Miinii Logo"
+              className="h-10 w-auto object-contain"
+            />
           </a>
 
           <div className="hidden items-center gap-8 text-sm font-semibold text-slate-600 md:flex">
