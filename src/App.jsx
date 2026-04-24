@@ -161,16 +161,12 @@ export default function MiiniiOnePageWebsite() {
 
             <div className="grid gap-4 md:pl-10">
               <div className="rounded-[2rem] border border-zinc-100 bg-white p-5 shadow-2xl shadow-zinc-200/40">
-                <div className="aspect-[4/4.7] rounded-[1.5rem] bg-gradient-to-br from-[#fff4ef] via-white to-[#ecfffb] p-6">
-                  <div className="flex h-full items-center justify-center rounded-[1.25rem] border border-dashed border-zinc-200 bg-white/80 text-center">
-                    <div>
-                      <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-[#ef6a30]/10 text-4xl">
-                        🧡
-                      </div>
-                      <p className="px-6 text-lg font-semibold text-zinc-700">Your Miinii hero image, product photo, or featured figure can go here.</p>
-                      <p className="mt-2 px-6 text-sm text-zinc-500">Replace this with your best product shot or lifestyle mockup.</p>
-                    </div>
-                  </div>
+                <div className="aspect-[4/4.7] overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-[#fff4ef] via-white to-[#ecfffb]">
+                  <img
+                    src="/hero-image.png"
+                    alt="Miinii featured figure"
+                    className="h-full w-full object-cover"
+                  />
                 </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-3">
