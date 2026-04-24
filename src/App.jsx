@@ -119,38 +119,43 @@ export default function MiiniiOnePageWebsite() {
       </header>
 
       <main>
-        <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(31,183,166,0.14),_transparent_35%),radial-gradient(circle_at_top_left,_rgba(239,106,48,0.15),_transparent_35%)]" />
-          <div className="relative mx-auto grid max-w-7xl gap-10 px-6 py-20 md:grid-cols-2 md:items-center md:py-28">
-            <div>
-              <div className="mb-4 inline-flex rounded-full border border-[#1fb7a6]/20 bg-[#1fb7a6]/10 px-4 py-1.5 text-sm font-medium text-[#138b80]">
+        
+          <div className="relative mx-auto grid max-w-7xl gap-10 px-5 py-14 md:grid-cols-2 md:items-center md:px-6 md:py-28">
+            <div className="text-center md:text-left">
+              <div className="mb-4 inline-flex rounded-full border border-[#1fb7a6]/20 bg-[#1fb7a6]/10 px-4 py-1.5 text-xs font-medium text-[#138b80] md:text-sm">
                 Personalized keepsakes made into mini art
               </div>
-              <h1 className="max-w-xl text-5xl font-black leading-tight tracking-tight md:text-6xl">
+        
+              <h1 className="mx-auto max-w-md text-4xl font-black leading-[1.08] tracking-tight md:mx-0 md:max-w-xl md:text-6xl">
                 Turn your photos into <span className="text-[#ef6a30]">custom 3D mini figures</span>
               </h1>
-              <p className="mt-6 max-w-xl text-lg leading-8 text-zinc-600">
+        
+              <p className="mx-auto mt-5 max-w-md text-base leading-7 text-zinc-600 md:mx-0 md:max-w-xl md:text-lg md:leading-8">
                 Miinii creates custom 3D mini figures based on real people and pets. Each piece is carefully sculpted,
                 resin printed, and hand-painted to become a one-of-a-kind gift or keepsake.
               </p>
-              <div className="mt-8 flex flex-wrap gap-4">
+        
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center md:justify-start">
                 <a
                   href="#contact"
-                  className="rounded-full bg-[#ef6a30] px-7 py-3.5 font-semibold text-white shadow-lg shadow-orange-200 transition hover:translate-y-[-1px]"
+                  className="rounded-full bg-[#ef6a30] px-7 py-3.5 text-center font-semibold text-white shadow-lg shadow-orange-200 transition hover:translate-y-[-1px]"
                 >
                   Start Your Order
                 </a>
                 <a
                   href="#how-it-works"
-                  className="rounded-full border border-zinc-200 px-7 py-3.5 font-semibold text-zinc-700 transition hover:border-[#1fb7a6] hover:text-[#1fb7a6]"
+                  className="rounded-full border border-zinc-200 px-7 py-3.5 text-center font-semibold text-zinc-700 transition hover:border-[#1fb7a6] hover:text-[#1fb7a6]"
                 >
                   See the Process
                 </a>
               </div>
-              <div className="mt-10 flex flex-wrap gap-6 text-sm text-zinc-500">
-                <div><span className="font-semibold text-zinc-900">Custom-made</span> for every order</div>
-                <div><span className="font-semibold text-zinc-900">Hand-painted</span> finish</div>
-                <div><span className="font-semibold text-zinc-900">Gift-ready</span> packaging</div>
+        
+              <div className="mt-8 grid gap-3 text-center text-sm text-zinc-500 sm:grid-cols-3 md:text-left">
+                <div><span className="font-semibold text-zinc-900">Custom-made</span><br />for every order</div>
+                <div><span className="font-semibold text-zinc-900">Hand-painted</span><br />finish</div>
+                <div><span className="font-semibold text-zinc-900">Gift-ready</span><br />packaging</div>
               </div>
             </div>
 
