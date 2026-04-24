@@ -444,7 +444,11 @@ export default function App() {
             <div className="relative overflow-hidden rounded-[2.5rem] border-8 border-white bg-gradient-to-br from-[#ff6f31] via-[#ff8d5c] to-[#16C1C1] p-4 shadow-2xl shadow-orange-200 sm:p-5 animate-[floatSoft_5s_ease-in-out_infinite]">
               <div className="rounded-[2rem] bg-white/95 p-4 sm:p-7">
                 <div className="aspect-[4/5] rounded-[1.75rem] bg-[#f2f4f7] p-3 shadow-inner sm:p-4">
-                  <PngHeroPlaceholder />
+                  <img
+                    src="/hero-image.png"
+                    alt="Miinii custom 3D mini figure"
+                    className="h-full w-full object-contain"
+                  />
                 </div>
               </div>
             </div>
