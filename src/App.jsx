@@ -96,12 +96,12 @@ export default function MiiniiOnePageWebsite() {
       <header className="sticky top-0 z-50 border-b border-zinc-100 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
          <a href="/" className="flex items-center">
-  <img
-    src="/miinii-logo.png"
-    alt="Miinii logo"
-    className="h-12 w-auto"
-  />
-</a>
+          <img
+            src="/miinii-logo.png"
+            alt="Miinii logo"
+            className="h-12 w-auto"
+          />
+        </a>
           <nav className="hidden gap-6 text-sm md:flex">
             <a href="#about" className="transition hover:text-[#ef6a30]">About</a>
             <a href="#how-it-works" className="transition hover:text-[#ef6a30]">How it Works</a>
