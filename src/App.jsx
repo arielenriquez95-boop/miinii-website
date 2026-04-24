@@ -63,10 +63,6 @@ const faqs = [
     q: "How long does production usually take?",
     a: "Production time depends on the queue, design complexity, and quantity. You can ask us directly for the current turnaround time before placing your order.",
   },
-  {
-    q: "Do you make pet figures and custom requests?",
-    a: "Yes. We create custom figures for people, pets, and special requests depending on the concept, pose, and details needed.",
-  },
 ];
 
 const collageItems = [
@@ -75,7 +71,7 @@ const collageItems = [
   "Pet Figure",
   "Client Figure",
   "Packaging Shot",
-  "Couple Figure",
+  "Finished Miinii",
 ];
 
 const requiredSections = ["home", "process", "products", "gallery", "faq", "contact"];
@@ -85,9 +81,8 @@ function validateWebsiteContent() {
     hasAllSections: requiredSections.length === 6 && requiredSections.every(Boolean),
     hasProcessSteps: processSteps.length >= 4,
     hasProducts: products.length === 4,
-    hasBenefits: benefits.length >= 3,
-    hasFaqs: faqs.length >= 5,
-    hasCollageItems: collageItems.length === 9,
+    hasFaqs: faqs.length >= 4,
+    hasCollageItems: collageItems.length === 6,
     hasExactProductOptions: ["Miinii Pop", "Miinii Me", "Miinii Pet", "Miinii Request"].every((title) =>
       products.some((product) => product.title === title)
     ),
@@ -97,9 +92,8 @@ function validateWebsiteContent() {
 console.assert(validateWebsiteContent().hasAllSections, "Website should include all standard landing page sections.");
 console.assert(validateWebsiteContent().hasProcessSteps, "Website should include at least 4 process steps.");
 console.assert(validateWebsiteContent().hasProducts, "Website should include exactly 4 product categories.");
-console.assert(validateWebsiteContent().hasBenefits, "Website should include at least 3 benefits.");
-console.assert(validateWebsiteContent().hasFaqs, "Website should include at least 5 FAQs.");
-console.assert(validateWebsiteContent().hasCollageItems, "Website should include exactly 9 collage items.");
+console.assert(validateWebsiteContent().hasFaqs, "Website should include at least 4 FAQs.");
+console.assert(validateWebsiteContent().hasCollageItems, "Website should include exactly 6 collage items.");
 console.assert(validateWebsiteContent().hasExactProductOptions, "Website should include Miinii Pop, Miinii Me, Miinii Pet, and Miinii Request.");
 
 function IconPlaceholder({ className = "h-6 w-6" }) {
@@ -117,27 +111,6 @@ function IconPlaceholder({ className = "h-6 w-6" }) {
       <rect x="3" y="3" width="18" height="18" rx="4" />
       <path d="M7 15l3-3a1.5 1.5 0 0 1 2.1 0L17 17" />
       <circle cx="9" cy="9" r="1.2" />
-    </svg>
-  );
-}
-
-function SparkleIcon({ className = "h-5 w-5" }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M12 3l1.6 5.1L18.8 10l-5.2 1.9L12 17l-1.6-5.1L5.2 10l5.2-1.9L12 3z" />
-      <path d="M5 3v4" />
-      <path d="M3 5h4" />
-      <path d="M19 17v4" />
-      <path d="M17 19h4" />
     </svg>
   );
 }
@@ -263,45 +236,6 @@ function ImagePlaceholder({
   );
 }
 
-function PngHeroPlaceholder() {
-  return (
-    <div className="relative flex h-full items-center justify-center overflow-hidden rounded-[1.5rem] bg-[radial-gradient(circle_at_top,_#ffffff_0%,_#f8fafc_45%,_#eef2f7_100%)]">
-      <div className="absolute left-1/2 top-[18%] h-40 w-40 -translate-x-1/2 rounded-full bg-[#ff6f31]/10 blur-3xl" />
-      <div className="absolute bottom-10 left-1/2 h-10 w-40 -translate-x-1/2 rounded-full bg-slate-300/40 blur-2xl" />
-
-      <div className="relative flex flex-col items-center justify-center text-center">
-        <div className="mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-white/80 shadow-lg shadow-slate-200">
-          <svg
-            className="h-10 w-10 text-[#ff6f31]"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <path d="M7 16V8" />
-            <path d="M17 16V8" />
-            <path d="M3 12h18" />
-            <path d="M8 5h8" />
-            <path d="M8 19h8" />
-            <path d="M9 8l-2 8" />
-            <path d="M15 8l2 8" />
-          </svg>
-        </div>
-
-        <p className="max-w-xs px-4 text-xl font-black text-slate-900 sm:text-2xl">
-          Place your Miinii PNG image here
-        </p>
-        <p className="mt-2 max-w-sm px-6 text-sm leading-6 text-slate-500">
-          Best for a borderless cutout product image with transparent background.
-        </p>
-      </div>
-    </div>
-  );
-}
-
 function PremiumCollageCard({ title }) {
   return (
     <div className="group relative aspect-square overflow-hidden rounded-[1.75rem] bg-white p-2 shadow-[0_18px_50px_rgba(15,23,42,0.08)] transition duration-500 hover:z-20 hover:scale-110 hover:shadow-[0_24px_70px_rgba(15,23,42,0.18)]">
@@ -363,11 +297,7 @@ export default function App() {
       <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/60 bg-white/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <a href="#home" className="flex items-center gap-2" aria-label="Go to Miinii home section">
-            <img
-              src="/miinii-logo.png"
-              alt="Miinii Logo"
-              className="h-10 w-auto object-contain"
-            />
+            <img src="/miinii-logo.png" alt="Miinii Logo" className="h-10 w-auto object-contain" />
           </a>
 
           <div className="hidden items-center gap-8 text-sm font-semibold text-slate-600 md:flex">
@@ -400,7 +330,7 @@ export default function App() {
             </Reveal>
 
             <Reveal className="[animation-delay:.08s]">
-             <h1 className="text-4xl font-black leading-[1.03] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">
+              <h1 className="text-4xl font-black leading-[1.03] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">
                 Turn your photos into <span className="text-[#ff6f31]">custom 3D mini figures</span>.
               </h1>
             </Reveal>
@@ -432,7 +362,7 @@ export default function App() {
           </div>
 
           <Reveal className="relative mx-auto w-full max-w-md sm:max-w-lg lg:max-w-none [animation-delay:.18s]">
-            <div className="relative overflow-hidden rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]">
+            <div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]">
               <div className="aspect-[4/5]">
                 <img
                   src="/hero-image.png"
@@ -441,7 +371,7 @@ export default function App() {
                 />
               </div>
             </div>
-          
+
             <div className="absolute -left-1 bottom-8 rounded-3xl bg-white p-4 shadow-xl sm:-left-6">
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#16C1C1]/15 text-[#16C1C1]">
@@ -454,23 +384,6 @@ export default function App() {
               </div>
             </div>
           </Reveal>
-        </div>
-      </section>
-
-      <section className="bg-white py-14 sm:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-4 sm:grid-cols-3">
-            {benefits.map((benefit, index) => (
-              <Reveal key={benefit} className={`[animation-delay:${index * 0.08}s]`}>
-                <div className="flex h-full gap-4 rounded-3xl border border-slate-100 bg-[#fff8f3] p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-[#16C1C1] shadow-sm">
-                    <IconPlaceholder className="h-6 w-6" />
-                  </div>
-                  <p className="text-sm font-semibold leading-6 text-slate-700 sm:text-base">{benefit}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -618,6 +531,14 @@ export default function App() {
 
               <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <a
+                  href="mailto:hello@miinii.com"
+                  className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-6 py-4 text-base font-black text-white backdrop-blur transition hover:-translate-y-1 hover:bg-white/20"
+                >
+                  <SocialIcon type="message" className="mr-2 h-5 w-5" />
+                  Message Us
+                </a>
+
+                <a
                   href="https://facebook.com"
                   target="_blank"
                   rel="noreferrer"
@@ -645,14 +566,6 @@ export default function App() {
                 >
                   <SocialIcon type="instagram" className="mr-2 h-5 w-5" />
                   Instagram
-                </a>
-
-                <a
-                  href="mailto:hello@miinii.com"
-                  className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-6 py-4 text-base font-black text-white backdrop-blur transition hover:-translate-y-1 hover:bg-white/20"
-                >
-                  <SocialIcon type="message" className="mr-2 h-5 w-5" />
-                  Message Us
                 </a>
               </div>
             </div>
