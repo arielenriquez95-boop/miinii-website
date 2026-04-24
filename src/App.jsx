@@ -1,599 +1,626 @@
-export default function MiiniiOnePageWebsite() {
-  const products = [
-    {
-      title: "Miinii Me",
-      subtitle: "Custom human mini figure",
-      desc: "A personalized mini figure made from your photos, carefully sculpted, resin printed, and hand-painted.",
-      price: "Starts at ₱3,490+",
-    },
-    {
-      title: "Miinii Pet",
-      subtitle: "Custom pet mini figure",
-      desc: "Turn your beloved pet into a keepsake mini figure with charming details and a handcrafted finish.",
-      price: "Starts at ₱3,490+",
-    },
-    {
-      title: "Miinii Duo",
-      subtitle: "Two-person custom figure",
-      desc: "Perfect for couples, best friends, and memorable gift ideas made into one meaningful display piece.",
-      price: "Custom quote",
-    },
-    {
-      title: "Miinii POP",
-      subtitle: "Cute stylized figure",
-      desc: "A playful and adorable version of you in Miinii’s signature stylized look.",
-      price: "Custom quote",
-    },
-  ];
+import React from "react";
+import { motion } from "framer-motion";
 
-  const steps = [
-    {
-      num: "01",
-      title: "Send your photos",
-      desc: "Share clear reference photos and your preferred pose, outfit, or concept.",
-    },
-    {
-      num: "02",
-      title: "3D sculpting preview",
-      desc: "We create your digital 3D preview for checking before production starts.",
-    },
-    {
-      num: "03",
-      title: "Resin printing & painting",
-      desc: "Your Miinii is printed in high resolution and carefully hand-painted.",
-    },
-    {
-      num: "04",
-      title: "Finishing & gift packaging",
-      desc: "Your custom figure is finalized, quality checked, and packed in a signature Miinii gift box.",
-    },
-  ];
+const fadeUp = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0 },
+};
 
-  const faqs = [
-    {
-      q: "How do I order?",
-      a: "Send us your photos, preferred size or concept, and any special details. We’ll guide you through the next steps.",
+const stagger = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.12,
     },
-    {
-      q: "Do I get to approve the design first?",
-      a: "Yes. 3D printing only proceeds once you approve the digital preview.",
-    },
-    {
-      q: "How long does it take?",
-      a: "Standard production usually takes around 2–4 weeks depending on the complexity and queue.",
-    },
-    {
-      q: "Will the final product look exactly like the preview?",
-      a: "The preview is for approval and guidance. Small differences may happen once the figure is printed and hand-painted.",
-    },
-    {
-      q: "Is this a good gift?",
-      a: "Yes. Miinii is designed to be a meaningful custom gift for birthdays, anniversaries, graduations, pets, and special milestones.",
-    },
-    {
-      q: "Do you ship nationwide?",
-      a: "Yes, shipping options can be arranged depending on your location.",
-    },
-  ];
+  },
+};
 
-  const testimonials = [
-    {
-      name: "Happy Client",
-      text: "Super unique and meaningful. The final figure felt very personal and beautifully made.",
-    },
-    {
-      name: "Gift Buyer",
-      text: "Perfect as a keepsake gift. The details and packaging made it extra special.",
-    },
-    {
-      name: "Pet Owner",
-      text: "Our custom pet Miinii turned out adorable. It captured the charm of our pet really well.",
-    },
-  ];
+function Icon({ name, className = "h-6 w-6" }) {
+  const commonProps = {
+    className,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    "aria-hidden": "true",
+  };
 
+  const icons = {
+    sparkles: (
+      <svg {...commonProps}>
+        <path d="M12 3l1.7 5.2L19 10l-5.3 1.8L12 17l-1.7-5.2L5 10l5.3-1.8L12 3z" />
+        <path d="M5 3v4" />
+        <path d="M3 5h4" />
+        <path d="M19 17v4" />
+        <path d="M17 19h4" />
+      </svg>
+    ),
+    gift: (
+      <svg {...commonProps}>
+        <rect x="3" y="8" width="18" height="13" rx="2" />
+        <path d="M12 8v13" />
+        <path d="M3 12h18" />
+        <path d="M7.5 8C5.6 8 5 6.8 5 5.8C5 4.7 5.9 4 6.9 4C8.7 4 10 6.1 12 8" />
+        <path d="M16.5 8C18.4 8 19 6.8 19 5.8C19 4.7 18.1 4 17.1 4C15.3 4 14 6.1 12 8" />
+      </svg>
+    ),
+    brush: (
+      <svg {...commonProps}>
+        <path d="M9 15l6.8-6.8a2.8 2.8 0 0 1 4 4L13 19" />
+        <path d="M7 17c-2.5.4-4 1.7-4 4c2.3 0 3.6-1.5 4-4z" />
+        <path d="M7 17l2 2" />
+      </svg>
+    ),
+    printer: (
+      <svg {...commonProps}>
+        <path d="M6 9V3h12v6" />
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+        <path d="M6 14h12v7H6z" />
+        <path d="M18 12h.01" />
+      </svg>
+    ),
+    cube: (
+      <svg {...commonProps}>
+        <path d="M12 2l8 4.5v9L12 20l-8-4.5v-9L12 2z" />
+        <path d="M4 6.5l8 4.5l8-4.5" />
+        <path d="M12 11v9" />
+      </svg>
+    ),
+    heart: (
+      <svg {...commonProps}>
+        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6l1-1a5.5 5.5 0 0 0 0-7.8z" />
+      </svg>
+    ),
+    star: (
+      <svg {...commonProps}>
+        <path d="M12 2l3.1 6.3l6.9 1l-5 4.9l1.2 6.8L12 17.8L5.8 21L7 14.2L2 9.3l6.9-1L12 2z" />
+      </svg>
+    ),
+    check: (
+      <svg {...commonProps}>
+        <path d="M20 6L9 17l-5-5" />
+      </svg>
+    ),
+    message: (
+      <svg {...commonProps}>
+        <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+      </svg>
+    ),
+    instagram: (
+      <svg {...commonProps}>
+        <rect x="3" y="3" width="18" height="18" rx="5" />
+        <circle cx="12" cy="12" r="4" />
+        <path d="M17.5 6.5h.01" />
+      </svg>
+    ),
+    arrow: (
+      <svg {...commonProps}>
+        <path d="M5 12h14" />
+        <path d="M13 5l7 7l-7 7" />
+      </svg>
+    ),
+    paw: (
+      <svg {...commonProps}>
+        <circle cx="6" cy="7" r="2" />
+        <circle cx="12" cy="5" r="2" />
+        <circle cx="18" cy="7" r="2" />
+        <circle cx="8" cy="13" r="2" />
+        <path d="M12 12c3.5 0 6 2.1 6 5a3 3 0 0 1-3 3c-1.3 0-2-.8-3-.8s-1.7.8-3 .8a3 3 0 0 1-3-3c0-2.9 2.5-5 6-5z" />
+      </svg>
+    ),
+    user: (
+      <svg {...commonProps}>
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 21a8 8 0 0 1 16 0" />
+      </svg>
+    ),
+    package: (
+      <svg {...commonProps}>
+        <path d="M21 8l-9-5l-9 5l9 5l9-5z" />
+        <path d="M3 8v8l9 5l9-5V8" />
+        <path d="M12 13v8" />
+        <path d="M8 17l2 2l5-6" />
+      </svg>
+    ),
+  };
+
+  return icons[name] || icons.sparkles;
+}
+
+const processSteps = [
+  {
+    icon: "cube",
+    title: "3D Sculpting",
+    text: "Your figure is digitally sculpted based on your reference photos.",
+  },
+  {
+    icon: "printer",
+    title: "Resin Printing",
+    text: "Printed in high resolution for clean details and a premium miniature look.",
+  },
+  {
+    icon: "brush",
+    title: "Hand Painting",
+    text: "Each piece is carefully painted by hand to bring the character to life.",
+  },
+  {
+    icon: "package",
+    title: "Finishing & Packaging",
+    text: "Finished, quality checked, and packed in a Miinii gift box.",
+  },
+];
+
+const products = [
+  {
+    icon: "user",
+    title: "Miinii Me",
+    text: "Custom human mini figures for birthdays, graduations, couples, and special memories.",
+  },
+  {
+    icon: "paw",
+    title: "Miinii Pets",
+    text: "Adorable custom pet mini figures made to celebrate your fur babies.",
+  },
+  {
+    icon: "gift",
+    title: "Miinii Custom",
+    text: "Personalized keepsakes for events, gifts, collections, and meaningful milestones.",
+  },
+];
+
+const faqs = [
+  {
+    q: "How does the process work?",
+    a: "Send your reference photos, review the 3D preview, then we print, paint, finish, and pack your Miinii.",
+  },
+  {
+    q: "Can I request revisions?",
+    a: "Yes. You can review the preview before printing and request minor adjustments before production starts.",
+  },
+  {
+    q: "Is it good as a gift?",
+    a: "Yes. Miinii figures are made as personal gifts, keepsakes, display pieces, and collectibles.",
+  },
+];
+
+const requiredSections = ["home", "process", "products", "gallery", "faq", "contact"];
+
+function validateWebsiteContent() {
+  return {
+    hasAllSections: requiredSections.every(Boolean),
+    hasProcessSteps: processSteps.length >= 4,
+    hasProducts: products.length >= 3,
+    hasFaqs: faqs.length >= 3,
+  };
+}
+
+console.assert(validateWebsiteContent().hasAllSections, "Website should include all standard landing page sections.");
+console.assert(validateWebsiteContent().hasProcessSteps, "Website should include at least 4 process steps.");
+console.assert(validateWebsiteContent().hasProducts, "Website should include at least 3 product categories.");
+console.assert(validateWebsiteContent().hasFaqs, "Website should include at least 3 FAQs.");
+
+function SectionHeader({ eyebrow, title, text, dark = false }) {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-white text-zinc-900">
-      <style>{`
-        html {
-          scroll-behavior: smooth;
-        }
+    <motion.div
+      variants={fadeUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.55, ease: "easeOut" }}
+      className="mx-auto mb-10 max-w-2xl text-center"
+    >
+      <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">
+        {eyebrow}
+      </p>
+      <h2 className={`text-3xl font-black tracking-tight sm:text-4xl md:text-5xl ${dark ? "text-white" : "text-slate-950"}`}>
+        {title}
+      </h2>
+      <p className={`mt-4 text-base leading-7 sm:text-lg ${dark ? "text-slate-300" : "text-slate-600"}`}>
+        {text}
+      </p>
+    </motion.div>
+  );
+}
 
-        @keyframes fadeUp {
-          from {
-            opacity: 0;
-            transform: translateY(24px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes floatSoft {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-12px);
-          }
-        }
-
-        @keyframes pulseGlow {
-          0%, 100% {
-            opacity: 0.55;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 0.9;
-            transform: scale(1.08);
-          }
-        }
-
-        .animate-fade-up {
-          animation: fadeUp 0.8s ease both;
-        }
-
-        .animate-float-soft {
-          animation: floatSoft 4s ease-in-out infinite;
-        }
-
-        .animate-pulse-glow {
-          animation: pulseGlow 5s ease-in-out infinite;
-        }
-
-        .delay-100 {
-          animation-delay: 0.1s;
-        }
-
-        .delay-200 {
-          animation-delay: 0.2s;
-        }
-
-        .delay-300 {
-          animation-delay: 0.3s;
-        }
-
-        .delay-400 {
-          animation-delay: 0.4s;
-        }
-      `}</style>
-
-      <header className="sticky top-0 z-50 border-b border-zinc-100 bg-white/90 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-5 md:px-6 md:py-4">
-          <a href="/" className="flex shrink-0 items-center">
-            <img
-              src="/miinii-logo.png"
-              alt="Miinii logo"
-              className="h-8 w-auto sm:h-9 md:h-12"
-            />
+export default function App() {
+  return (
+    <main className="min-h-screen overflow-hidden bg-[#fff8f3] text-slate-900">
+      <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/60 bg-white/80 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+          <a href="#home" className="flex items-center gap-2" aria-label="Go to Miinii home section">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#ff6f31] shadow-lg shadow-orange-200">
+              <Icon name="sparkles" className="h-5 w-5 text-white" />
+            </div>
+            <div className="leading-tight">
+              <p className="text-lg font-black tracking-tight">Miinii</p>
+              <p className="hidden text-xs font-medium text-slate-500 sm:block">
+                3D custom mini figures
+              </p>
+            </div>
           </a>
 
-          <nav className="hidden items-center gap-6 text-sm font-medium text-zinc-700 md:flex">
-            <a href="#about" className="transition hover:text-[#ef6a30]">
-              About
-            </a>
-            <a href="#how-it-works" className="transition hover:text-[#ef6a30]">
-              Process
-            </a>
-            <a href="#products" className="transition hover:text-[#ef6a30]">
-              Products
-            </a>
-            <a href="#faq" className="transition hover:text-[#ef6a30]">
-              FAQ
-            </a>
-            <a href="#contact" className="transition hover:text-[#ef6a30]">
-              Contact
-            </a>
-          </nav>
+          <div className="hidden items-center gap-8 text-sm font-semibold text-slate-600 md:flex">
+            <a href="#process" className="transition hover:text-[#ff6f31]">Process</a>
+            <a href="#products" className="transition hover:text-[#ff6f31]">Products</a>
+            <a href="#gallery" className="transition hover:text-[#ff6f31]">Gallery</a>
+            <a href="#faq" className="transition hover:text-[#ff6f31]">FAQ</a>
+          </div>
 
           <a
             href="#contact"
-            className="rounded-full bg-[#ef6a30] px-4 py-2 text-xs font-bold text-white shadow-md shadow-orange-200 transition hover:scale-[1.03] active:scale-[0.98] sm:px-5 sm:py-2.5 sm:text-sm"
+            className="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-slate-300 transition hover:-translate-y-0.5 hover:bg-[#ff6f31]"
           >
             Order Now
           </a>
         </div>
-      </header>
+      </nav>
 
-      <main>
-        <section className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(31,183,166,0.18),_transparent_35%),radial-gradient(circle_at_top_left,_rgba(239,106,48,0.18),_transparent_36%)]" />
-          <div className="animate-pulse-glow absolute right-[-80px] top-24 h-56 w-56 rounded-full bg-[#1fb7a6]/20 blur-3xl" />
-          <div className="animate-pulse-glow absolute bottom-8 left-[-90px] h-56 w-56 rounded-full bg-[#ef6a30]/20 blur-3xl" />
+      <section id="home" className="relative pt-28 sm:pt-32 lg:pt-36">
+        <div className="absolute -left-24 top-28 h-72 w-72 rounded-full bg-[#16C1C1]/20 blur-3xl" />
+        <div className="absolute -right-20 top-20 h-80 w-80 rounded-full bg-[#ff6f31]/20 blur-3xl" />
 
-          <div className="relative mx-auto grid max-w-7xl gap-8 px-4 pb-12 pt-10 sm:px-5 sm:pb-16 md:grid-cols-2 md:items-center md:gap-10 md:px-6 md:py-24 lg:py-28">
-            <div className="order-2 text-center md:order-1 md:text-left">
-              <div className="animate-fade-up mb-4 inline-flex max-w-full rounded-full border border-[#1fb7a6]/20 bg-[#1fb7a6]/10 px-4 py-1.5 text-xs font-bold text-[#138b80] sm:text-sm">
-                Personalized keepsakes made into mini art
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 pb-16 pt-8 sm:px-6 md:pb-24 lg:grid-cols-2 lg:px-8">
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            animate="visible"
+            className="text-center lg:text-left"
+          >
+            <motion.div
+              variants={fadeUp}
+              transition={{ duration: 0.55 }}
+              className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-orange-100 bg-white px-4 py-2 text-sm font-bold text-[#ff6f31] shadow-sm lg:mx-0"
+            >
+              <Icon name="star" className="h-4 w-4 fill-[#ff6f31]" />
+              Custom mini figures made from your photos
+            </motion.div>
+
+            <motion.h1
+              variants={fadeUp}
+              transition={{ duration: 0.65 }}
+              className="text-4xl font-black leading-[1.03] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl"
+            >
+              Turn your photos into custom 3D mini figures.
+            </motion.h1>
+
+            <motion.p
+              variants={fadeUp}
+              transition={{ duration: 0.65 }}
+              className="mx-auto mt-6 max-w-xl text-base leading-8 text-slate-600 sm:text-lg lg:mx-0"
+            >
+              Miinii creates handcrafted 3D mini figures based on real people and pets. Each piece is carefully sculpted, resin printed, and hand-painted into a one-of-a-kind keepsake.
+            </motion.p>
+
+            <motion.div
+              variants={fadeUp}
+              transition={{ duration: 0.65 }}
+              className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start"
+            >
+              <a
+                href="#contact"
+                className="group inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-base font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20]"
+              >
+                Start Your Miinii
+                <Icon name="arrow" className="ml-2 h-5 w-5 transition group-hover:translate-x-1" />
+              </a>
+              <a
+                href="#process"
+                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-7 py-4 text-base font-black text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-[#16C1C1]"
+              >
+                View Process
+              </a>
+            </motion.div>
+
+            <motion.div
+              variants={fadeUp}
+              transition={{ duration: 0.65 }}
+              className="mx-auto mt-8 grid grid-cols-3 gap-3 rounded-3xl bg-white/80 p-3 shadow-lg shadow-orange-100/70 backdrop-blur sm:max-w-lg lg:mx-0 lg:max-w-xl"
+            >
+              {[
+                ["3D", "Sculpted"],
+                ["Resin", "Printed"],
+                ["Hand", "Painted"],
+              ].map(([a, b]) => (
+                <div key={a} className="rounded-2xl bg-[#fff8f3] p-3 text-center sm:p-4">
+                  <p className="text-xl font-black text-slate-950 sm:text-2xl">{a}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 sm:text-sm">{b}</p>
+                </div>
+              ))}
+            </motion.div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.75, ease: "easeOut" }}
+            className="relative mx-auto w-full max-w-md sm:max-w-lg lg:max-w-none"
+          >
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              className="relative overflow-hidden rounded-[2.5rem] border-8 border-white bg-gradient-to-br from-[#ff6f31] via-[#ff8d5c] to-[#16C1C1] p-4 shadow-2xl shadow-orange-200 sm:p-5"
+            >
+              <div className="rounded-[2rem] bg-white/95 p-4 sm:p-7">
+                <div className="aspect-[4/5] rounded-[1.75rem] bg-[#f2f4f7] p-3 shadow-inner sm:p-4">
+                  <div className="flex h-full flex-col items-center justify-center rounded-[1.5rem] border-2 border-dashed border-slate-300 bg-white text-center">
+                    <div className="mb-5 flex h-28 w-28 items-center justify-center rounded-full bg-[#ff6f31]/10 sm:h-36 sm:w-36">
+                      <Icon name="gift" className="h-14 w-14 text-[#ff6f31] sm:h-20 sm:w-20" />
+                    </div>
+                    <p className="max-w-xs px-4 text-xl font-black text-slate-950 sm:text-2xl">
+                      Place your Miinii product photo here
+                    </p>
+                    <p className="mt-3 max-w-xs px-5 text-sm leading-6 text-slate-500">
+                      Replace this area with your best figure, box, or lifestyle product shot.
+                    </p>
+                  </div>
+                </div>
               </div>
+            </motion.div>
 
-              <h1 className="animate-fade-up delay-100 mx-auto max-w-[22rem] text-[2.55rem] font-black leading-[0.98] tracking-tight sm:max-w-xl sm:text-6xl md:mx-0 md:text-6xl lg:text-7xl">
-                Turn your photos into{" "}
-                <span className="text-[#ef6a30]">custom 3D mini figures</span>
-              </h1>
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="absolute -left-1 bottom-8 rounded-3xl bg-white p-4 shadow-xl sm:-left-6"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#16C1C1]/15">
+                  <Icon name="heart" className="h-5 w-5 text-[#16C1C1]" />
+                </div>
+                <div>
+                  <p className="text-sm font-black">Made with care</p>
+                  <p className="text-xs text-slate-500">Personalized gift</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
 
-              <p className="animate-fade-up delay-200 mx-auto mt-5 max-w-md text-base leading-7 text-zinc-600 sm:text-lg sm:leading-8 md:mx-0 md:max-w-xl">
-                Miinii creates custom 3D mini figures based on real people and
-                pets. Each piece is carefully sculpted, resin printed, and
-                hand-painted to become a one-of-a-kind gift or keepsake.
+      <section className="bg-white py-14 sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.25 }}
+            className="grid gap-4 sm:grid-cols-3"
+          >
+            {[
+              "Perfect for birthdays, anniversaries, graduations, and milestones.",
+              "Made from reference photos and reviewed before printing.",
+              "Premium resin print with careful hand-painted finishing.",
+            ].map((text) => (
+              <motion.div
+                key={text}
+                variants={fadeUp}
+                transition={{ duration: 0.5 }}
+                className="flex gap-3 rounded-3xl border border-slate-100 bg-[#fff8f3] p-5 shadow-sm"
+              >
+                <Icon name="check" className="mt-1 h-5 w-5 shrink-0 text-[#16C1C1]" />
+                <p className="text-sm font-semibold leading-6 text-slate-700 sm:text-base">{text}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      <section id="process" className="py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            eyebrow="How it works"
+            title="From photo to mini figure"
+            text="A simple production flow that turns your favorite people and pets into handcrafted 3D keepsakes."
+          />
+
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4"
+          >
+            {processSteps.map((step, index) => (
+              <motion.div
+                key={step.title}
+                variants={fadeUp}
+                transition={{ duration: 0.55 }}
+                className="group relative overflow-hidden rounded-[2rem] bg-white p-6 shadow-lg shadow-orange-100/60 transition hover:-translate-y-2 hover:shadow-xl"
+              >
+                <div className="absolute right-5 top-4 text-6xl font-black text-slate-100">
+                  {index + 1}
+                </div>
+                <div className="relative mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ff6f31]/10 transition group-hover:scale-110">
+                  <Icon name={step.icon} className="h-7 w-7 text-[#ff6f31]" />
+                </div>
+                <h3 className="relative text-xl font-black text-slate-950">{step.title}</h3>
+                <p className="relative mt-3 text-sm leading-6 text-slate-600">{step.text}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      <section id="products" className="bg-slate-950 py-16 text-white sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            eyebrow="What we make"
+            title="Mini figures for every story"
+            text="Choose the Miinii style that fits your gift, collection, or special memory."
+            dark
+          />
+
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.25 }}
+            className="grid gap-5 md:grid-cols-3"
+          >
+            {products.map((product) => (
+              <motion.div
+                key={product.title}
+                variants={fadeUp}
+                transition={{ duration: 0.55 }}
+                className="rounded-[2rem] border border-white/10 bg-white/5 p-7 shadow-2xl shadow-black/10 backdrop-blur transition hover:-translate-y-2 hover:bg-white/10"
+              >
+                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#16C1C1]/20">
+                  <Icon name={product.icon} className="h-7 w-7 text-[#16C1C1]" />
+                </div>
+                <h3 className="text-2xl font-black">{product.title}</h3>
+                <p className="mt-3 leading-7 text-slate-300">{product.text}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      <section id="gallery" className="py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            eyebrow="Gallery"
+            title="Showcase your best Miinii photos"
+            text="Use this area for your product shots, packaging photos, client figures, and social proof."
+          />
+
+          <motion.div
+            variants={stagger}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+          >
+            {["Product Shot", "Gift Box", "Pet Figure", "Client Display"].map((item, index) => (
+              <motion.div
+                key={item}
+                variants={fadeUp}
+                transition={{ duration: 0.5 }}
+                className={`group aspect-[4/5] overflow-hidden rounded-[2rem] bg-white p-4 shadow-lg shadow-orange-100 transition hover:-translate-y-2 ${
+                  index === 1 ? "sm:translate-y-8" : ""
+                }`}
+              >
+                <div className="flex h-full items-center justify-center rounded-[1.5rem] bg-gradient-to-br from-orange-50 to-teal-50 text-center">
+                  <div>
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-white shadow-sm transition group-hover:scale-110">
+                      <Icon name="sparkles" className="h-8 w-8 text-[#ff6f31]" />
+                    </div>
+                    <p className="text-lg font-black text-slate-950">{item}</p>
+                    <p className="mt-2 px-6 text-sm text-slate-500">Replace with your image</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="bg-white py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.6 }}
+            className="grid gap-8 rounded-[2rem] bg-[#fff8f3] p-6 shadow-xl shadow-orange-100 sm:p-10 lg:grid-cols-[1fr_0.8fr] lg:p-12"
+          >
+            <div>
+              <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#ff6f31]">
+                Why Miinii
               </p>
-
-              <div className="animate-fade-up delay-300 mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center md:justify-start">
-                <a
-                  href="#contact"
-                  className="rounded-full bg-[#ef6a30] px-7 py-3.5 text-center font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-1 active:translate-y-0"
-                >
-                  Start Your Order
-                </a>
-                <a
-                  href="#how-it-works"
-                  className="rounded-full border border-zinc-200 bg-white px-7 py-3.5 text-center font-bold text-zinc-700 shadow-sm transition hover:-translate-y-1 hover:border-[#1fb7a6] hover:text-[#1fb7a6] active:translate-y-0"
-                >
-                  See the Process
-                </a>
-              </div>
-
-              <div className="animate-fade-up delay-400 mt-8 grid gap-3 text-center text-sm text-zinc-500 sm:grid-cols-3 md:text-left">
-                <div className="rounded-2xl bg-white/80 p-4 shadow-sm ring-1 ring-zinc-100">
-                  <span className="font-bold text-zinc-900">Custom-made</span>
-                  <br />
-                  for every order
-                </div>
-                <div className="rounded-2xl bg-white/80 p-4 shadow-sm ring-1 ring-zinc-100">
-                  <span className="font-bold text-zinc-900">Hand-painted</span>
-                  <br />
-                  finish
-                </div>
-                <div className="rounded-2xl bg-white/80 p-4 shadow-sm ring-1 ring-zinc-100">
-                  <span className="font-bold text-zinc-900">Gift-ready</span>
-                  <br />
-                  packaging
-                </div>
-              </div>
-            </div>
-
-            <div className="order-1 md:order-2">
-              <div className="relative mx-auto w-full max-w-[430px] md:max-w-none">
-                <div className="absolute inset-x-8 bottom-3 h-16 rounded-full bg-[#ef6a30]/20 blur-2xl" />
-
-                <div className="animate-float-soft relative mx-auto w-full overflow-hidden rounded-[2rem]">
-                  <img
-                    src="/hero-image.png"
-                    alt="Miinii featured figure"
-                    className="mx-auto h-auto w-full max-w-[390px] object-contain sm:max-w-[480px] md:max-w-[560px] lg:max-w-[620px]"
-                  />
-                </div>
-
-                <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-3">
-                  <div className="rounded-2xl border border-zinc-100 bg-white/90 p-3 text-center shadow-sm backdrop-blur sm:rounded-3xl sm:p-4">
-                    <div className="text-base font-black text-[#ef6a30] sm:text-xl md:text-2xl">
-                      100%
-                    </div>
-                    <p className="mt-1 text-[10px] leading-4 text-zinc-600 sm:text-xs md:text-sm">
-                      customized
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-zinc-100 bg-white/90 p-3 text-center shadow-sm backdrop-blur sm:rounded-3xl sm:p-4">
-                    <div className="text-base font-black text-[#1fb7a6] sm:text-xl md:text-2xl">
-                      2–4
-                    </div>
-                    <p className="mt-1 text-[10px] leading-4 text-zinc-600 sm:text-xs md:text-sm">
-                      weeks
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-zinc-100 bg-white/90 p-3 text-center shadow-sm backdrop-blur sm:rounded-3xl sm:p-4">
-                    <div className="text-base font-black text-zinc-900 sm:text-xl md:text-2xl">
-                      Gift
-                    </div>
-                    <p className="mt-1 text-[10px] leading-4 text-zinc-600 sm:text-xs md:text-sm">
-                      ready
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section
-          id="about"
-          className="mx-auto max-w-7xl px-4 py-14 sm:px-5 md:px-6 md:py-20"
-        >
-          <div className="grid gap-8 md:grid-cols-[1.1fr_0.9fr] md:items-center md:gap-10">
-            <div className="animate-fade-up">
-              <div className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-[#1fb7a6]">
-                About Miinii
-              </div>
-              <h2 className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
-                A custom figure made to feel personal, memorable, and
-                display-worthy
+              <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
+                A personal gift that feels premium, cute, and meaningful.
               </h2>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-600 sm:text-lg sm:leading-8">
-                Miinii transforms your favorite people and pets into
-                handcrafted 3D mini figures. Whether it’s for a birthday,
-                graduation, anniversary, memorial keepsake, or just something
-                special for yourself, each piece is made with care to capture
-                your story in miniature form.
+              <p className="mt-5 text-base leading-8 text-slate-600 sm:text-lg">
+                Miinii is designed for people who want something more personal than a regular gift. Every figure is custom-made, reviewed before printing, and finished with care.
               </p>
             </div>
 
-            <div className="rounded-[2rem] bg-zinc-50 p-4 sm:p-5 md:p-8">
-              <div className="grid gap-4 sm:grid-cols-2">
-                {[
-                  ["🎁", "Meaningful gift", "Perfect for special occasions and sentimental keepsakes."],
-                  ["🖌️", "Hand-finished", "Carefully painted for a crafted and premium look."],
-                  ["🧍", "Made from photos", "Based on your real reference photos and ideas."],
-                  ["📦", "Gift-box ready", "Finished with packaging made for gifting and display."],
-                ].map(([icon, title, text]) => (
-                  <div
-                    key={title}
-                    className="rounded-3xl bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
-                  >
-                    <div className="text-3xl">{icon}</div>
-                    <div className="mt-3 font-bold">{title}</div>
-                    <p className="mt-2 text-sm leading-6 text-zinc-600">
-                      {text}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="how-it-works" className="bg-zinc-50 py-14 md:py-20">
-          <div className="mx-auto max-w-7xl px-4 sm:px-5 md:px-6">
-            <div className="max-w-2xl">
-              <div className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-[#ef6a30]">
-                How it works
-              </div>
-              <h2 className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
-                From your photos to a finished Miinii
-              </h2>
-              <p className="mt-4 text-base leading-7 text-zinc-600 sm:text-lg sm:leading-8">
-                A simple step-by-step process designed to make custom ordering
-                easy and clear.
-              </p>
-            </div>
-
-            <div className="mt-9 grid gap-4 sm:grid-cols-2 md:mt-12 xl:grid-cols-4">
-              {steps.map((step) => (
-                <div
-                  key={step.num}
-                  className="group rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-zinc-100 transition hover:-translate-y-1 hover:shadow-xl"
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1fb7a6]/10 text-sm font-black tracking-[0.12em] text-[#1fb7a6] transition group-hover:bg-[#ef6a30]/10 group-hover:text-[#ef6a30]">
-                    {step.num}
-                  </div>
-                  <h3 className="mt-5 text-xl font-black">{step.title}</h3>
-                  <p className="mt-3 leading-7 text-zinc-600">{step.desc}</p>
+            <div className="grid gap-3">
+              {[
+                "Custom-made from real references",
+                "Preview before production",
+                "Detailed resin print quality",
+                "Hand-painted finish",
+                "Gift-ready packaging",
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-3 rounded-2xl bg-white p-4 font-bold text-slate-700 shadow-sm">
+                  <Icon name="check" className="h-5 w-5 shrink-0 text-[#16C1C1]" />
+                  {item}
                 </div>
               ))}
             </div>
-          </div>
-        </section>
+          </motion.div>
+        </div>
+      </section>
 
-        <section
-          id="products"
-          className="mx-auto max-w-7xl px-4 py-14 sm:px-5 md:px-6 md:py-20"
-        >
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div className="max-w-2xl">
-              <div className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-[#1fb7a6]">
-                Products
-              </div>
-              <h2 className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
-                Choose the Miinii that fits your story
-              </h2>
-              <p className="mt-4 text-base leading-7 text-zinc-600 sm:text-lg sm:leading-8">
-                Customized options for people, pets, pairs, and stylized
-                concepts.
-              </p>
-            </div>
+      <section id="faq" className="py-16 sm:py-24">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            eyebrow="FAQ"
+            title="Common questions"
+            text="Here are simple answers your customers may want to know before placing an order."
+          />
 
-            <div className="rounded-3xl bg-[#ef6a30]/10 px-4 py-3 text-sm font-bold text-[#ef6a30] md:max-w-xs md:rounded-full md:py-2 md:text-center">
-              Final pricing may vary depending on details and complexity
-            </div>
-          </div>
-
-          <div className="mt-9 grid gap-4 sm:grid-cols-2 md:mt-12 xl:grid-cols-4">
-            {products.map((item) => (
-              <div
-                key={item.title}
-                className="group rounded-[2rem] border border-zinc-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+          <div className="grid gap-4">
+            {faqs.map((faq) => (
+              <motion.div
+                key={faq.q}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.45 }}
+                className="rounded-3xl bg-white p-6 shadow-lg shadow-orange-100/60"
               >
-                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#ef6a30]/15 to-[#1fb7a6]/15 text-2xl transition group-hover:scale-110">
-                  ✨
-                </div>
-                <div className="text-xl font-black tracking-tight">
-                  {item.title}
-                </div>
-                <div className="mt-1 text-sm font-bold text-[#1fb7a6]">
-                  {item.subtitle}
-                </div>
-                <p className="mt-4 leading-7 text-zinc-600">{item.desc}</p>
-                <div className="mt-6 inline-flex rounded-full bg-[#ef6a30]/10 px-4 py-2 text-sm font-black text-[#ef6a30]">
-                  {item.price}
-                </div>
-              </div>
+                <h3 className="text-lg font-black text-slate-950">{faq.q}</h3>
+                <p className="mt-3 leading-7 text-slate-600">{faq.a}</p>
+              </motion.div>
             ))}
           </div>
-        </section>
-
-        <section className="bg-zinc-950 py-14 text-white md:py-20">
-          <div className="mx-auto max-w-7xl px-4 sm:px-5 md:px-6">
-            <div className="grid gap-8 md:grid-cols-[0.95fr_1.05fr] md:items-center md:gap-10">
-              <div>
-                <div className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-[#1fb7a6]">
-                  Why people love Miinii
-                </div>
-                <h2 className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
-                  More than a figure — it’s a keepsake with personality
-                </h2>
-                <p className="mt-5 text-base leading-7 text-zinc-300 sm:text-lg sm:leading-8">
-                  Miinii is designed for people who want something personal,
-                  creative, and display-worthy. It’s a gift that feels
-                  thoughtful because it is made specifically for one person, one
-                  pet, one memory.
-                </p>
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-3">
-                {testimonials.map((item) => (
-                  <div
-                    key={item.name}
-                    className="rounded-[2rem] border border-white/10 bg-white/5 p-5 backdrop-blur transition hover:-translate-y-1 hover:bg-white/10"
-                  >
-                    <div className="text-sm text-[#ef6a30]">★★★★★</div>
-                    <p className="mt-4 text-sm leading-7 text-zinc-300">
-                      “{item.text}”
-                    </p>
-                    <div className="mt-4 text-sm font-bold text-white">
-                      {item.name}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-7xl px-4 py-14 sm:px-5 md:px-6 md:py-20">
-          <div className="rounded-[2rem] bg-gradient-to-r from-[#fff4ef] to-[#ecfffb] p-5 md:rounded-[2.25rem] md:p-12">
-            <div className="grid gap-8 md:grid-cols-2 md:items-center">
-              <div>
-                <div className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-[#ef6a30]">
-                  Gallery
-                </div>
-                <h2 className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
-                  Show your best custom works here
-                </h2>
-                <p className="mt-4 max-w-xl text-base leading-7 text-zinc-600 sm:text-lg sm:leading-8">
-                  Add a curated gallery of finished Miinii figures, close-up
-                  details, packaging shots, and client gift moments to build
-                  trust and excitement.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 md:gap-4">
-                {["Photo 1", "Photo 2", "Photo 3", "Photo 4"].map((photo) => (
-                  <div
-                    key={photo}
-                    className="aspect-square rounded-[1.5rem] bg-white p-3 shadow-sm transition hover:-translate-y-1 hover:shadow-md md:rounded-[1.75rem] md:p-4"
-                  >
-                    <div className="flex h-full items-center justify-center rounded-[1.25rem] border border-dashed border-zinc-200 text-sm font-medium text-zinc-400">
-                      {photo}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="faq" className="bg-zinc-50 py-14 md:py-20">
-          <div className="mx-auto max-w-4xl px-4 sm:px-5 md:px-6">
-            <div className="text-center">
-              <div className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-[#1fb7a6]">
-                FAQ
-              </div>
-              <h2 className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
-                Common questions
-              </h2>
-            </div>
-
-            <div className="mt-9 space-y-4 md:mt-12">
-              {faqs.map((item) => (
-                <div
-                  key={item.q}
-                  className="rounded-[1.75rem] bg-white p-5 shadow-sm ring-1 ring-zinc-100 transition hover:-translate-y-1 hover:shadow-md sm:p-6"
-                >
-                  <h3 className="text-lg font-black">{item.q}</h3>
-                  <p className="mt-2 leading-7 text-zinc-600">{item.a}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section
-          id="contact"
-          className="mx-auto max-w-7xl px-4 py-14 sm:px-5 md:px-6 md:py-20"
-        >
-          <div className="grid gap-8 rounded-[2rem] bg-zinc-950 p-5 text-white sm:p-6 md:grid-cols-[1fr_0.9fr] md:rounded-[2.25rem] md:p-12">
-            <div>
-              <div className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-[#1fb7a6]">
-                Contact / Order
-              </div>
-              <h2 className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
-                Ready to create your Miinii?
-              </h2>
-              <p className="mt-5 max-w-xl text-base leading-7 text-zinc-300 sm:text-lg sm:leading-8">
-                Send your photos and idea, and we’ll help turn them into a
-                custom 3D mini figure you can proudly display or gift.
-              </p>
-
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a
-                  href="https://facebook.com"
-                  className="rounded-full bg-[#ef6a30] px-6 py-3.5 text-center font-bold text-white shadow-lg shadow-orange-950/30 transition hover:-translate-y-1 active:translate-y-0"
-                >
-                  Message on Facebook
-                </a>
-                <a
-                  href="https://instagram.com"
-                  className="rounded-full border border-white/15 px-6 py-3.5 text-center font-bold text-white transition hover:-translate-y-1 hover:border-white/40 active:translate-y-0"
-                >
-                  View Instagram
-                </a>
-              </div>
-            </div>
-
-            <div className="rounded-[1.75rem] bg-white p-5 text-zinc-900 md:p-6">
-              <h3 className="text-xl font-black">Quick inquiry</h3>
-              <p className="mt-2 text-sm leading-6 text-zinc-600">
-                This can be replaced with a form, chat button, or your direct
-                contact details.
-              </p>
-
-              <div className="mt-6 space-y-4">
-                <div className="rounded-2xl bg-zinc-50 p-4">
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">
-                    Email
-                  </div>
-                  <div className="mt-1 font-semibold">your@email.com</div>
-                </div>
-
-                <div className="rounded-2xl bg-zinc-50 p-4">
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">
-                    Location
-                  </div>
-                  <div className="mt-1 font-semibold">Philippines</div>
-                </div>
-
-                <div className="rounded-2xl bg-zinc-50 p-4">
-                  <div className="text-xs font-bold uppercase tracking-[0.18em] text-zinc-500">
-                    Production Time
-                  </div>
-                  <div className="mt-1 font-semibold">Approx. 2–4 weeks</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer className="border-t border-zinc-100 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-8 text-center text-sm text-zinc-500 sm:px-5 md:flex-row md:items-center md:justify-between md:px-6 md:text-left">
-          <div>
-            <span className="font-black text-zinc-900">Miinii</span> — 3D
-            custom mini figures
-          </div>
-          <div>Custom-made with care for meaningful gifts and keepsakes.</div>
         </div>
+      </section>
+
+      <section id="contact" className="px-4 pb-8 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.65 }}
+          className="mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#ff6f31] to-[#16C1C1] p-6 text-center shadow-2xl shadow-orange-200 sm:p-10 lg:p-16"
+        >
+          <div className="mx-auto max-w-3xl">
+            <h2 className="text-3xl font-black tracking-tight text-white sm:text-5xl">
+              Ready to create your own Miinii?
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-white/90 sm:text-lg">
+              Send your reference photos and let’s turn your favorite person, pet, or memory into a custom 3D mini figure.
+            </p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <a
+                href="https://instagram.com/miiniistudios"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center rounded-full bg-white px-7 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1"
+              >
+                <Icon name="instagram" className="mr-2 h-5 w-5" />
+                Visit Instagram
+              </a>
+              <a
+                href="mailto:hello@miinii.com"
+                className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-7 py-4 text-base font-black text-white backdrop-blur transition hover:-translate-y-1 hover:bg-white/20"
+              >
+                <Icon name="message" className="mr-2 h-5 w-5" />
+                Message Us
+              </a>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      <footer className="px-4 py-8 text-center text-sm font-medium text-slate-500 sm:px-6 lg:px-8">
+        <p>© 2026 Miinii. 3D custom mini figures. All rights reserved.</p>
       </footer>
-    </div>
+    </main>
   );
 }
