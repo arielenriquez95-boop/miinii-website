@@ -160,12 +160,12 @@ export default function MiiniiOnePageWebsite() {
             </div>
 
             <div className="grid gap-4 md:pl-10">
-              <div className="rounded-[2rem] border border-zinc-100 bg-white p-5 shadow-2xl shadow-zinc-200/40">
-                <div className="aspect-[4/4.7] overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-[#fff4ef] via-white to-[#ecfffb]">
+             <div className="rounded-[2rem] border border-zinc-100 bg-white p-5 shadow-2xl shadow-zinc-200/40">
+                <div className="aspect-[4/4.7] overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-[#fff4ef] via-white to-[#ecfffb] p-6">
                   <img
                     src="/hero-image.png"
                     alt="Miinii featured figure"
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-contain"
                   />
                 </div>
               </div>
