@@ -76,14 +76,15 @@ const faqs = [
 ];
 
 const collageItems = [
-  { title: "Hero Figure", className: "col-span-2 row-span-2 md:col-span-2 md:row-span-2" },
-  { title: "Gift Box", className: "col-span-1 row-span-1" },
-  { title: "Pet Figure", className: "col-span-1 row-span-1" },
-  { title: "Client Figure", className: "col-span-1 row-span-1" },
-  { title: "Packaging Shot", className: "col-span-1 row-span-1 md:col-span-2" },
-  { title: "Couple Figure", className: "col-span-1 row-span-1" },
-  { title: "Studio Shot", className: "col-span-1 row-span-1" },
-  { title: "Close-up Detail", className: "col-span-1 row-span-1" },
+  "Hero Figure",
+  "Gift Box",
+  "Pet Figure",
+  "Client Figure",
+  "Packaging Shot",
+  "Couple Figure",
+  "Studio Shot",
+  "Close-up Detail",
+  "Finished Miinii",
 ];
 
 const requiredSections = ["home", "process", "products", "gallery", "faq", "contact"];
@@ -95,7 +96,7 @@ function validateWebsiteContent() {
     hasProducts: products.length === 4,
     hasBenefits: benefits.length >= 3,
     hasFaqs: faqs.length >= 5,
-    hasCollageItems: collageItems.length >= 6,
+    hasCollageItems: collageItems.length === 9,
     hasExactProductOptions: ["Miinii Pop", "Miinii Me", "Miinii Pet", "Miinii Request"].every((title) =>
       products.some((product) => product.title === title)
     ),
@@ -107,7 +108,7 @@ console.assert(validateWebsiteContent().hasProcessSteps, "Website should include
 console.assert(validateWebsiteContent().hasProducts, "Website should include exactly 4 product categories.");
 console.assert(validateWebsiteContent().hasBenefits, "Website should include at least 3 benefits.");
 console.assert(validateWebsiteContent().hasFaqs, "Website should include at least 5 FAQs.");
-console.assert(validateWebsiteContent().hasCollageItems, "Website should include at least 6 collage items.");
+console.assert(validateWebsiteContent().hasCollageItems, "Website should include exactly 9 collage items.");
 console.assert(validateWebsiteContent().hasExactProductOptions, "Website should include Miinii Pop, Miinii Me, Miinii Pet, and Miinii Request.");
 
 function IconPlaceholder({ className = "h-6 w-6" }) {
@@ -310,22 +311,20 @@ function PngHeroPlaceholder() {
   );
 }
 
-function PremiumCollageCard({ title, subtitle = "Replace with your image", className = "" }) {
+function PremiumCollageCard({ title }) {
   return (
-    <div
-      className={`group relative overflow-hidden rounded-[1.75rem] bg-white p-2 shadow-[0_18px_50px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:shadow-[0_22px_60px_rgba(15,23,42,0.14)] ${className}`}
-    >
+    <div className="group relative aspect-square overflow-hidden rounded-[1.75rem] bg-white p-2 shadow-[0_18px_50px_rgba(15,23,42,0.08)] transition duration-500 hover:z-20 hover:scale-110 hover:shadow-[0_24px_70px_rgba(15,23,42,0.18)]">
       <div className="pointer-events-none absolute inset-0 rounded-[1.75rem] bg-gradient-to-br from-white via-transparent to-[#ff6f31]/5" />
       <div className="relative flex h-full flex-col overflow-hidden rounded-[1.2rem] bg-[linear-gradient(145deg,#ffffff,#f8fafc)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,111,49,0.12),_transparent_35%)] opacity-0 transition duration-500 group-hover:opacity-100" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,111,49,0.14),_transparent_38%)] opacity-0 transition duration-500 group-hover:opacity-100" />
 
         <div className="relative flex flex-1 items-center justify-center p-5 sm:p-6">
           <div className="text-center">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#fff3ec] text-[#ff6f31] shadow-sm">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#fff3ec] text-[#ff6f31] shadow-sm transition duration-500 group-hover:scale-110">
               <IconPlaceholder className="h-7 w-7" />
             </div>
             <p className="text-sm font-bold text-slate-900 sm:text-base">{title}</p>
-            <p className="mt-1 text-xs text-slate-500 sm:text-sm">{subtitle}</p>
+            <p className="mt-1 text-xs text-slate-500 sm:text-sm">Replace with your image</p>
           </div>
         </div>
 
@@ -555,18 +554,9 @@ export default function App() {
           />
 
           <Reveal>
-            <div className="grid auto-rows-[150px] grid-cols-2 gap-4 sm:auto-rows-[190px] md:grid-cols-3 lg:auto-rows-[220px] lg:grid-cols-4">
-              {collageItems.map((item, index) => (
-                <PremiumCollageCard
-                  key={item.title}
-                  title={item.title}
-                  subtitle="Replace with your image"
-                  className={`${item.className} ${
-                    index % 2 === 0
-                      ? "animate-[floatSoft_6s_ease-in-out_infinite]"
-                      : "animate-[floatSoft_7s_ease-in-out_infinite]"
-                  }`}
-                />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {collageItems.map((item) => (
+                <PremiumCollageCard key={item} title={item} />
               ))}
             </div>
           </Reveal>
@@ -643,7 +633,7 @@ export default function App() {
                   className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1"
                 >
                   <SocialIcon type="facebook" className="mr-2 h-5 w-5" />
-                  Visit Facebook
+                  Facebook
                 </a>
 
                 <a
@@ -653,7 +643,7 @@ export default function App() {
                   className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1"
                 >
                   <SocialIcon type="tiktok" className="mr-2 h-5 w-5" />
-                  Visit TikTok
+                  TikTok
                 </a>
 
                 <a
@@ -663,7 +653,7 @@ export default function App() {
                   className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1"
                 >
                   <SocialIcon type="instagram" className="mr-2 h-5 w-5" />
-                  Visit Instagram
+                  Instagram
                 </a>
 
                 <a
