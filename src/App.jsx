@@ -248,8 +248,8 @@ function PremiumCollageCard({ title }) {
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#fff3ec] text-[#ff6f31] shadow-sm transition duration-500 group-hover:scale-110">
               <IconPlaceholder className="h-7 w-7" />
             </div>
-            <p className="text-sm font-bold text-slate-900 sm:text-base">{title}</p>
-            <p className="mt-1 text-xs text-slate-500 sm:text-sm">Replace with your image</p>
+            <p className="text-lg font-bold text-slate-900 sm:text-base">{title}</p>
+            <p className="mt-1 text-sm text-slate-500 sm:text-sm">Replace with your image</p>
           </div>
         </div>
 
@@ -267,11 +267,11 @@ function PremiumCollageCard({ title }) {
 function SectionHeader({ eyebrow, title, text, dark = false }) {
   return (
     <Reveal className="mx-auto mb-10 max-w-2xl text-center">
-      <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">{eyebrow}</p>
-      <h2 className={`text-3xl font-black tracking-tight sm:text-4xl md:text-5xl ${dark ? "text-white" : "text-slate-950"}`}>
+      <p className="mb-3 text-base font-bold uppercase tracking-[0.22em] text-[#16C1C1] sm:text-sm sm:tracking-[0.25em]">{eyebrow}</p>
+      <h2 className={`text-4xl font-black tracking-tight sm:text-4xl md:text-5xl ${dark ? "text-white" : "text-slate-950"}`}>
         {title}
       </h2>
-      <p className={`mt-4 text-base leading-7 sm:text-lg ${dark ? "text-slate-300" : "text-slate-600"}`}>{text}</p>
+      <p className={`mt-4 text-lg leading-8 sm:text-lg ${dark ? "text-slate-300" : "text-slate-600"}`}>{text}</p>
     </Reveal>
   );
 }
@@ -295,9 +295,9 @@ export default function App() {
       `}</style>
 
       <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/60 bg-white/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
           <a href="#home" className="flex items-center gap-2" aria-label="Go to Miinii home section">
-            <img src="/miinii-logo.png" alt="Miinii Logo" className="h-10 w-auto object-contain" />
+            <img src="/miinii-logo.png" alt="Miinii Logo" className="h-12 w-auto object-contain sm:h-10" />
           </a>
 
           <div className="hidden items-center gap-8 text-sm font-semibold text-slate-600 md:flex">
@@ -309,34 +309,34 @@ export default function App() {
 
           <a
             href="#contact"
-            className="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-slate-300 transition hover:-translate-y-0.5 hover:bg-[#ff6f31]"
+            className="rounded-full bg-slate-950 px-5 py-3 text-base font-bold text-white shadow-lg shadow-slate-300 transition hover:-translate-y-0.5 hover:bg-[#ff6f31] sm:px-5 sm:py-2.5 sm:text-sm"
           >
             Order Now
           </a>
         </div>
       </nav>
 
-      <section id="home" className="relative pt-28 sm:pt-32 lg:pt-36">
+      <section id="home" className="relative pt-24 sm:pt-32 lg:pt-36">
         <div className="absolute -left-24 top-28 h-72 w-72 rounded-full bg-[#16C1C1]/20 blur-3xl animate-[pulseSoft_5s_ease-in-out_infinite]" />
         <div className="absolute -right-20 top-20 h-80 w-80 rounded-full bg-[#ff6f31]/20 blur-3xl animate-[pulseSoft_6s_ease-in-out_infinite]" />
 
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 pb-16 pt-8 sm:px-6 md:pb-24 lg:grid-cols-2 lg:px-8">
+        <div className="mx-auto grid max-w-7xl items-center gap-6 px-4 pb-12 pt-6 sm:gap-10 sm:px-6 md:pb-24 lg:grid-cols-2 lg:px-8">
           <div className="text-center lg:text-left">
             <Reveal>
-              <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-orange-100 bg-white px-4 py-2 text-sm font-bold text-[#ff6f31] shadow-sm lg:mx-0">
-                <StarIcon className="h-4 w-4 fill-[#ff6f31]" />
+              <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-orange-100 bg-white px-4 py-2.5 text-base font-bold text-[#ff6f31] shadow-sm sm:text-sm lg:mx-0">
+                <StarIcon className="h-5 w-5 fill-[#ff6f31] sm:h-4 sm:w-4" />
                 Custom mini figures made from your photos
               </div>
             </Reveal>
 
             <Reveal className="[animation-delay:.08s]">
-              <h1 className="text-4xl font-black leading-[1.03] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">
+              <h1 className="text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">
                 Turn your photos into <span className="text-[#ff6f31]">custom 3D mini figures</span>.
               </h1>
             </Reveal>
 
             <Reveal className="[animation-delay:.16s]">
-              <p className="mx-auto mt-6 max-w-xl text-base leading-8 text-slate-600 sm:text-lg lg:mx-0">
+              <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-600 sm:text-lg lg:mx-0">
                 Miinii creates handcrafted 3D mini figures based on real people and pets. Each piece is carefully sculpted,
                 resin printed, and hand-painted into a one-of-a-kind keepsake.
               </p>
@@ -346,14 +346,14 @@ export default function App() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
                 <a
                   href="#contact"
-                  className="group inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-base font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20]"
+                  className="group inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-8 py-4.5 text-lg font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:px-7 sm:py-4 sm:text-base"
                 >
                   Start Your Miinii
                   <ArrowIcon className="ml-2 h-5 w-5 transition group-hover:translate-x-1" />
                 </a>
                 <a
                   href="#process"
-                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-7 py-4 text-base font-black text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-[#16C1C1]"
+                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-8 py-4.5 text-lg font-black text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-[#16C1C1] sm:px-7 sm:py-4 sm:text-base"
                 >
                   View Process
                 </a>
@@ -361,25 +361,25 @@ export default function App() {
             </Reveal>
           </div>
 
-          <Reveal className="relative mx-auto w-full max-w-md sm:max-w-lg lg:max-w-none [animation-delay:.18s]">
+          <Reveal className="relative mx-auto -mt-2 w-full max-w-[420px] sm:mt-0 sm:max-w-lg lg:max-w-none [animation-delay:.18s]">
             <div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]">
-              <div className="aspect-[4/5]">
+              <div className="aspect-[4/5] min-h-[390px] sm:min-h-0">
                 <img
                   src="/hero-image.png"
                   alt="Miinii custom 3D mini figure"
-                  className="h-full w-full object-contain"
+                  className="h-full w-full scale-110 object-contain sm:scale-100"
                 />
               </div>
             </div>
 
-            <div className="absolute -left-1 bottom-8 rounded-3xl bg-white p-4 shadow-xl sm:-left-6">
+            <div className="absolute bottom-6 left-2 rounded-3xl bg-white p-4 shadow-xl sm:-left-6 sm:bottom-8">
               <div className="flex items-center gap-3">
                 <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#16C1C1]/15 text-[#16C1C1]">
                   <HeartIcon className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-sm font-black">Made with care</p>
-                  <p className="text-xs text-slate-500">Personalized gift</p>
+                  <p className="text-base font-black sm:text-sm">Made with care</p>
+                  <p className="text-sm text-slate-500 sm:text-xs">Personalized gift</p>
                 </div>
               </div>
             </div>
@@ -387,7 +387,7 @@ export default function App() {
         </div>
       </section>
 
-      <section id="process" className="py-16 sm:py-24">
+      <section id="process" className="py-14 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader
             eyebrow="How it works"
@@ -410,8 +410,8 @@ export default function App() {
                   <div className="mb-2 inline-flex rounded-full bg-[#ff6f31]/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#ff6f31]">
                     Step {index + 1}
                   </div>
-                  <h3 className="text-xl font-black text-slate-950">{step.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-600">{step.text}</p>
+                  <h3 className="text-2xl font-black text-slate-950 sm:text-xl">{step.title}</h3>
+                  <p className="mt-3 text-base leading-7 text-slate-600 sm:text-sm sm:leading-6">{step.text}</p>
                 </article>
               </Reveal>
             ))}
@@ -441,7 +441,7 @@ export default function App() {
                     />
                   </div>
                   <h3 className="text-2xl font-black">{product.title}</h3>
-                  <p className="mt-3 leading-7 text-slate-300">{product.text}</p>
+                  <p className="mt-3 text-base leading-8 text-slate-300 sm:leading-7">{product.text}</p>
                 </article>
               </Reveal>
             ))}
@@ -473,10 +473,10 @@ export default function App() {
             <div className="grid gap-8 rounded-[2rem] bg-[#fff8f3] p-6 shadow-xl shadow-orange-100 sm:p-10 lg:grid-cols-[1fr_0.8fr] lg:p-12">
               <div>
                 <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#ff6f31]">Why Miinii</p>
-                <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
+                <h2 className="text-4xl font-black tracking-tight text-slate-950 sm:text-4xl">
                   A personal gift that feels premium, cute, and meaningful.
                 </h2>
-                <p className="mt-5 text-base leading-8 text-slate-600 sm:text-lg">
+                <p className="mt-5 text-lg leading-8 text-slate-600 sm:text-lg">
                   Miinii is designed for people who want something more personal than a regular gift. Every figure is
                   custom-made, reviewed before printing, and finished with care.
                 </p>
@@ -484,7 +484,7 @@ export default function App() {
 
               <div className="grid gap-3">
                 {whyMiiniiItems.map((item) => (
-                  <div key={item} className="flex items-center gap-4 rounded-2xl bg-white p-4 font-bold text-slate-700 shadow-sm">
+                  <div key={item} className="flex items-center gap-4 rounded-2xl bg-white p-4 text-base font-bold text-slate-700 shadow-sm sm:text-base">
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#fff8f3] text-[#ff6f31]">
                       <IconPlaceholder className="h-6 w-6" />
                     </div>
@@ -509,8 +509,8 @@ export default function App() {
             {faqs.map((faq, index) => (
               <Reveal key={faq.q} className={`[animation-delay:${index * 0.08}s]`}>
                 <article className="rounded-3xl bg-white p-6 shadow-lg shadow-orange-100/60">
-                  <h3 className="text-lg font-black text-slate-950">{faq.q}</h3>
-                  <p className="mt-3 leading-7 text-slate-600">{faq.a}</p>
+                  <h3 className="text-xl font-black text-slate-950 sm:text-lg">{faq.q}</h3>
+                  <p className="mt-3 text-base leading-8 text-slate-600 sm:leading-7">{faq.a}</p>
                 </article>
               </Reveal>
             ))}
@@ -522,17 +522,17 @@ export default function App() {
         <Reveal>
           <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#ff6f31] to-[#16C1C1] p-6 text-center shadow-2xl shadow-orange-200 sm:p-10 lg:p-16">
             <div className="mx-auto max-w-3xl">
-              <h2 className="text-3xl font-black tracking-tight text-white sm:text-5xl">
+              <h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl">
                 Ready to create your own Miinii?
               </h2>
-              <p className="mx-auto mt-5 max-w-2xl text-base leading-8 text-white/90 sm:text-lg">
+              <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/90 sm:text-lg">
                 Send your reference photos and let’s turn your favorite person, pet, or memory into a custom 3D mini figure.
               </p>
 
               <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <a
                   href="mailto:hello@miinii.com"
-                  className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-6 py-4 text-base font-black text-white backdrop-blur transition hover:-translate-y-1 hover:bg-white/20"
+                  className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-6 py-4 text-lg font-black text-white backdrop-blur transition hover:-translate-y-1 hover:bg-white/20 sm:text-base"
                 >
                   <SocialIcon type="message" className="mr-2 h-5 w-5" />
                   Message Us
@@ -542,7 +542,7 @@ export default function App() {
                   href="https://facebook.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1"
+                  className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-lg font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:text-base"
                 >
                   <SocialIcon type="facebook" className="mr-2 h-5 w-5" />
                   Facebook
@@ -552,7 +552,7 @@ export default function App() {
                   href="https://tiktok.com"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1"
+                  className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-lg font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:text-base"
                 >
                   <SocialIcon type="tiktok" className="mr-2 h-5 w-5" />
                   TikTok
@@ -562,7 +562,7 @@ export default function App() {
                   href="https://instagram.com/miiniistudios"
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1"
+                  className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-lg font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:text-base"
                 >
                   <SocialIcon type="instagram" className="mr-2 h-5 w-5" />
                   Instagram
