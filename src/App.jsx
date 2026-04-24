@@ -411,8 +411,8 @@ export default function App() {
             </Reveal>
 
             <Reveal className="[animation-delay:.08s]">
-              <h1 className="text-4xl font-black leading-[1.03] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">
-                Turn your photos into custom 3D mini figures.
+             <h1 className="text-4xl font-black leading-[1.03] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">
+                Turn your photos into <span className="text-[#ff6f31]">custom 3D mini figures</span>.
               </h1>
             </Reveal>
 
