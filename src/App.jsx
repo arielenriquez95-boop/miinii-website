@@ -547,9 +547,7 @@ export default function App() {
               </div>
 
               <div className="mt-8 text-center text-sm leading-7 text-white/90 sm:text-base">
-                <p>Email: hello@miinii.com</p>
-                <p>Location: Philippines</p>
-                <p>Available for custom 3D mini figure orders.</p>
+                <p>miinii.ariel@gmail.com | Meycauayan, Bulacan, Philippines</p>
               </div>
             </div>
           </div>
