@@ -308,14 +308,14 @@ export default function App() {
         </div>
       </nav>
 
-      <section id="home" className="relative pt-24 sm:pt-32 lg:pt-36">
+      <section id="home" className="relative pt-16 sm:pt-20 lg:pt-24">
         <div className="absolute -left-24 top-28 h-72 w-72 rounded-full bg-[#16C1C1]/20 blur-3xl animate-[pulseSoft_5s_ease-in-out_infinite]" />
         <div className="absolute -right-20 top-20 h-80 w-80 rounded-full bg-[#ff6f31]/20 blur-3xl animate-[pulseSoft_6s_ease-in-out_infinite]" />
 
-        <div className="mx-auto grid max-w-7xl items-center gap-6 px-4 pb-12 pt-6 sm:gap-10 sm:px-6 md:pb-24 lg:grid-cols-2 lg:px-8">
-          <Reveal className="relative mx-auto -mt-2 w-full max-w-[460px] sm:mt-0 sm:max-w-lg lg:mx-0 lg:max-w-none [animation-delay:.08s]">
+        <div className="mx-auto grid max-w-7xl items-center gap-4 px-4 pb-10 pt-2 sm:gap-8 sm:px-6 sm:pt-4 md:pb-20 lg:grid-cols-2 lg:px-8">
+          <Reveal className="relative mx-auto -mt-4 w-full max-w-[460px] sm:-mt-2 sm:max-w-lg lg:mx-0 lg:max-w-none [animation-delay:.08s]">
             <div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]">
-              <div className="aspect-[4/5] min-h-[390px] sm:min-h-0">
+              <div className="aspect-[4/5] min-h-[360px] sm:min-h-0">
                 <img
                   src="/hero-image.png"
                   alt="Miinii custom 3D mini figure"
