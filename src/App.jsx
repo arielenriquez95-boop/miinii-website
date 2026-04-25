@@ -526,7 +526,7 @@ export default function App() {
                 </a>
 
                 <a
-                  href="https://tiktok.com/MiiniiStudios"
+                  href="https://www.tiktok.com/@miiniistudios"
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-lg font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:text-base"
