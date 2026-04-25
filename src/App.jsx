@@ -82,7 +82,7 @@ function validateWebsiteContent() {
       products.some((product) => product.title === title)
     ),
     hasProductPrices: products.every((product) => Boolean(product.price)),
-    hasProductOldPrices: products.every((product) => Boolean(product.oldPrice)),
+    hasProductOldPrices: products.every((product) => product.title === "Miinii Request" || Boolean(product.oldPrice)),
   };
 }
 
@@ -93,7 +93,7 @@ console.assert(validateWebsiteContent().hasFaqs, "Website should include at leas
 console.assert(validateWebsiteContent().hasCollageItems, "Website should include exactly 6 collage items.");
 console.assert(validateWebsiteContent().hasExactProductOptions, "Website should include Miinii Pop, Miinii Me, Miinii Pet, and Miinii Request.");
 console.assert(validateWebsiteContent().hasProductPrices, "Each product should include a price.");
-console.assert(validateWebsiteContent().hasProductOldPrices, "Each product should include an old strikethrough price.");
+console.assert(validateWebsiteContent().hasProductOldPrices, "Discounted products should include an old strikethrough price.");
 
 function IconPlaceholder({ className = "h-6 w-6" }) {
   return (
@@ -319,7 +319,7 @@ export default function App() {
         <div className="absolute -left-24 top-28 h-72 w-72 rounded-full bg-[#16C1C1]/20 blur-3xl animate-[pulseSoft_5s_ease-in-out_infinite]" />
         <div className="absolute -right-20 top-20 h-80 w-80 rounded-full bg-[#ff6f31]/20 blur-3xl animate-[pulseSoft_6s_ease-in-out_infinite]" />
 
-        <div className="mx-auto grid max-w-7xl items-center gap-0 px-4 pb-10 pt-1 sm:gap-5 sm:px-6 sm:pt-1 md:pb-20 lg:grid-cols-2 lg:gap-8 lg:px-8">
+        <div className="mx-auto grid max-w-7xl items-center gap-0 px-4 pb-2 pt-1 sm:gap-5 sm:px-6 sm:pb-6 sm:pt-1 md:pb-8 lg:grid-cols-2 lg:gap-8 lg:px-8">
           <Reveal className="relative mx-auto -mt-3 w-[88%] max-w-[390px] sm:-mt-4 sm:w-full sm:max-w-lg lg:mx-0 lg:max-w-none [animation-delay:.08s]">
             <div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]">
               <div className="aspect-[4/5] min-h-[330px] sm:min-h-0">
@@ -367,27 +367,33 @@ export default function App() {
         </div>
       </section>
 
-      <section id="process" className="py-14 sm:py-24">
+      <section id="process" className="bg-white py-10 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            eyebrow="How it works"
-            title="From photo to mini figure"
-            text="A simple production flow that turns your favorite people and pets into handcrafted 3D keepsakes."
-          />
+          <div className="mx-auto mb-8 max-w-2xl text-center sm:mb-10">
+            <p className="mb-3 text-base font-bold uppercase tracking-[0.22em] text-[#16C1C1] sm:text-sm sm:tracking-[0.25em]">
+              How it works
+            </p>
+            <h2 className="text-4xl font-black tracking-tight text-slate-950 sm:text-4xl md:text-5xl">
+              From photo to mini figure
+            </h2>
+            <p className="mt-4 text-lg leading-8 text-slate-600">
+              A simple production flow that turns your favorite people and pets into handcrafted 3D keepsakes.
+            </p>
+          </div>
 
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {processSteps.map((step, index) => (
               <Reveal key={step.title} className={`[animation-delay:${index * 0.08}s]`}>
-                <article className="group relative h-full overflow-hidden rounded-[2rem] bg-white p-5 shadow-lg shadow-orange-100/60 transition hover:-translate-y-2 hover:shadow-xl">
-                  <div className="mb-5 aspect-[4/3] rounded-[1.5rem] bg-[#f8fafc] p-3">
+                <article className="group relative h-full overflow-hidden rounded-[2rem] border border-slate-100 bg-[#fff8f3] p-4 shadow-sm transition hover:-translate-y-2 hover:shadow-xl hover:shadow-orange-100/70 sm:p-5">
+                  <div className="mb-5 aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-white p-3 shadow-inner shadow-slate-100">
                     <ImagePlaceholder
                       title={step.title}
                       subtitle="Image placeholder"
-                      className="h-full"
+                      className="h-full border-slate-200 bg-gradient-to-br from-white to-orange-50/40"
                       iconClassName="h-8 w-8"
                     />
                   </div>
-                  <div className="mb-2 inline-flex rounded-full bg-[#ff6f31]/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#ff6f31]">
+                  <div className="mb-3 inline-flex rounded-full bg-[#ff6f31] px-3 py-1 text-xs font-black uppercase tracking-wider text-white shadow-sm shadow-orange-200">
                     Step {index + 1}
                   </div>
                   <h3 className="text-2xl font-black text-slate-950 sm:text-xl">{step.title}</h3>
@@ -422,9 +428,11 @@ export default function App() {
                   </div>
                   <h3 className="text-2xl font-black">{product.title}</h3>
                   <div className="mt-3 flex flex-wrap items-center gap-2">
-                    <span className="rounded-full bg-white/10 px-3 py-1.5 text-sm font-bold text-slate-400 line-through ring-1 ring-white/10">
-                      {product.oldPrice}
-                    </span>
+                    {product.oldPrice && (
+                      <span className="rounded-full bg-white/10 px-3 py-1.5 text-sm font-bold text-slate-400 line-through ring-1 ring-white/10">
+                        {product.oldPrice}
+                      </span>
+                    )}
                     <span className="rounded-full bg-[#ff6f31]/15 px-4 py-2 text-sm font-black text-[#ff9a6f] ring-1 ring-[#ff6f31]/20">
                       {product.price}
                     </span>
