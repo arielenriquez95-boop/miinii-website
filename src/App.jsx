@@ -22,15 +22,18 @@ const processSteps = [
 const products = [
   {
     title: "Miinii Pop",
-    price: "Starts at ₱2,990",
+    oldPrice: "₱3,490",
+    price: "₱2,990",
   },
   {
     title: "Miinii Me",
-    price: "Starts at ₱2,990",
+    oldPrice: "₱3,490",
+    price: "₱2,990",
   },
   {
     title: "Miinii Pet",
-    price: "Starts at ₱2,990",
+    oldPrice: "₱3,490",
+    price: "₱2,990",
   },
   {
     title: "Miinii Request",
@@ -78,6 +81,8 @@ function validateWebsiteContent() {
     hasExactProductOptions: ["Miinii Pop", "Miinii Me", "Miinii Pet", "Miinii Request"].every((title) =>
       products.some((product) => product.title === title)
     ),
+    hasProductPrices: products.every((product) => Boolean(product.price)),
+    hasProductOldPrices: products.every((product) => Boolean(product.oldPrice)),
   };
 }
 
@@ -87,6 +92,8 @@ console.assert(validateWebsiteContent().hasProducts, "Website should include exa
 console.assert(validateWebsiteContent().hasFaqs, "Website should include at least 4 FAQs.");
 console.assert(validateWebsiteContent().hasCollageItems, "Website should include exactly 6 collage items.");
 console.assert(validateWebsiteContent().hasExactProductOptions, "Website should include Miinii Pop, Miinii Me, Miinii Pet, and Miinii Request.");
+console.assert(validateWebsiteContent().hasProductPrices, "Each product should include a price.");
+console.assert(validateWebsiteContent().hasProductOldPrices, "Each product should include an old strikethrough price.");
 
 function IconPlaceholder({ className = "h-6 w-6" }) {
   return (
@@ -414,7 +421,14 @@ export default function App() {
                     />
                   </div>
                   <h3 className="text-2xl font-black">{product.title}</h3>
-                  <p className="mt-3 text-base leading-8 text-slate-300 sm:leading-7">{product.text}</p>
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <span className="rounded-full bg-white/10 px-3 py-1.5 text-sm font-bold text-slate-400 line-through ring-1 ring-white/10">
+                      {product.oldPrice}
+                    </span>
+                    <span className="rounded-full bg-[#ff6f31]/15 px-4 py-2 text-sm font-black text-[#ff9a6f] ring-1 ring-[#ff6f31]/20">
+                      {product.price}
+                    </span>
+                  </div>
                 </article>
               </Reveal>
             ))}
