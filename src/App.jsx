@@ -243,24 +243,24 @@ function ImagePlaceholder({
 
 function PremiumCollageCard({ title }) {
   return (
-    <div className="group relative aspect-square overflow-hidden rounded-[1.75rem] bg-white p-2 shadow-[0_18px_50px_rgba(15,23,42,0.08)] transition duration-500 hover:z-20 hover:scale-110 hover:shadow-[0_24px_70px_rgba(15,23,42,0.18)]">
-      <div className="pointer-events-none absolute inset-0 rounded-[1.75rem] bg-gradient-to-br from-white via-transparent to-[#ff6f31]/5" />
-      <div className="relative flex h-full flex-col overflow-hidden rounded-[1.2rem] bg-[linear-gradient(145deg,#ffffff,#f8fafc)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,111,49,0.14),_transparent_38%)] opacity-0 transition duration-500 group-hover:opacity-100" />
+    <div className="group relative aspect-square overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/5 p-2 shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition duration-500 hover:z-20 hover:scale-110 hover:bg-white/10 hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)]">
+      <div className="pointer-events-none absolute inset-0 rounded-[1.75rem] bg-gradient-to-br from-white/10 via-transparent to-[#ff6f31]/10" />
+      <div className="relative flex h-full flex-col overflow-hidden rounded-[1.2rem] bg-[linear-gradient(145deg,rgba(255,255,255,0.10),rgba(15,23,42,0.65))] backdrop-blur">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(22,193,193,0.16),_transparent_38%)] opacity-0 transition duration-500 group-hover:opacity-100" />
 
         <div className="relative flex flex-1 items-center justify-center p-5 sm:p-6">
           <div className="text-center">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#fff3ec] text-[#ff6f31] shadow-sm transition duration-500 group-hover:scale-110">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ff6f31]/15 text-[#ff9a6f] shadow-sm transition duration-500 group-hover:scale-110">
               <IconPlaceholder className="h-7 w-7" />
             </div>
-            <p className="text-lg font-bold text-slate-900 sm:text-base">{title}</p>
-            <p className="mt-1 text-sm text-slate-500 sm:text-sm">Replace with your image</p>
+            <p className="text-lg font-bold text-white sm:text-base">{title}</p>
+            <p className="mt-1 text-sm text-slate-400 sm:text-sm">Replace with your image</p>
           </div>
         </div>
 
-        <div className="relative flex items-center justify-between border-t border-slate-100 px-4 py-3">
+        <div className="relative flex items-center justify-between border-t border-white/10 px-4 py-3">
           <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">Miinii</span>
-          <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+          <span className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-300">
             Photo Slot
           </span>
         </div>
@@ -411,57 +411,43 @@ export default function App() {
         </div>
       </section>
 
-      <section id="products" className="bg-[#fffaf7] py-16 sm:py-24">
+      <section id="products" className="bg-white py-16 text-slate-950 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader
             eyebrow="What we make"
             title="Mini figures for every story"
             text="Choose the Miinii style that fits your gift, collection, or special memory."
           />
-      
+
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {products.map((product, index) => (
               <Reveal key={product.title} className={`[animation-delay:${index * 0.08}s]`}>
-                <article className="group relative isolate overflow-hidden rounded-[2rem] border border-white/70 bg-white p-4 shadow-[0_20px_60px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_28px_80px_rgba(15,23,42,0.14)] sm:p-5">
-                  {/* subtle gradient background */}
+                <article className="group relative isolate h-full overflow-hidden rounded-[2rem] border border-white/70 bg-white p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_28px_80px_rgba(15,23,42,0.14)]">
                   <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-[linear-gradient(135deg,rgba(255,111,49,0.10),rgba(22,193,193,0.08),rgba(255,255,255,0.96))]" />
-      
-                  {/* glow effects */}
                   <div className="pointer-events-none absolute -left-10 -top-10 h-32 w-32 rounded-full bg-[#ff6f31]/12 blur-3xl transition duration-500 group-hover:scale-125" />
                   <div className="pointer-events-none absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-[#16C1C1]/12 blur-3xl transition duration-500 group-hover:scale-125" />
-      
-                  <div className="relative">
-                    <div className="mb-5 overflow-hidden rounded-[1.6rem] border border-slate-100 bg-[linear-gradient(180deg,#ffffff,#f8fafc)] p-2 shadow-inner shadow-slate-100">
-                      <div className="aspect-[4/5] overflow-hidden rounded-[1.3rem] bg-white">
-                        <img
-                          src={product.image}
-                          alt={`${product.title} product sample`}
-                          className="h-full w-full object-contain transition duration-500 group-hover:scale-105"
-                        />
-                      </div>
-                    </div>
-      
-                    <div className="mb-2">
-                      <span className="inline-flex rounded-full bg-slate-950/5 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
-                        Miinii Collection
+                  <div className="relative mb-5 aspect-[4/5] overflow-hidden rounded-[1.5rem] border border-slate-100 bg-white p-2 shadow-inner shadow-slate-100">
+                    <img
+                      src={product.image}
+                      alt={`${product.title} product sample`}
+                      className="h-full w-full rounded-[1.25rem] object-contain transition duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <div className="relative mb-2">
+                    <span className="inline-flex rounded-full bg-slate-950/5 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                      Miinii Collection
+                    </span>
+                  </div>
+                  <h3 className="relative text-2xl font-black tracking-tight text-slate-950">{product.title}</h3>
+                  <div className="relative mt-3 flex flex-wrap items-center gap-2">
+                    {product.oldPrice && (
+                      <span className="rounded-full bg-slate-100 px-3 py-1.5 text-sm font-bold text-slate-400 line-through ring-1 ring-slate-200">
+                        {product.oldPrice}
                       </span>
-                    </div>
-      
-                    <h3 className="text-2xl font-black tracking-tight text-slate-950">
-                      {product.title}
-                    </h3>
-      
-                    <div className="mt-4 flex flex-wrap items-center gap-2">
-                      {product.oldPrice && (
-                        <span className="rounded-full bg-slate-100 px-3 py-1.5 text-sm font-bold text-slate-400 line-through ring-1 ring-slate-200">
-                          {product.oldPrice}
-                        </span>
-                      )}
-      
-                      <span className="rounded-full bg-[#ff6f31]/12 px-4 py-2 text-sm font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">
-                        {product.price}
-                      </span>
-                    </div>
+                    )}
+                    <span className="rounded-full bg-[#ff6f31]/15 px-4 py-2 text-sm font-black text-[#ff9a6f] ring-1 ring-[#ff6f31]/20">
+                      {product.price}
+                    </span>
                   </div>
                 </article>
               </Reveal>
@@ -470,12 +456,13 @@ export default function App() {
         </div>
       </section>
 
-      <section id="gallery" className="py-16 sm:py-24">
+      <section id="gallery" className="bg-[#070B18] py-16 text-white sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader
             eyebrow="Gallery"
             title="Showcase your best Miinii photos"
             text="A premium collage-style section for product shots, packaging, client figures, and social proof."
+            dark
           />
 
           <Reveal>
