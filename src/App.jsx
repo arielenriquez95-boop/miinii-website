@@ -87,6 +87,7 @@ function validateWebsiteContent() {
     ),
     hasProductPrices: products.every((product) => Boolean(product.price)),
     hasProductOldPrices: products.every((product) => product.title === "Miinii Request" || Boolean(product.oldPrice)),
+    hasProductImages: products.every((product) => Boolean(product.image)),
   };
 }
 
@@ -98,6 +99,7 @@ console.assert(validateWebsiteContent().hasCollageItems, "Website should include
 console.assert(validateWebsiteContent().hasExactProductOptions, "Website should include Miinii Pop, Miinii Me, Miinii Pet, and Miinii Request.");
 console.assert(validateWebsiteContent().hasProductPrices, "Each product should include a price.");
 console.assert(validateWebsiteContent().hasProductOldPrices, "Discounted products should include an old strikethrough price.");
+console.assert(validateWebsiteContent().hasProductImages, "Each product should include an image path.");
 
 function IconPlaceholder({ className = "h-6 w-6" }) {
   return (
@@ -323,7 +325,7 @@ export default function App() {
         <div className="absolute -left-24 top-28 h-72 w-72 rounded-full bg-[#16C1C1]/20 blur-3xl animate-[pulseSoft_5s_ease-in-out_infinite]" />
         <div className="absolute -right-20 top-20 h-80 w-80 rounded-full bg-[#ff6f31]/20 blur-3xl animate-[pulseSoft_6s_ease-in-out_infinite]" />
 
-        <div className="mx-auto grid max-w-7xl items-center gap-0 px-4 pb-2 pt-1 sm:gap-5 sm:px-6 sm:pb-6 sm:pt-1 md:pb-8 lg:grid-cols-2 lg:gap-8 lg:px-8">
+        <div className="mx-auto grid max-w-7xl items-center gap-0 px-4 pb-8 pt-1 sm:gap-5 sm:px-6 sm:pb-6 sm:pt-1 md:pb-8 lg:grid-cols-2 lg:gap-8 lg:px-8">
           <Reveal className="relative mx-auto -mt-3 w-[88%] max-w-[390px] sm:-mt-4 sm:w-full sm:max-w-lg lg:mx-0 lg:max-w-none [animation-delay:.08s]">
             <div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]">
               <div className="aspect-[4/5] min-h-[330px] sm:min-h-0">
@@ -428,7 +430,6 @@ export default function App() {
                       alt={`${product.title} product sample`}
                       className="h-full w-full rounded-[1.25rem] object-contain"
                     />
-                  </div>
                   </div>
                   <h3 className="text-2xl font-black">{product.title}</h3>
                   <div className="mt-3 flex flex-wrap items-center gap-2">
