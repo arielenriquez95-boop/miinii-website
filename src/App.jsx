@@ -38,14 +38,6 @@ const products = [
   },
 ];
 
-const whyMiiniiItems = [
-  "Custom-made from real references",
-  "Preview before production",
-  "Detailed resin print quality",
-  "Hand-painted finish",
-  "Gift-ready packaging",
-];
-
 const faqs = [
   {
     q: "How does the process work?",
@@ -321,8 +313,19 @@ export default function App() {
         <div className="absolute -right-20 top-20 h-80 w-80 rounded-full bg-[#ff6f31]/20 blur-3xl animate-[pulseSoft_6s_ease-in-out_infinite]" />
 
         <div className="mx-auto grid max-w-7xl items-center gap-6 px-4 pb-12 pt-6 sm:gap-10 sm:px-6 md:pb-24 lg:grid-cols-2 lg:px-8">
-          <div className="text-center lg:text-left">
+          <Reveal className="relative mx-auto -mt-2 w-full max-w-[460px] sm:mt-0 sm:max-w-lg lg:mx-0 lg:max-w-none [animation-delay:.08s]">
+            <div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]">
+              <div className="aspect-[4/5] min-h-[390px] sm:min-h-0">
+                <img
+                  src="/hero-image.png"
+                  alt="Miinii custom 3D mini figure"
+                  className="h-full w-full scale-110 object-contain sm:scale-100"
+                />
+              </div>
+            </div>
+          </Reveal>
 
+          <div className="text-center lg:text-left">
             <Reveal className="[animation-delay:.08s]">
               <h1 className="text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">
                 Turn your photos into <span className="text-[#ff6f31]">custom 3D mini figures</span>.
@@ -354,30 +357,6 @@ export default function App() {
               </div>
             </Reveal>
           </div>
-
-          <Reveal className="relative mx-auto -mt-2 w-full max-w-[420px] sm:mt-0 sm:max-w-lg lg:max-w-none [animation-delay:.18s]">
-            <div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]">
-              <div className="aspect-[4/5] min-h-[390px] sm:min-h-0">
-                <img
-                  src="/hero-image.png"
-                  alt="Miinii custom 3D mini figure"
-                  className="h-full w-full scale-110 object-contain sm:scale-100"
-                />
-              </div>
-            </div>
-
-            <div className="absolute bottom-6 left-2 rounded-3xl bg-white p-4 shadow-xl sm:-left-6 sm:bottom-8">
-              <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#16C1C1]/15 text-[#16C1C1]">
-                  <HeartIcon className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-base font-black sm:text-sm">Made with care</p>
-                  <p className="text-sm text-slate-500 sm:text-xs">Personalized gift</p>
-                </div>
-              </div>
-            </div>
-          </Reveal>
         </div>
       </section>
 
@@ -461,35 +440,6 @@ export default function App() {
         </div>
       </section>
 
-      <section className="bg-white py-16 sm:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Reveal>
-            <div className="grid gap-8 rounded-[2rem] bg-[#fff8f3] p-6 shadow-xl shadow-orange-100 sm:p-10 lg:grid-cols-[1fr_0.8fr] lg:p-12">
-              <div>
-                <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#ff6f31]">Why Miinii</p>
-                <h2 className="text-4xl font-black tracking-tight text-slate-950 sm:text-4xl">
-                  A personal gift that feels premium, cute, and meaningful.
-                </h2>
-                <p className="mt-5 text-lg leading-8 text-slate-600 sm:text-lg">
-                  Miinii is designed for people who want something more personal than a regular gift. Every figure is
-                  custom-made, reviewed before printing, and finished with care.
-                </p>
-              </div>
-
-              <div className="grid gap-3">
-                {whyMiiniiItems.map((item) => (
-                  <div key={item} className="flex items-center gap-4 rounded-2xl bg-white p-4 text-base font-bold text-slate-700 shadow-sm sm:text-base">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#fff8f3] text-[#ff6f31]">
-                      <IconPlaceholder className="h-6 w-6" />
-                    </div>
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
 
       <section id="faq" className="py-16 sm:py-24">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
