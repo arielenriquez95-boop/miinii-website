@@ -547,7 +547,8 @@ export default function App() {
               </div>
 
               <div className="mt-8 text-center text-sm leading-7 text-white/90 sm:text-base">
-                <p>miinii.ariel@gmail.com | Meycauayan, Bulacan, Philippines</p>
+                <p>miinii.ariel@gmail.com</p>
+                <p>Meycauayan City of Bulacan, Philippines</p>
               </div>
             </div>
           </div>
