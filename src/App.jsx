@@ -308,24 +308,24 @@ export default function App() {
         </div>
       </nav>
 
-      <section id="home" className="relative pt-16 sm:pt-20 lg:pt-24">
+      <section id="home" className="relative pt-14 sm:pt-16 lg:pt-18">
         <div className="absolute -left-24 top-28 h-72 w-72 rounded-full bg-[#16C1C1]/20 blur-3xl animate-[pulseSoft_5s_ease-in-out_infinite]" />
         <div className="absolute -right-20 top-20 h-80 w-80 rounded-full bg-[#ff6f31]/20 blur-3xl animate-[pulseSoft_6s_ease-in-out_infinite]" />
 
-        <div className="mx-auto grid max-w-7xl items-center gap-4 px-4 pb-10 pt-2 sm:gap-8 sm:px-6 sm:pt-4 md:pb-20 lg:grid-cols-2 lg:px-8">
-          <Reveal className="relative mx-auto -mt-4 w-full max-w-[460px] sm:-mt-2 sm:max-w-lg lg:mx-0 lg:max-w-none [animation-delay:.08s]">
+        <div className="mx-auto grid max-w-7xl items-center gap-1 px-4 pb-10 pt-0 sm:gap-5 sm:px-6 sm:pt-1 md:pb-20 lg:grid-cols-2 lg:gap-8 lg:px-8">
+          <Reveal className="relative mx-auto -mt-6 w-[88%] max-w-[390px] sm:-mt-4 sm:w-full sm:max-w-lg lg:mx-0 lg:max-w-none [animation-delay:.08s]">
             <div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]">
-              <div className="aspect-[4/5] min-h-[360px] sm:min-h-0">
+              <div className="aspect-[4/5] min-h-[330px] sm:min-h-0">
                 <img
                   src="/hero-image.png"
                   alt="Miinii custom 3D mini figure"
-                  className="h-full w-full scale-110 object-contain sm:scale-100"
+                  className="h-full w-full scale-105 object-contain sm:scale-100"
                 />
               </div>
             </div>
           </Reveal>
 
-          <div className="text-center lg:text-left">
+          <div className="-mt-3 text-center sm:mt-0 lg:text-left">
             <Reveal className="[animation-delay:.08s]">
               <h1 className="text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">
                 Turn your photos into <span className="text-[#ff6f31]">custom 3D mini figures</span>.
