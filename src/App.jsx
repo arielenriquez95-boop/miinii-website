@@ -22,19 +22,19 @@ const processSteps = [
 const products = [
   {
     title: "Miinii Pop",
-    text: "Fun, collectible-style mini figures with a cute display-ready character look.",
+    price: "Starts at ₱2,990",
   },
   {
     title: "Miinii Me",
-    text: "Custom mini figures based on real people for birthdays, graduations, couples, and special moments.",
+    price: "Starts at ₱2,990",
   },
   {
     title: "Miinii Pet",
-    text: "Personalized pet mini figures made to celebrate your favorite fur babies.",
+    price: "Starts at ₱2,990",
   },
   {
     title: "Miinii Request",
-    text: "Special custom requests for unique poses, themes, outfits, and meaningful keepsakes.",
+    price: "Custom quote",
   },
 ];
 
