@@ -411,7 +411,7 @@ export default function App() {
         </div>
       </section>
 
-      <section id="products" className="py-16 sm:py-24">
+      <section id="products" className="bg-[#fffaf7] py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader
             eyebrow="What we make"
