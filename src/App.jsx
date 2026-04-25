@@ -245,8 +245,8 @@ function PremiumCollageCard({ title }) {
   return (
     <div className="group relative aspect-square overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/5 p-2 shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition duration-500 hover:z-20 hover:scale-110 hover:bg-white/10 hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)]">
       <div className="pointer-events-none absolute inset-0 rounded-[1.75rem] bg-gradient-to-br from-white/10 via-transparent to-[#ff6f31]/10" />
-      <div className="relative flex h-full flex-col overflow-hidden rounded-[1.2rem] bg-[linear-gradient(145deg,rgba(255,255,255,0.10),rgba(15,23,42,0.65))] backdrop-blur">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(22,193,193,0.16),_transparent_38%)] opacity-0 transition duration-500 group-hover:opacity-100" />
+      <div className="relative flex h-full flex-col overflow-hidden rounded-[1.2rem] bg-slate-900/80 backdrop-blur">
+        <div className="absolute inset-0 bg-teal-400/10 opacity-0 transition duration-500 group-hover:opacity-100" />
 
         <div className="relative flex flex-1 items-center justify-center p-5 sm:p-6">
           <div className="text-center">
@@ -321,7 +321,7 @@ export default function App() {
         </div>
       </nav>
 
-      <section id="home" className="relative pt-16 sm:pt-16 lg:pt-18">
+      <section id="home" className="relative pt-16 sm:pt-16 lg:pt-20">
         <div className="absolute -left-24 top-28 h-72 w-72 rounded-full bg-[#16C1C1]/20 blur-3xl animate-[pulseSoft_5s_ease-in-out_infinite]" />
         <div className="absolute -right-20 top-20 h-80 w-80 rounded-full bg-[#ff6f31]/20 blur-3xl animate-[pulseSoft_6s_ease-in-out_infinite]" />
 
@@ -356,14 +356,14 @@ export default function App() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
                 <a
                   href="#contact"
-                  className="group inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-8 py-4.5 text-lg font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:px-7 sm:py-4 sm:text-base"
+                  className="group inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-8 py-[18px] text-lg font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:px-7 sm:py-4 sm:text-base"
                 >
                   Start Your Miinii
                   <ArrowIcon className="ml-2 h-5 w-5 transition group-hover:translate-x-1" />
                 </a>
                 <a
                   href="#process"
-                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-8 py-4.5 text-lg font-black text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-[#16C1C1] sm:px-7 sm:py-4 sm:text-base"
+                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-8 py-[18px] text-lg font-black text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-[#16C1C1] sm:px-7 sm:py-4 sm:text-base"
                 >
                   View Process
                 </a>
@@ -419,26 +419,24 @@ export default function App() {
             text="Choose the Miinii style that fits your gift, collection, or special memory."
           />
 
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mx-auto grid max-w-sm gap-5 sm:max-w-none sm:grid-cols-2 lg:grid-cols-4">
             {products.map((product, index) => (
               <Reveal key={product.title} className={`[animation-delay:${index * 0.08}s]`}>
-                <article className="group relative isolate h-full overflow-hidden rounded-[2rem] border border-white/70 bg-white p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-[0_28px_80px_rgba(15,23,42,0.14)]">
-                  <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-[linear-gradient(135deg,rgba(255,111,49,0.10),rgba(22,193,193,0.08),rgba(255,255,255,0.96))]" />
-                  <div className="pointer-events-none absolute -left-10 -top-10 h-32 w-32 rounded-full bg-[#ff6f31]/12 blur-3xl transition duration-500 group-hover:scale-125" />
-                  <div className="pointer-events-none absolute -bottom-10 -right-10 h-32 w-32 rounded-full bg-[#16C1C1]/12 blur-3xl transition duration-500 group-hover:scale-125" />
-                  <div className="relative mb-5 aspect-[4/5] overflow-hidden rounded-[1.5rem] border border-slate-100 bg-white p-2 shadow-inner shadow-slate-100">
+                <article className="group relative h-full overflow-hidden rounded-[2rem] border border-slate-100 bg-white p-4 shadow-[0_16px_45px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:scale-[1.015] hover:shadow-[0_24px_65px_rgba(15,23,42,0.14)] sm:p-5">
+                  <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-gradient-to-br from-orange-50/70 via-teal-50/40 to-white" />
+                  <div className="relative mb-5 aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#f8fafc] p-0">
                     <img
                       src={product.image}
                       alt={`${product.title} product sample`}
-                      className="h-full w-full rounded-[1.25rem] object-contain transition duration-500 group-hover:scale-105"
+                      className="h-full w-full rounded-[1.5rem] object-contain transition duration-500 group-hover:scale-[1.03]"
                     />
                   </div>
                   <div className="relative mb-2">
-                    <span className="inline-flex rounded-full bg-slate-950/5 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">
+                    <span className="inline-flex rounded-full bg-slate-950/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 sm:text-[11px] sm:tracking-[0.18em]">
                       Miinii Collection
                     </span>
                   </div>
-                  <h3 className="relative text-2xl font-black tracking-tight text-slate-950">{product.title}</h3>
+                  <h3 className="relative text-3xl font-black tracking-tight text-slate-950 sm:text-2xl">{product.title}</h3>
                   <div className="relative mt-3 flex flex-wrap items-center gap-2">
                     {product.oldPrice && (
                       <span className="rounded-full bg-slate-100 px-3 py-1.5 text-sm font-bold text-slate-400 line-through ring-1 ring-slate-200">
