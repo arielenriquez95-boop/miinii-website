@@ -322,12 +322,6 @@ export default function App() {
 
         <div className="mx-auto grid max-w-7xl items-center gap-6 px-4 pb-12 pt-6 sm:gap-10 sm:px-6 md:pb-24 lg:grid-cols-2 lg:px-8">
           <div className="text-center lg:text-left">
-            <Reveal>
-              <div className="mx-auto mb-5 inline-flex items-center gap-2 rounded-full border border-orange-100 bg-white px-4 py-2.5 text-base font-bold text-[#ff6f31] shadow-sm sm:text-sm lg:mx-0">
-                <StarIcon className="h-5 w-5 fill-[#ff6f31] sm:h-4 sm:w-4" />
-                Custom mini figures made from your photos
-              </div>
-            </Reveal>
 
             <Reveal className="[animation-delay:.08s]">
               <h1 className="text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">
