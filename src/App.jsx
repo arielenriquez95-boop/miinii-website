@@ -422,11 +422,11 @@ export default function App() {
             {products.map((product, index) => (
               <Reveal key={product.title} className={`[animation-delay:${index * 0.08}s]`}>
                 <article className="h-full rounded-[2rem] border border-white/10 bg-white/5 p-5 shadow-2xl shadow-black/10 backdrop-blur transition hover:-translate-y-2 hover:bg-white/10">
-                  <div className="mb-5 aspect-square overflow-hidden rounded-[1.5rem] bg-white/5 p-2">
+                  <div className="mb-5 aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-white/5 p-2">
                     <img
                       src={product.image}
                       alt={`${product.title} product sample`}
-                      className="h-full w-full rounded-[1.25rem] object-cover"
+                      className="h-full w-full rounded-[1.25rem] object-contain"
                     />
                   </div>
                   </div>
