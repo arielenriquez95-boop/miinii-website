@@ -508,7 +508,7 @@ export default function App() {
 
               <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <a
-                  href="https://www.facebook.com/messages/t/287422604458093"
+                  href="https://instagram.com/MiiniiStudios"
                   className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-6 py-4 text-lg font-black text-white backdrop-blur transition hover:-translate-y-1 hover:bg-white/20 sm:text-base"
                 >
                   <SocialIcon type="message" className="mr-2 h-5 w-5" />
