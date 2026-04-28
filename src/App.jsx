@@ -395,11 +395,11 @@ export default function App() {
             {processSteps.map((step, index) => (
               <Reveal key={step.title} className={`[animation-delay:${index * 0.08}s]`}>
                 <article className="group relative h-full overflow-hidden rounded-[2rem] border border-slate-100 bg-[#fff8f3] p-4 shadow-sm transition hover:-translate-y-2 hover:shadow-xl hover:shadow-orange-100/70 sm:p-5">
-                  <div className="mb-5 aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-white shadow-inner shadow-slate-100">
+                  <div className="mb-5 aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-transparent">
                     <img
                       src={step.image}
                       alt={`${step.title} process image`}
-                      className="h-full w-full object-contain p-3 transition duration-500 group-hover:scale-[1.04]"
+                      className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.04]"
                     />
                   </div>
                   <div className="mb-3 inline-flex rounded-full bg-[#ff6f31] px-3 py-1 text-xs font-black uppercase tracking-wider text-white shadow-sm shadow-orange-200">
