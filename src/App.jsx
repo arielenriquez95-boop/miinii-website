@@ -272,32 +272,26 @@ function ProductLightbox({ product, onClose }) {
 
   return (
     <div className="fixed inset-0 z-[100] bg-slate-950/90 p-3 backdrop-blur-xl sm:flex sm:items-center sm:justify-center sm:p-6">
-      <button
-        type="button"
-        onClick={onClose}
-        className="fixed right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-white/25 sm:h-11 sm:w-11"
-        aria-label="Close product preview"
-      >
-        ×
-      </button>
+      <div className="relative mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem]">
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-3 top-3 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950 sm:right-4 sm:top-4"
+          aria-label="Close product preview"
+        >
+          ×
+        </button>
 
-      <div className="mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem]">
         <div className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-[0.95fr_1.05fr]">
-          <div className="relative min-h-[300px] bg-gradient-to-br from-orange-50 via-white to-teal-50 p-4 sm:min-h-[420px] sm:p-8 md:sticky md:top-0 md:h-full">
-            <div className="absolute left-4 top-4 rounded-full bg-slate-950 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-white sm:left-5 sm:top-5 sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.18em]">
-              Miinii Collection
-            </div>
+          <div className="relative min-h-[330px] overflow-hidden bg-gradient-to-br from-orange-50 via-white to-teal-50 sm:min-h-[420px] md:sticky md:top-0 md:h-full">
             <img
               src={product.image}
               alt={`${product.title} full product preview`}
-              className="h-full min-h-[270px] w-full object-contain pt-8 sm:min-h-[360px] sm:pt-10"
+              className="h-full min-h-[330px] w-full object-cover sm:min-h-[420px] md:min-h-full"
             />
           </div>
 
           <div className="flex flex-col justify-center p-5 sm:p-8 lg:p-10">
-            <p className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-[#16C1C1] sm:mb-3 sm:text-sm sm:tracking-[0.25em]">
-              What we make
-            </p>
             <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">{product.title}</h2>
             <p className="mt-3 text-sm leading-7 text-slate-600 sm:mt-4 sm:text-lg sm:leading-8">{product.shortText}</p>
 
@@ -463,9 +457,6 @@ export default function App() {
                   <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-gradient-to-br from-orange-50/70 via-teal-50/40 to-white" />
                   <div className="relative mb-3 aspect-[4/5] overflow-hidden rounded-[1.1rem] bg-[#f8fafc] p-0 sm:mb-5 sm:rounded-[1.5rem]">
                     <img src={product.image} alt={`${product.title} product sample`} className="h-full w-full rounded-[1.5rem] object-contain transition duration-500 group-hover:scale-[1.03]" />
-                  </div>
-                  <div className="relative mb-2">
-                    <span className="inline-flex rounded-full bg-slate-950/5 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 sm:text-[11px] sm:tracking-[0.18em]">Miinii Collection</span>
                   </div>
                   <h3 className="relative text-lg font-black tracking-tight text-slate-950 sm:text-2xl">{product.title}</h3>
                   <div className="relative mt-2 flex flex-nowrap items-center gap-1.5 sm:mt-3 sm:gap-2">
