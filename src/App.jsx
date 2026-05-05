@@ -500,7 +500,7 @@ export default function App() {
           />
 
           <Reveal>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
               {collageItems.map((item) => (
                 <PremiumCollageCard key={item} title={item} />
               ))}
@@ -514,11 +514,11 @@ export default function App() {
         <div className="absolute left-0 top-10 h-64 w-64 rounded-full bg-[#16C1C1]/10 blur-3xl" />
         <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#ff6f31]/10 blur-3xl" />
 
-        <div className="relative mx-auto grid max-w-7xl items-center gap-8 px-4 sm:px-6 lg:grid-cols-[.95fr_1.05fr] lg:px-8">
+        <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <Reveal>
             <div className="overflow-hidden rounded-[2rem] border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
-              <div className="grid gap-0 sm:grid-cols-[0.9fr_1.1fr]">
-                <div className="relative min-h-[280px] overflow-hidden bg-gradient-to-br from-slate-100 to-white p-4">
+              <div className="grid gap-0 md:grid-cols-[0.85fr_1.15fr]">
+                <div className="relative min-h-[320px] overflow-hidden bg-gradient-to-br from-slate-100 to-white p-4 sm:min-h-[380px]">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(22,193,193,0.18),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(255,111,49,0.16),transparent_35%)]" />
                   <div className="relative h-full overflow-hidden rounded-[1.5rem] border border-white/70 bg-white shadow-inner">
                     <img
@@ -536,38 +536,24 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="p-6 sm:p-8">
+                <div className="flex flex-col justify-center p-6 sm:p-10 lg:p-12">
                   <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">About us</p>
                   <h2 className="text-4xl font-black tracking-tight text-slate-950 sm:text-5xl">Small figures, big memories.</h2>
                   <p className="mt-5 text-lg leading-8 text-slate-600">
                     Miinii creates custom 3D mini figures from your photos, crafted with digital sculpting, resin printing, and careful hand painting.
                   </p>
                   <p className="mt-4 text-base leading-7 text-slate-500">
-                    Each piece is made to feel personal, gift-ready, and display-worthy — perfect for people, pets, milestones, and special requests.
+                    Every piece is made to feel personal, gift-ready, and display-worthy — whether it is for people, pets, milestones, or special requests.
                   </p>
+                  <div className="mt-7 flex flex-wrap gap-2">
+                    {['Handmade', 'Personal', 'Gift-ready'].map((item) => (
+                      <span key={item} className="rounded-full bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-slate-500 shadow-sm ring-1 ring-slate-100">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          </Reveal>
-
-          <Reveal className="[animation-delay:.12s]">
-            <div className="grid gap-4 sm:grid-cols-3">
-              {[
-                ["Handmade", "Sculpted and painted with care"],
-                ["Personal", "Based on your favorite photos"],
-                ["Gift-ready", "Finished with a premium keepsake feel"],
-              ].map(([title, text]) => (
-                <div
-                  key={title}
-                  className="group rounded-[1.75rem] border border-slate-100 bg-white p-5 shadow-sm transition duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-orange-100/70"
-                >
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ff6f31]/10 text-[#ff6f31] transition duration-500 group-hover:scale-110">
-                    <HeartIcon className="h-5 w-5" />
-                  </div>
-                  <h3 className="text-xl font-black text-slate-950">{title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-500">{text}</p>
-                </div>
-              ))}
             </div>
           </Reveal>
         </div>
@@ -583,10 +569,10 @@ export default function App() {
             </p>
           </Reveal>
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
             {testimonials.map((testimonial, index) => (
               <Reveal key={testimonial.name} className={`[animation-delay:${index * 0.05}s]`}>
-                <article className="group relative h-full overflow-hidden rounded-[1.5rem] border border-white/80 bg-white/85 p-5 shadow-sm backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-[#16C1C1]/30 hover:shadow-xl hover:shadow-orange-100/60">
+                <article className="group relative h-full overflow-hidden rounded-[1.35rem] border border-white/80 bg-white/85 p-4 shadow-sm backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-[#16C1C1]/30 hover:shadow-xl hover:shadow-orange-100/60 sm:p-5">
                   <div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" />
                   <div className="relative mb-4 flex items-center justify-between gap-3">
                     <div className="flex gap-0.5 text-[#ff6f31]">
@@ -596,12 +582,12 @@ export default function App() {
                     </div>
                   </div>
 
-                  <p className="relative min-h-[56px] text-sm font-medium leading-7 text-slate-600">“{testimonial.text}”</p>
+                  <p className="relative min-h-[72px] text-xs font-medium leading-6 text-slate-600 sm:min-h-[56px] sm:text-sm sm:leading-7">“{testimonial.text}”</p>
 
                   <div className="relative mt-4 border-t border-slate-100 pt-4">
                     <div>
-                      <h3 className="text-sm font-black text-slate-950">{testimonial.name}</h3>
-                      <p className="mt-0.5 text-xs font-bold uppercase tracking-[0.14em] text-slate-400">{testimonial.role}</p>
+                      <h3 className="text-xs font-black text-slate-950 sm:text-sm">{testimonial.name}</h3>
+                      <p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 sm:text-xs sm:tracking-[0.14em]">{testimonial.role}</p>
                     </div>
                   </div>
                 </article>
