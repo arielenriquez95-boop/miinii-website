@@ -49,6 +49,39 @@ const products = [
   },
 ];
 
+const testimonials = [
+  {
+    name: "Happy Client",
+    role: "Miinii Gift",
+    text: "The final figure felt personal, cute, and gift-ready.",
+  },
+  {
+    name: "Pet Owner",
+    role: "Miinii Pet",
+    text: "Our pet became a tiny keepsake we can display at home.",
+  },
+  {
+    name: "Collector",
+    role: "Miinii Pop",
+    text: "A fun collectible with a handmade, premium feel.",
+  },
+  {
+    name: "Gift Buyer",
+    role: "Birthday Gift",
+    text: "It was unique, thoughtful, and different from regular gifts.",
+  },
+  {
+    name: "Couple Client",
+    role: "Custom Duo",
+    text: "The preview made the process easy before production started.",
+  },
+  {
+    name: "Fur Parent",
+    role: "Pet Keepsake",
+    text: "A small piece, but it carried a lot of emotion.",
+  },
+];
+
 const faqs = [
   {
     q: "How does the process work?",
@@ -473,6 +506,108 @@ export default function App() {
               ))}
             </div>
           </Reveal>
+        </div>
+      </section>
+
+
+      <section id="about" className="relative overflow-hidden bg-white py-16 sm:py-24">
+        <div className="absolute left-0 top-10 h-64 w-64 rounded-full bg-[#16C1C1]/10 blur-3xl" />
+        <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#ff6f31]/10 blur-3xl" />
+
+        <div className="relative mx-auto grid max-w-7xl items-center gap-8 px-4 sm:px-6 lg:grid-cols-[.95fr_1.05fr] lg:px-8">
+          <Reveal>
+            <div className="overflow-hidden rounded-[2rem] border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
+              <div className="grid gap-0 sm:grid-cols-[0.9fr_1.1fr]">
+                <div className="relative min-h-[280px] overflow-hidden bg-gradient-to-br from-slate-100 to-white p-4">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(22,193,193,0.18),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(255,111,49,0.16),transparent_35%)]" />
+                  <div className="relative h-full overflow-hidden rounded-[1.5rem] border border-white/70 bg-white shadow-inner">
+                    <img
+                      src="/about-portrait.png"
+                      alt="Miinii artist portrait placeholder"
+                      className="h-full w-full object-cover"
+                    />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/75 text-center backdrop-blur-sm">
+                      <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ff6f31]/10 text-[#ff6f31]">
+                        <IconPlaceholder className="h-7 w-7" />
+                      </div>
+                      <p className="text-base font-black text-slate-950">Portrait Photo</p>
+                      <p className="mt-1 px-5 text-sm leading-6 text-slate-500">Replace with your photo: /about-portrait.png</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6 sm:p-8">
+                  <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">About us</p>
+                  <h2 className="text-4xl font-black tracking-tight text-slate-950 sm:text-5xl">Small figures, big memories.</h2>
+                  <p className="mt-5 text-lg leading-8 text-slate-600">
+                    Miinii creates custom 3D mini figures from your photos, crafted with digital sculpting, resin printing, and careful hand painting.
+                  </p>
+                  <p className="mt-4 text-base leading-7 text-slate-500">
+                    Each piece is made to feel personal, gift-ready, and display-worthy — perfect for people, pets, milestones, and special requests.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal className="[animation-delay:.12s]">
+            <div className="grid gap-4 sm:grid-cols-3">
+              {[
+                ["Handmade", "Sculpted and painted with care"],
+                ["Personal", "Based on your favorite photos"],
+                ["Gift-ready", "Finished with a premium keepsake feel"],
+              ].map(([title, text]) => (
+                <div
+                  key={title}
+                  className="group rounded-[1.75rem] border border-slate-100 bg-white p-5 shadow-sm transition duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-orange-100/70"
+                >
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ff6f31]/10 text-[#ff6f31] transition duration-500 group-hover:scale-110">
+                    <HeartIcon className="h-5 w-5" />
+                  </div>
+                  <h3 className="text-xl font-black text-slate-950">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-500">{text}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section id="testimonials" className="bg-[#fff8f3] py-12 sm:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal className="mx-auto mb-8 max-w-2xl text-center">
+            <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">Testimonials</p>
+            <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Kind words from Miinii clients</h2>
+            <p className="mt-3 text-base leading-7 text-slate-600">
+              Short notes from customers who turned their favorite moments into custom keepsakes.
+            </p>
+          </Reveal>
+
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {testimonials.map((testimonial, index) => (
+              <Reveal key={testimonial.name} className={`[animation-delay:${index * 0.05}s]`}>
+                <article className="group relative h-full overflow-hidden rounded-[1.5rem] border border-white/80 bg-white/85 p-5 shadow-sm backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-[#16C1C1]/30 hover:shadow-xl hover:shadow-orange-100/60">
+                  <div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" />
+                  <div className="relative mb-4 flex items-center justify-between gap-3">
+                    <div className="flex gap-0.5 text-[#ff6f31]">
+                      {[...Array(5)].map((_, starIndex) => (
+                        <StarIcon key={starIndex} className="h-3.5 w-3.5 fill-current" />
+                      ))}
+                    </div>
+                  </div>
+
+                  <p className="relative min-h-[56px] text-sm font-medium leading-7 text-slate-600">“{testimonial.text}”</p>
+
+                  <div className="relative mt-4 border-t border-slate-100 pt-4">
+                    <div>
+                      <h3 className="text-sm font-black text-slate-950">{testimonial.name}</h3>
+                      <p className="mt-0.5 text-xs font-bold uppercase tracking-[0.14em] text-slate-400">{testimonial.role}</p>
+                    </div>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
