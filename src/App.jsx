@@ -58,12 +58,12 @@ const faqs = [
 ].map(([q, a]) => ({ q, a }));
 
 const collageItems = [
-  ["Hero Figure", "/gallery-hero-figure.png"],
-  ["Gift Box", "/gallery-gift-box.png"],
-  ["Pet Figure", "/gallery-pet-figure.png"],
-  ["Client Figure", "/gallery-client-figure.png"],
-  ["Packaging Shot", "/gallery-packaging-shot.png"],
-  ["Finished Miinii", "/gallery-finished-miinii.png"],
+  ["Gallery 1", "/Gallery1.png"],
+  ["Gallery 2", "/Gallery2.png"],
+  ["Gallery 3", "/Gallery3.png"],
+  ["Gallery 4", "/Gallery4.png"],
+  ["Gallery 5", "/Gallery5.png"],
+  ["Gallery 6", "/Gallery6.png"],
 ].map(([title, image]) => ({ title, image }));
 
 function IconPlaceholder({ className = "h-6 w-6" }) {
@@ -137,7 +137,7 @@ function GalleryModal({ items, index, setIndex, onClose }) {
       <button type="button" onClick={previous} className="absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Previous gallery image">‹</button>
 
       <div className="w-full max-w-5xl" onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
-        <div className="relative mx-auto aspect-[4/5] max-h-[82vh] overflow-hidden rounded-[1.5rem] bg-slate-900 shadow-2xl shadow-black/40 sm:aspect-[16/10]">
+        <div className="relative mx-auto aspect-square max-h-[82vh] max-w-[82vh] overflow-hidden rounded-[1.5rem] bg-slate-900 shadow-2xl shadow-black/40">
           <img src={item.image} alt={`${item.title} full preview`} className="h-full w-full object-contain" />
         </div>
         <div className="mt-4 flex items-center justify-center gap-2">
@@ -217,14 +217,23 @@ function ProcessCard({ step, index }) {
 
 function GalleryCard({ item, onClick }) {
   return (
-    <button type="button" onClick={onClick} className="group relative aspect-square overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/5 p-2 text-left shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition duration-500 hover:z-20 hover:scale-105 hover:bg-white/10 hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 focus:ring-offset-[#070B18]" aria-label={`Open ${item.title} gallery image`}>
-      <div className="pointer-events-none absolute inset-0 rounded-[1.75rem] bg-gradient-to-br from-white/10 via-transparent to-[#ff6f31]/10" />
-      <div className="relative flex h-full flex-col overflow-hidden rounded-[1.2rem] bg-slate-900/80 backdrop-blur">
-        <div className="absolute inset-0 bg-teal-400/10 opacity-0 transition duration-500 group-hover:opacity-100" />
-        <div className="relative flex flex-1 items-center justify-center overflow-hidden p-4 sm:p-6">
-          <div className="relative text-center"><div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ff6f31]/15 text-[#ff9a6f] sm:h-14 sm:w-14"><IconPlaceholder className="h-6 w-6 sm:h-7 sm:w-7" /></div><p className="text-sm font-bold text-white sm:text-base">{item.title}</p><p className="mt-1 text-xs text-slate-400 sm:text-sm">Tap to preview</p></div>
+    <button
+      type="button"
+      onClick={onClick}
+      className="group relative aspect-square overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/5 p-0 text-left shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition duration-500 hover:z-20 hover:scale-105 hover:bg-white/10 hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 focus:ring-offset-[#070B18] sm:rounded-[1.75rem]"
+      aria-label={`Open ${item.title} gallery image`}
+    >
+      <img
+        src={item.image}
+        alt={`${item.title} placeholder`}
+        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+      />
+      <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/45 text-center opacity-100 backdrop-blur-sm transition duration-500 group-hover:bg-slate-950/30">
+        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 text-white shadow-sm sm:h-14 sm:w-14">
+          <IconPlaceholder className="h-6 w-6 sm:h-7 sm:w-7" />
         </div>
-        <div className="relative flex items-center justify-between border-t border-white/10 px-3 py-2.5 sm:px-4 sm:py-3"><span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">Miinii</span><span className="rounded-full bg-white/10 px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-slate-300">Open</span></div>
+        <p className="text-sm font-black text-white sm:text-base">{item.image.replace('/', '')}</p>
+        <p className="mt-1 text-xs font-medium text-slate-200 sm:text-sm">Square PNG placeholder</p>
       </div>
     </button>
   );
