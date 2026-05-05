@@ -1,26 +1,10 @@
 import React, { useState } from "react";
 
 const processSteps = [
-  {
-    title: "3D Sculpting",
-    text: "Your Miinii is digitally sculpted based on your reference photos.",
-    image: "/process-sculpting.png",
-  },
-  {
-    title: "3D Printing",
-    text: "Printed in high resolution for clean details and a premium miniature look.",
-    image: "/process-printing.png",
-  },
-  {
-    title: "Hand Painting",
-    text: "Each piece is carefully painted by hand to bring your Miinii to life.",
-    image: "/process-painting.png",
-  },
-  {
-    title: "Finishing & Packaging",
-    text: "Finished, quality checked, and packed in a gift-ready Miinii box.",
-    image: "/process-packaging.png",
-  },
+  { title: "3D Sculpting", text: "Your Miinii is digitally sculpted based on your reference photos.", image: "/process-sculpting.png" },
+  { title: "3D Printing", text: "Printed in high resolution for clean details and a premium miniature look.", image: "/process-printing.png" },
+  { title: "Hand Painting", text: "Each piece is carefully painted by hand to bring your Miinii to life.", image: "/process-painting.png" },
+  { title: "Finishing & Packaging", text: "Finished, quality checked, and packed in a gift-ready Miinii box.", image: "/process-packaging.png" },
 ];
 
 const products = [
@@ -58,41 +42,29 @@ const products = [
 ];
 
 const testimonials = [
-  { name: "Happy Client", role: "Miinii Gift", text: "The final figure felt personal, cute, and gift-ready." },
-  { name: "Pet Owner", role: "Miinii Pet", text: "Our pet became a tiny keepsake we can display at home." },
-  { name: "Collector", role: "Miinii Pop", text: "A fun collectible with a handmade, premium feel." },
-  { name: "Gift Buyer", role: "Birthday Gift", text: "It was unique, thoughtful, and different from regular gifts." },
-  { name: "Couple Client", role: "Custom Duo", text: "The preview made the process easy before production started." },
-  { name: "Fur Parent", role: "Pet Keepsake", text: "A small piece, but it carried a lot of emotion." },
-];
+  ["Happy Client", "Miinii Gift", "The final figure felt personal, cute, and gift-ready."],
+  ["Pet Owner", "Miinii Pet", "Our pet became a tiny keepsake we can display at home."],
+  ["Collector", "Miinii Pop", "A fun collectible with a handmade, premium feel."],
+  ["Gift Buyer", "Birthday Gift", "It was unique, thoughtful, and different from regular gifts."],
+  ["Couple Client", "Custom Duo", "The preview made the process easy before production started."],
+  ["Fur Parent", "Pet Keepsake", "A small piece, but it carried a lot of emotion."],
+].map(([name, role, text]) => ({ name, role, text }));
 
 const faqs = [
-  {
-    q: "How does the process work?",
-    a: "Send your reference photos, review the 3D preview, then we print, paint, finish, and pack your Miinii.",
-  },
-  {
-    q: "Can I request revisions?",
-    a: "Yes. You can review the 3D preview before printing and request minor adjustments before production starts.",
-  },
-  {
-    q: "Is it good as a gift?",
-    a: "Yes. Miinii figures are made as personal gifts, keepsakes, display pieces, and collectibles.",
-  },
-  {
-    q: "How long does production usually take?",
-    a: "Production time depends on the queue, design complexity, and quantity. You can ask us directly for the current turnaround time before placing your order.",
-  },
-];
+  ["How does the process work?", "Send your reference photos, review the 3D preview, then we print, paint, finish, and pack your Miinii."],
+  ["Can I request revisions?", "Yes. You can review the 3D preview before printing and request minor adjustments before production starts."],
+  ["Is it good as a gift?", "Yes. Miinii figures are made as personal gifts, keepsakes, display pieces, and collectibles."],
+  ["How long does production usually take?", "Production time depends on the queue, design complexity, and quantity. You can ask us directly for the current turnaround time before placing your order."],
+].map(([q, a]) => ({ q, a }));
 
 const collageItems = [
-  { title: "Hero Figure", image: "/gallery-hero-figure.png" },
-  { title: "Gift Box", image: "/gallery-gift-box.png" },
-  { title: "Pet Figure", image: "/gallery-pet-figure.png" },
-  { title: "Client Figure", image: "/gallery-client-figure.png" },
-  { title: "Packaging Shot", image: "/gallery-packaging-shot.png" },
-  { title: "Finished Miinii", image: "/gallery-finished-miinii.png" },
-];
+  ["Hero Figure", "/gallery-hero-figure.png"],
+  ["Gift Box", "/gallery-gift-box.png"],
+  ["Pet Figure", "/gallery-pet-figure.png"],
+  ["Client Figure", "/gallery-client-figure.png"],
+  ["Packaging Shot", "/gallery-packaging-shot.png"],
+  ["Finished Miinii", "/gallery-finished-miinii.png"],
+].map(([title, image]) => ({ title, image }));
 
 function IconPlaceholder({ className = "h-6 w-6" }) {
   return (
@@ -106,8 +78,8 @@ function IconPlaceholder({ className = "h-6 w-6" }) {
 
 function StarIcon({ className = "h-4 w-4" }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M12 2l3.1 6.3l6.9 1l-5 4.9l1.2 6.8L12 17.8L5.8 21L7 14.2L2 9.3l6.9-1L12 2z" />
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21 7 14.2 2 9.3l6.9-1L12 2z" />
     </svg>
   );
 }
@@ -116,55 +88,17 @@ function ArrowIcon({ className = "h-5 w-5" }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M5 12h14" />
-      <path d="M13 5l7 7l-7 7" />
+      <path d="M13 5l7 7-7 7" />
     </svg>
   );
 }
 
 function SocialIcon({ type, className = "h-5 w-5" }) {
-  const common = {
-    className,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: "2",
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-    "aria-hidden": "true",
-  };
-
-  if (type === "facebook") {
-    return (
-      <svg {...common}>
-        <path d="M14 8h3V4h-3c-2.2 0-4 1.8-4 4v3H7v4h3v5h4v-5h3l1-4h-4v-2c0-.6.4-1 1-1z" />
-      </svg>
-    );
-  }
-
-  if (type === "tiktok") {
-    return (
-      <svg {...common}>
-        <path d="M14 4v9.5a3.5 3.5 0 1 1-3.5-3.5" />
-        <path d="M14 4c1 2 2.5 3 5 3" />
-      </svg>
-    );
-  }
-
-  if (type === "instagram") {
-    return (
-      <svg {...common}>
-        <rect x="3" y="3" width="18" height="18" rx="5" />
-        <circle cx="12" cy="12" r="4" />
-        <path d="M17.5 6.5h.01" />
-      </svg>
-    );
-  }
-
-  return (
-    <svg {...common}>
-      <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
-    </svg>
-  );
+  const common = { className, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true" };
+  if (type === "facebook") return <svg {...common}><path d="M14 8h3V4h-3c-2.2 0-4 1.8-4 4v3H7v4h3v5h4v-5h3l1-4h-4v-2c0-.6.4-1 1-1z" /></svg>;
+  if (type === "tiktok") return <svg {...common}><path d="M14 4v9.5a3.5 3.5 0 1 1-3.5-3.5" /><path d="M14 4c1 2 2.5 3 5 3" /></svg>;
+  if (type === "instagram") return <svg {...common}><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><path d="M17.5 6.5h.01" /></svg>;
+  return <svg {...common}><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" /></svg>;
 }
 
 function Reveal({ children, className = "" }) {
@@ -174,416 +108,218 @@ function Reveal({ children, className = "" }) {
 function SectionHeader({ eyebrow, title, text, dark = false }) {
   return (
     <Reveal className="mx-auto mb-10 max-w-2xl text-center">
-      <p className="mb-3 text-base font-bold uppercase tracking-[0.22em] text-[#16C1C1] sm:text-sm sm:tracking-[0.25em]">{eyebrow}</p>
-      <h2 className={`text-4xl font-black tracking-tight sm:text-4xl md:text-5xl ${dark ? "text-white" : "text-slate-950"}`}>{title}</h2>
-      <p className={`mt-4 text-lg leading-8 sm:text-lg ${dark ? "text-slate-300" : "text-slate-600"}`}>{text}</p>
+      <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">{eyebrow}</p>
+      <h2 className={`text-4xl font-black tracking-tight md:text-5xl ${dark ? "text-white" : "text-slate-950"}`}>{title}</h2>
+      <p className={`mt-4 text-lg leading-8 ${dark ? "text-slate-300" : "text-slate-600"}`}>{text}</p>
     </Reveal>
   );
 }
 
-function PremiumCollageCard({ item, onClick }) {
+function SwipeModal({ items, index, setIndex, onClose, mode = "gallery" }) {
+  const [touchStart, setTouchStart] = useState(null);
+  const item = items[index];
+  const isProcess = mode === "process";
+  const previous = () => setIndex((current) => (current === 0 ? items.length - 1 : current - 1));
+  const next = () => setIndex((current) => (current === items.length - 1 ? 0 : current + 1));
+
+  const onTouchEnd = (event) => {
+    if (touchStart === null) return;
+    const distance = touchStart - event.changedTouches[0].clientX;
+    if (distance > 45) next();
+    if (distance < -45) previous();
+    setTouchStart(null);
+  };
+
+  if (!item) return null;
+
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group relative aspect-square overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/5 p-2 text-left shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition duration-500 hover:z-20 hover:scale-105 hover:bg-white/10 hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 focus:ring-offset-[#070B18]"
-      aria-label={`Open ${item.title} gallery image`}
-    >
+    <div className="fixed inset-0 z-[100] bg-slate-950/90 p-3 backdrop-blur-xl sm:flex sm:items-center sm:justify-center sm:p-6">
+      <div className="relative mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem]">
+        <button type="button" onClick={onClose} className="absolute right-3 top-3 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950" aria-label="Close preview">×</button>
+        <div className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-[0.95fr_1.05fr]" onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
+          <div className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-white to-teal-50 md:sticky md:top-0">
+            <div className="aspect-[4/5] h-full w-full overflow-hidden">
+              <img src={item.image} alt={`${item.title} preview`} className="h-full w-full object-cover" />
+            </div>
+          </div>
+          <div className="flex flex-col justify-center p-5 sm:p-8 lg:p-10">
+            {isProcess && <div className="mb-4 inline-flex w-fit rounded-full bg-[#ff6f31] px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-white">Step {index + 1}</div>}
+            <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">{item.title}</h2>
+            {item.text && <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-lg sm:leading-8">{item.text}</p>}
+            <div className="mt-6 rounded-[1.35rem] bg-[#fff8f3] p-4 ring-1 ring-orange-100 sm:p-5">
+              <h3 className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">{isProcess ? "Process Preview" : "Gallery Preview"}</h3>
+              <p className="mt-3 text-sm leading-6 text-slate-600">Swipe left or right to view the next item.</p>
+            </div>
+            <div className="mt-5 flex items-center justify-between gap-3">
+              <button type="button" onClick={previous} className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-2xl font-bold text-white transition hover:bg-[#ff6f31]" aria-label="Previous">‹</button>
+              <div className="flex justify-center gap-2">
+                {items.map((dot, dotIndex) => <button key={dot.title} type="button" onClick={() => setIndex(dotIndex)} className={`h-2.5 rounded-full transition ${dotIndex === index ? "w-8 bg-[#16C1C1]" : "w-2.5 bg-slate-300 hover:bg-slate-400"}`} aria-label={`Open ${dot.title}`} />)}
+              </div>
+              <button type="button" onClick={next} className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-2xl font-bold text-white transition hover:bg-[#ff6f31]" aria-label="Next">›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProductModal({ product, onClose }) {
+  if (!product) return null;
+  return (
+    <div className="fixed inset-0 z-[100] bg-slate-950/90 p-3 backdrop-blur-xl sm:flex sm:items-center sm:justify-center sm:p-6">
+      <div className="relative mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem]">
+        <button type="button" onClick={onClose} className="absolute right-3 top-3 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950" aria-label="Close product preview">×</button>
+        <div className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-[0.95fr_1.05fr]">
+          <div className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-white to-teal-50 md:sticky md:top-0">
+            <div className="aspect-[4/5] h-full w-full overflow-hidden"><img src={product.image} alt={`${product.title} preview`} className="h-full w-full object-cover" /></div>
+          </div>
+          <div className="flex flex-col justify-center p-5 sm:p-8 lg:p-10">
+            <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">{product.title}</h2>
+            <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-lg sm:leading-8">{product.shortText}</p>
+            <div className="mt-4 flex flex-nowrap items-center gap-2 sm:mt-5 sm:flex-wrap">
+              {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-400 line-through ring-1 ring-slate-200 sm:px-4 sm:py-2 sm:text-sm">{product.oldPrice}</span>}
+              <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-4 py-2 text-sm font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 sm:px-5 sm:py-2.5 sm:text-base">{product.price}</span>
+            </div>
+            <div className="mt-5 rounded-[1.35rem] bg-[#fff8f3] p-4 ring-1 ring-orange-100 sm:mt-7 sm:rounded-[1.5rem] sm:p-5">
+              <h3 className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">Details</h3>
+              <ul className="mt-3 grid gap-2.5 sm:mt-4 sm:gap-3">
+                {product.details.map((detail) => <li key={detail} className="flex gap-3 text-sm leading-6 text-slate-600 sm:text-base"><span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#16C1C1]" /><span>{detail}</span></li>)}
+              </ul>
+            </div>
+            <a href="#contact" onClick={onClose} className="mt-5 inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:mt-6 sm:text-base">Start Your Miinii<ArrowIcon className="ml-2 h-5 w-5" /></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProductCard({ product, onClick }) {
+  return (
+    <button type="button" onClick={onClick} className="group relative h-full w-full overflow-hidden rounded-[1.5rem] border border-slate-100 bg-white p-3 text-left shadow-[0_16px_45px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:scale-[1.015] hover:shadow-[0_24px_65px_rgba(15,23,42,0.14)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 sm:rounded-[2rem] sm:p-5" aria-label={`Open ${product.title} product details`}>
+      <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-gradient-to-br from-orange-50/70 via-teal-50/40 to-white" />
+      <div className="relative mb-3 aspect-[4/5] overflow-hidden rounded-[1.1rem] bg-[#f8fafc] sm:mb-5 sm:rounded-[1.5rem]"><img src={product.image} alt={`${product.title} product sample`} className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.03]" /></div>
+      <h3 className="relative text-lg font-black tracking-tight text-slate-950 sm:text-2xl">{product.title}</h3>
+      <div className="relative mt-2 flex flex-nowrap items-center gap-1.5 sm:mt-3 sm:gap-2">
+        {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200 sm:px-3 sm:py-1.5 sm:text-sm">{product.oldPrice}</span>}
+        <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-2.5 py-1 text-[10px] font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 sm:px-4 sm:py-2 sm:text-sm">{product.price}</span>
+      </div>
+      <p className="relative mt-3 text-xs font-bold text-[#16C1C1] sm:text-sm">Tap to view details</p>
+    </button>
+  );
+}
+
+function ProcessCard({ step, index, onClick }) {
+  return (
+    <button type="button" onClick={onClick} className="group relative h-full w-full overflow-hidden rounded-[1.5rem] border border-slate-100 bg-[#fff8f3] p-3 text-left shadow-sm transition hover:-translate-y-2 hover:shadow-xl hover:shadow-orange-100/70 focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 sm:rounded-[2rem] sm:p-5" aria-label={`Open ${step.title} process details`}>
+      <div className="mb-3 aspect-[4/3] overflow-hidden rounded-[1.1rem] bg-transparent sm:mb-5 sm:rounded-[1.5rem]"><img src={step.image} alt={`${step.title} process image`} className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.04]" /></div>
+      <div className="mb-3 inline-flex rounded-full bg-[#ff6f31] px-3 py-1 text-[10px] font-black uppercase tracking-wider text-white shadow-sm shadow-orange-200 sm:text-xs">Step {index + 1}</div>
+      <h3 className="text-base font-black text-slate-950 sm:text-xl">{step.title}</h3>
+      <p className="mt-2 text-xs leading-5 text-slate-600 sm:mt-3 sm:text-sm sm:leading-6">{step.text}</p>
+      <p className="mt-3 text-xs font-bold text-[#16C1C1] sm:text-sm">Tap to preview</p>
+    </button>
+  );
+}
+
+function GalleryCard({ item, onClick }) {
+  return (
+    <button type="button" onClick={onClick} className="group relative aspect-square overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/5 p-2 text-left shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition duration-500 hover:z-20 hover:scale-105 hover:bg-white/10 hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 focus:ring-offset-[#070B18]" aria-label={`Open ${item.title} gallery image`}>
       <div className="pointer-events-none absolute inset-0 rounded-[1.75rem] bg-gradient-to-br from-white/10 via-transparent to-[#ff6f31]/10" />
       <div className="relative flex h-full flex-col overflow-hidden rounded-[1.2rem] bg-slate-900/80 backdrop-blur">
         <div className="absolute inset-0 bg-teal-400/10 opacity-0 transition duration-500 group-hover:opacity-100" />
         <div className="relative flex flex-1 items-center justify-center overflow-hidden p-4 sm:p-6">
-          <img src={item.image} alt={`${item.title} gallery placeholder`} className="absolute inset-0 h-full w-full object-cover opacity-0 transition duration-500 group-hover:scale-105" />
-          <div className="relative text-center">
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ff6f31]/15 text-[#ff9a6f] shadow-sm transition duration-500 group-hover:scale-110 sm:h-14 sm:w-14">
-              <IconPlaceholder className="h-6 w-6 sm:h-7 sm:w-7" />
-            </div>
-            <p className="text-sm font-bold text-white sm:text-base">{item.title}</p>
-            <p className="mt-1 text-xs text-slate-400 sm:text-sm">Tap to preview</p>
-          </div>
+          <div className="relative text-center"><div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#ff6f31]/15 text-[#ff9a6f] sm:h-14 sm:w-14"><IconPlaceholder className="h-6 w-6 sm:h-7 sm:w-7" /></div><p className="text-sm font-bold text-white sm:text-base">{item.title}</p><p className="mt-1 text-xs text-slate-400 sm:text-sm">Tap to preview</p></div>
         </div>
-        <div className="relative flex items-center justify-between border-t border-white/10 px-3 py-2.5 sm:px-4 sm:py-3">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">Miinii</span>
-          <span className="rounded-full bg-white/10 px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-slate-300">Open</span>
-        </div>
+        <div className="relative flex items-center justify-between border-t border-white/10 px-3 py-2.5 sm:px-4 sm:py-3"><span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">Miinii</span><span className="rounded-full bg-white/10 px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-slate-300">Open</span></div>
       </div>
     </button>
   );
 }
 
-function GalleryLightbox({ items, activeIndex, setActiveIndex, onClose }) {
-  const [touchStart, setTouchStart] = useState(null);
-  const activeItem = items[activeIndex];
-
-  const goPrevious = () => setActiveIndex((current) => (current === 0 ? items.length - 1 : current - 1));
-  const goNext = () => setActiveIndex((current) => (current === items.length - 1 ? 0 : current + 1));
-
-  const handleTouchEnd = (event) => {
-    if (touchStart === null) return;
-    const touchEnd = event.changedTouches[0].clientX;
-    const swipeDistance = touchStart - touchEnd;
-    if (swipeDistance > 45) goNext();
-    if (swipeDistance < -45) goPrevious();
-    setTouchStart(null);
-  };
-
-  if (!activeItem) return null;
-
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 px-4 py-6 backdrop-blur-xl">
-      <button type="button" onClick={onClose} className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl font-bold text-white backdrop-blur transition hover:bg-white/20" aria-label="Close gallery preview">×</button>
-      <button type="button" onClick={goPrevious} className="absolute left-3 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Previous gallery image">‹</button>
-
-      <div className="w-full max-w-4xl" onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={handleTouchEnd}>
-        <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/10 p-3 shadow-2xl shadow-black/40 sm:p-4">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-slate-900 sm:aspect-[16/10]">
-            <img src={activeItem.image} alt={`${activeItem.title} full preview`} className="h-full w-full object-contain" />
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/45 text-center backdrop-blur-sm">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#ff6f31]/15 text-[#ff9a6f]"><IconPlaceholder className="h-8 w-8" /></div>
-              <p className="text-xl font-black text-white">{activeItem.title}</p>
-              <p className="mt-1 text-sm text-slate-300">Replace with your image: {activeItem.image}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-4 flex items-center justify-between gap-3 text-white">
-          <button type="button" onClick={goPrevious} className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl font-bold backdrop-blur transition hover:bg-white/20 sm:hidden" aria-label="Previous gallery image">‹</button>
-          <div className="min-w-0 flex-1 text-center">
-            <h3 className="truncate text-lg font-black">{activeItem.title}</h3>
-            <p className="mt-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">{activeIndex + 1} / {items.length} · Swipe to view</p>
-          </div>
-          <button type="button" onClick={goNext} className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl font-bold backdrop-blur transition hover:bg-white/20 sm:hidden" aria-label="Next gallery image">›</button>
-        </div>
-
-        <div className="mt-4 flex justify-center gap-2">
-          {items.map((item, index) => (
-            <button key={item.title} type="button" onClick={() => setActiveIndex(index)} className={`h-2.5 rounded-full transition ${index === activeIndex ? "w-8 bg-[#16C1C1]" : "w-2.5 bg-white/30 hover:bg-white/50"}`} aria-label={`Open ${item.title}`} />
-          ))}
-        </div>
-      </div>
-
-      <button type="button" onClick={goNext} className="absolute right-3 top-1/2 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Next gallery image">›</button>
-    </div>
-  );
-}
-
-function ProductLightbox({ product, onClose }) {
-  if (!product) return null;
-
-  return (
-    <div className="fixed inset-0 z-[100] bg-slate-950/90 p-3 backdrop-blur-xl sm:flex sm:items-center sm:justify-center sm:p-6">
-      <div className="relative mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem]">
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute right-3 top-3 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950 sm:right-4 sm:top-4"
-          aria-label="Close product preview"
-        >
-          ×
-        </button>
-
-        <div className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-[0.95fr_1.05fr]">
-          <div className="relative min-h-[330px] overflow-hidden bg-gradient-to-br from-orange-50 via-white to-teal-50 sm:min-h-[420px] md:sticky md:top-0 md:h-full">
-            <img
-              src={product.image}
-              alt={`${product.title} full product preview`}
-              className="h-full min-h-[330px] w-full object-cover sm:min-h-[420px] md:min-h-full"
-            />
-          </div>
-
-          <div className="flex flex-col justify-center p-5 sm:p-8 lg:p-10">
-            <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">{product.title}</h2>
-            <p className="mt-3 text-sm leading-7 text-slate-600 sm:mt-4 sm:text-lg sm:leading-8">{product.shortText}</p>
-
-            <div className="mt-4 flex flex-nowrap items-center gap-2 sm:mt-5 sm:flex-wrap">
-              {product.oldPrice && (
-                <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-400 line-through ring-1 ring-slate-200 sm:px-4 sm:py-2 sm:text-sm">
-                  {product.oldPrice}
-                </span>
-              )}
-              <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-4 py-2 text-sm font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 sm:px-5 sm:py-2.5 sm:text-base">
-                {product.price}
-              </span>
-            </div>
-
-            <div className="mt-5 rounded-[1.35rem] bg-[#fff8f3] p-4 ring-1 ring-orange-100 sm:mt-7 sm:rounded-[1.5rem] sm:p-5">
-              <h3 className="text-xs font-black uppercase tracking-[0.16em] text-slate-400 sm:text-sm sm:tracking-[0.18em]">Details</h3>
-              <ul className="mt-3 grid gap-2.5 sm:mt-4 sm:gap-3">
-                {product.details.map((detail) => (
-                  <li key={detail} className="flex gap-3 text-sm leading-6 text-slate-600 sm:text-base">
-                    <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#16C1C1]" />
-                    <span>{detail}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <a
-              href="#contact"
-              onClick={onClose}
-              className="mt-5 inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:mt-6 sm:text-base"
-            >
-              Start Your Miinii
-              <ArrowIcon className="ml-2 h-5 w-5" />
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function App() {
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(null);
+  const [activeProcessIndex, setActiveProcessIndex] = useState(null);
   const [activeProduct, setActiveProduct] = useState(null);
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#fff8f3] text-slate-900 [scroll-behavior:smooth]">
       <style>{`
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(28px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes floatSoft {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-6px); }
-        }
-        @keyframes pulseSoft {
-          0%, 100% { transform: scale(1); opacity: .8; }
-          50% { transform: scale(1.08); opacity: 1; }
-        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes floatSoft { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        @keyframes pulseSoft { 0%, 100% { transform: scale(1); opacity: .8; } 50% { transform: scale(1.08); opacity: 1; } }
       `}</style>
 
       <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/60 bg-white/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
-          <a href="#home" className="flex items-center gap-2" aria-label="Go to Miinii home section">
-            <img src="/miinii-logo.png" alt="Miinii Logo" className="h-12 w-auto object-contain sm:h-10" />
-          </a>
-
+          <a href="#home" className="flex items-center gap-2" aria-label="Go to Miinii home section"><img src="/miinii-logo.png" alt="Miinii Logo" className="h-12 w-auto object-contain sm:h-10" /></a>
           <div className="hidden items-center gap-8 text-sm font-semibold text-slate-600 md:flex">
-            <a href="#process" className="transition hover:text-[#ff6f31]">Process</a>
-            <a href="#products" className="transition hover:text-[#ff6f31]">Products</a>
-            <a href="#gallery" className="transition hover:text-[#ff6f31]">Gallery</a>
-            <a href="#about" className="transition hover:text-[#ff6f31]">About Us</a>
-            <a href="#testimonials" className="transition hover:text-[#ff6f31]">Testimonials</a>
-            <a href="#faq" className="transition hover:text-[#ff6f31]">FAQ</a>
+            {["process", "products", "gallery", "about", "testimonials", "faq"].map((section) => <a key={section} href={`#${section}`} className="capitalize transition hover:text-[#ff6f31]">{section === "about" ? "About Us" : section}</a>)}
           </div>
-
-          <a href="#contact" className="rounded-full bg-slate-950 px-5 py-3 text-base font-bold text-white shadow-lg shadow-slate-300 transition hover:-translate-y-0.5 hover:bg-[#ff6f31] sm:px-5 sm:py-2.5 sm:text-sm">
-            Order Now
-          </a>
+          <a href="#contact" className="rounded-full bg-slate-950 px-5 py-3 text-base font-bold text-white shadow-lg shadow-slate-300 transition hover:-translate-y-0.5 hover:bg-[#ff6f31] sm:px-5 sm:py-2.5 sm:text-sm">Order Now</a>
         </div>
       </nav>
 
       <section id="home" className="relative pt-16 sm:pt-16 lg:pt-20">
         <div className="absolute -left-24 top-28 h-72 w-72 rounded-full bg-[#16C1C1]/20 blur-3xl animate-[pulseSoft_5s_ease-in-out_infinite]" />
         <div className="absolute -right-20 top-20 h-80 w-80 rounded-full bg-[#ff6f31]/20 blur-3xl animate-[pulseSoft_6s_ease-in-out_infinite]" />
-
         <div className="mx-auto grid max-w-7xl items-center gap-0 px-4 pb-8 pt-1 sm:gap-5 sm:px-6 sm:pb-6 sm:pt-1 md:pb-8 lg:grid-cols-2 lg:gap-8 lg:px-8">
-          <Reveal className="relative mx-auto -mt-3 w-[88%] max-w-[390px] sm:-mt-4 sm:w-full sm:max-w-lg lg:mx-0 lg:max-w-none [animation-delay:.08s]">
-            <div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]">
-              <div className="aspect-[4/5] min-h-[330px] sm:min-h-0">
-                <img src="/hero-image.png" alt="Miinii custom 3D mini figure" className="h-full w-full scale-105 object-contain sm:scale-100" />
-              </div>
-            </div>
-          </Reveal>
-
+          <Reveal className="relative mx-auto -mt-3 w-[88%] max-w-[390px] sm:-mt-4 sm:w-full sm:max-w-lg lg:mx-0 lg:max-w-none [animation-delay:.08s]"><div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]"><div className="aspect-[4/5] min-h-[330px] sm:min-h-0"><img src="/hero-image.png" alt="Miinii custom 3D mini figure" className="h-full w-full scale-105 object-contain sm:scale-100" /></div></div></Reveal>
           <div className="-mt-8 text-center sm:mt-0 lg:text-left">
-            <Reveal className="[animation-delay:.08s]">
-              <h1 className="text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">
-                Turn your photos into <span className="text-[#ff6f31]">custom 3D mini figures</span>.
-              </h1>
-            </Reveal>
-
-            <Reveal className="[animation-delay:.16s]">
-              <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-600 sm:text-lg lg:mx-0">
-                Miinii creates handcrafted 3D mini figures based on real people and pets. Each piece is carefully sculpted, resin printed, and hand-painted into a one-of-a-kind keepsake.
-              </p>
-            </Reveal>
-
-            <Reveal className="[animation-delay:.24s]">
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
-                <a href="#contact" className="group inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-8 py-[18px] text-lg font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:px-7 sm:py-4 sm:text-base">
-                  Start Your Miinii
-                  <ArrowIcon className="ml-2 h-5 w-5 transition group-hover:translate-x-1" />
-                </a>
-                <a href="#process" className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-8 py-[18px] text-lg font-black text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-[#16C1C1] sm:px-7 sm:py-4 sm:text-base">
-                  View Process
-                </a>
-              </div>
-            </Reveal>
+            <Reveal><h1 className="text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">Turn your photos into <span className="text-[#ff6f31]">custom 3D mini figures</span>.</h1></Reveal>
+            <Reveal><p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-600 lg:mx-0">Miinii creates handcrafted 3D mini figures based on real people and pets. Each piece is carefully sculpted, resin printed, and hand-painted into a one-of-a-kind keepsake.</p></Reveal>
+            <Reveal><div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start"><a href="#contact" className="group inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-8 py-[18px] text-lg font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:px-7 sm:py-4 sm:text-base">Start Your Miinii<ArrowIcon className="ml-2 h-5 w-5 transition group-hover:translate-x-1" /></a><a href="#process" className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-8 py-[18px] text-lg font-black text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-[#16C1C1] sm:px-7 sm:py-4 sm:text-base">View Process</a></div></Reveal>
           </div>
         </div>
       </section>
 
       <section id="process" className="bg-white py-10 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto mb-8 max-w-2xl text-center sm:mb-10">
-            <p className="mb-3 text-base font-bold uppercase tracking-[0.22em] text-[#16C1C1] sm:text-sm sm:tracking-[0.25em]">How it works</p>
-            <h2 className="text-4xl font-black tracking-tight text-slate-950 sm:text-4xl md:text-5xl">From photo to mini figure</h2>
-            <p className="mt-4 text-lg leading-8 text-slate-600">A simple production flow that turns your favorite people and pets into handcrafted 3D keepsakes.</p>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-            {processSteps.map((step, index) => (
-              <Reveal key={step.title} className={`[animation-delay:${index * 0.08}s]`}>
-                <article className="group relative h-full overflow-hidden rounded-[1.5rem] border border-slate-100 bg-[#fff8f3] p-3 shadow-sm transition hover:-translate-y-2 hover:shadow-xl hover:shadow-orange-100/70 sm:rounded-[2rem] sm:p-5">
-                  <div className="mb-3 aspect-[4/3] overflow-hidden rounded-[1.1rem] bg-transparent sm:mb-5 sm:rounded-[1.5rem]">
-                    <img src={step.image} alt={`${step.title} process image`} className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.04]" />
-                  </div>
-                  <div className="mb-3 inline-flex rounded-full bg-[#ff6f31] px-3 py-1 text-[10px] font-black uppercase tracking-wider text-white shadow-sm shadow-orange-200 sm:text-xs">Step {index + 1}</div>
-                  <h3 className="text-base font-black text-slate-950 sm:text-xl">{step.title}</h3>
-                  <p className="mt-2 text-xs leading-5 text-slate-600 sm:mt-3 sm:text-sm sm:leading-6">{step.text}</p>
-                </article>
-              </Reveal>
-            ))}
-          </div>
+          <SectionHeader eyebrow="How it works" title="From photo to mini figure" text="A simple production flow that turns your favorite people and pets into handcrafted 3D keepsakes." />
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{processSteps.map((step, index) => <Reveal key={step.title}><ProcessCard step={step} index={index} onClick={() => setActiveProcessIndex(index)} /></Reveal>)}</div>
         </div>
       </section>
 
       <section id="products" className="bg-white py-16 text-slate-950 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="What we make" title="Mini figures for every story" text="Choose the Miinii style that fits your gift, collection, or special memory." />
-
-          <div className="mx-auto grid grid-cols-2 gap-3 sm:max-w-none sm:gap-5 lg:grid-cols-4">
-            {products.map((product, index) => (
-              <Reveal key={product.title} className={`[animation-delay:${index * 0.08}s]`}>
-                <button
-                  type="button"
-                  onClick={() => setActiveProduct(product)}
-                  className="group relative h-full w-full overflow-hidden rounded-[1.5rem] border border-slate-100 bg-white p-3 text-left shadow-[0_16px_45px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:scale-[1.015] hover:shadow-[0_24px_65px_rgba(15,23,42,0.14)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 sm:rounded-[2rem] sm:p-5"
-                  aria-label={`Open ${product.title} product details`}
-                >
-                  <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-gradient-to-br from-orange-50/70 via-teal-50/40 to-white" />
-                  <div className="relative mb-3 aspect-[4/5] overflow-hidden rounded-[1.1rem] bg-[#f8fafc] p-0 sm:mb-5 sm:rounded-[1.5rem]">
-                    <img src={product.image} alt={`${product.title} product sample`} className="h-full w-full rounded-[1.5rem] object-contain transition duration-500 group-hover:scale-[1.03]" />
-                  </div>
-                  <h3 className="relative text-lg font-black tracking-tight text-slate-950 sm:text-2xl">{product.title}</h3>
-                  <div className="relative mt-2 flex flex-nowrap items-center gap-1.5 sm:mt-3 sm:gap-2">
-                    {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200 sm:px-3 sm:py-1.5 sm:text-sm">{product.oldPrice}</span>}
-                    <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-2.5 py-1 text-[10px] font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 sm:px-4 sm:py-2 sm:text-sm">{product.price}</span>
-                  </div>
-                  <p className="relative mt-3 text-xs font-bold text-[#16C1C1] sm:text-sm">Tap to view details</p>
-                </button>
-              </Reveal>
-            ))}
-          </div>
+          <div className="mx-auto grid grid-cols-2 gap-3 sm:max-w-none sm:gap-5 lg:grid-cols-4">{products.map((product) => <Reveal key={product.title}><ProductCard product={product} onClick={() => setActiveProduct(product)} /></Reveal>)}</div>
         </div>
       </section>
 
       <section id="gallery" className="bg-[#070B18] py-16 text-white sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="Gallery" title="Showcase your best Miinii photos" text="A premium collage-style section for product shots, packaging, client figures, and social proof." dark />
-          <Reveal>
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
-              {collageItems.map((item, index) => <PremiumCollageCard key={item.title} item={item} onClick={() => setActiveGalleryIndex(index)} />)}
-            </div>
-          </Reveal>
+          <Reveal><div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">{collageItems.map((item, index) => <GalleryCard key={item.title} item={item} onClick={() => setActiveGalleryIndex(index)} />)}</div></Reveal>
         </div>
       </section>
 
       <section id="about" className="relative overflow-hidden bg-white py-16 sm:py-24">
-        <div className="absolute left-0 top-10 h-64 w-64 rounded-full bg-[#16C1C1]/10 blur-3xl" />
-        <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#ff6f31]/10 blur-3xl" />
-        <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <Reveal>
-            <div className="overflow-hidden rounded-[2rem] border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
-              <div className="grid gap-0 md:grid-cols-[0.85fr_1.15fr]">
-                <div className="relative min-h-[320px] overflow-hidden bg-gradient-to-br from-slate-100 to-white p-4 sm:min-h-[380px]">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(22,193,193,0.18),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(255,111,49,0.16),transparent_35%)]" />
-                  <div className="relative h-full overflow-hidden rounded-[1.5rem] border border-white/70 bg-white shadow-inner">
-                    <img src="/about-portrait.png" alt="Miinii artist portrait placeholder" className="h-full w-full object-cover" />
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/75 text-center backdrop-blur-sm">
-                      <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ff6f31]/10 text-[#ff6f31]"><IconPlaceholder className="h-7 w-7" /></div>
-                      <p className="text-base font-black text-slate-950">Portrait Photo</p>
-                      <p className="mt-1 px-5 text-sm leading-6 text-slate-500">Replace with your photo: /about-portrait.png</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col justify-center p-6 sm:p-10 lg:p-12">
-                  <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">About us</p>
-                  <h2 className="text-4xl font-black tracking-tight text-slate-950 sm:text-5xl">Small figures, big memories.</h2>
-                  <p className="mt-5 text-lg leading-8 text-slate-600">Miinii creates custom 3D mini figures from your photos, crafted with digital sculpting, resin printing, and careful hand painting.</p>
-                  <p className="mt-4 text-base leading-7 text-slate-500">Every piece is made to feel personal, gift-ready, and display-worthy — whether it is for people, pets, milestones, or special requests.</p>
-                  <div className="mt-7 flex flex-wrap gap-2">
-                    {["Handmade", "Personal", "Gift-ready"].map((item) => <span key={item} className="rounded-full bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-slate-500 shadow-sm ring-1 ring-slate-100">{item}</span>)}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        </div>
+        <div className="absolute left-0 top-10 h-64 w-64 rounded-full bg-[#16C1C1]/10 blur-3xl" /><div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#ff6f31]/10 blur-3xl" />
+        <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8"><Reveal><div className="overflow-hidden rounded-[2rem] border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)]"><div className="grid gap-0 md:grid-cols-[0.85fr_1.15fr]">
+          <div className="relative min-h-[320px] overflow-hidden bg-gradient-to-br from-slate-100 to-white p-4 sm:min-h-[380px]"><div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(22,193,193,0.18),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(255,111,49,0.16),transparent_35%)]" /><div className="relative h-full overflow-hidden rounded-[1.5rem] border border-white/70 bg-white shadow-inner"><img src="/about-portrait.png" alt="Miinii artist portrait placeholder" className="h-full w-full object-cover" /><div className="absolute inset-0 flex flex-col items-center justify-center bg-white/75 text-center backdrop-blur-sm"><div className="mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#ff6f31]/10 text-[#ff6f31]"><IconPlaceholder className="h-7 w-7" /></div><p className="text-base font-black text-slate-950">Portrait Photo</p><p className="mt-1 px-5 text-sm leading-6 text-slate-500">Replace with your photo: /about-portrait.png</p></div></div></div>
+          <div className="flex flex-col justify-center p-6 sm:p-10 lg:p-12"><p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">About us</p><h2 className="text-4xl font-black tracking-tight text-slate-950 sm:text-5xl">Small figures, big memories.</h2><p className="mt-5 text-lg leading-8 text-slate-600">Miinii creates custom 3D mini figures from your photos, crafted with digital sculpting, resin printing, and careful hand painting.</p><p className="mt-4 text-base leading-7 text-slate-500">Every piece is made to feel personal, gift-ready, and display-worthy — whether it is for people, pets, milestones, or special requests.</p><div className="mt-7 flex flex-wrap gap-2">{["Handmade", "Personal", "Gift-ready"].map((item) => <span key={item} className="rounded-full bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-slate-500 shadow-sm ring-1 ring-slate-100">{item}</span>)}</div></div>
+        </div></div></Reveal></div>
       </section>
 
       <section id="testimonials" className="bg-[#fff8f3] py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto mb-8 max-w-2xl text-center">
-            <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">Testimonials</p>
-            <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Kind words from Miinii clients</h2>
-            <p className="mt-3 text-base leading-7 text-slate-600">Short notes from customers who turned their favorite moments into custom keepsakes.</p>
-          </Reveal>
-
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
-            {testimonials.map((testimonial, index) => (
-              <Reveal key={testimonial.name} className={`[animation-delay:${index * 0.05}s]`}>
-                <article className="group relative h-full overflow-hidden rounded-[1.35rem] border border-white/80 bg-white/85 p-4 shadow-sm backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-[#16C1C1]/30 hover:shadow-xl hover:shadow-orange-100/60 sm:p-5">
-                  <div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" />
-                  <div className="relative mb-4 flex gap-0.5 text-[#ff6f31]">{[...Array(5)].map((_, starIndex) => <StarIcon key={starIndex} className="h-3.5 w-3.5 fill-current" />)}</div>
-                  <p className="relative min-h-[72px] text-xs font-medium leading-6 text-slate-600 sm:min-h-[56px] sm:text-sm sm:leading-7">“{testimonial.text}”</p>
-                  <div className="relative mt-4 border-t border-slate-100 pt-4">
-                    <h3 className="text-xs font-black text-slate-950 sm:text-sm">{testimonial.name}</h3>
-                    <p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 sm:text-xs sm:tracking-[0.14em]">{testimonial.role}</p>
-                  </div>
-                </article>
-              </Reveal>
-            ))}
-          </div>
+          <Reveal className="mx-auto mb-8 max-w-2xl text-center"><p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">Testimonials</p><h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Kind words from Miinii clients</h2><p className="mt-3 text-base leading-7 text-slate-600">Short notes from customers who turned their favorite moments into custom keepsakes.</p></Reveal>
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">{testimonials.map((testimonial) => <Reveal key={testimonial.name}><article className="group relative h-full overflow-hidden rounded-[1.35rem] border border-white/80 bg-white/85 p-4 shadow-sm backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-[#16C1C1]/30 hover:shadow-xl hover:shadow-orange-100/60 sm:p-5"><div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" /><div className="relative mb-4 flex gap-0.5 text-[#ff6f31]">{[...Array(5)].map((_, i) => <StarIcon key={i} className="h-3.5 w-3.5" />)}</div><p className="relative min-h-[72px] text-xs font-medium leading-6 text-slate-600 sm:min-h-[56px] sm:text-sm sm:leading-7">“{testimonial.text}”</p><div className="relative mt-4 border-t border-slate-100 pt-4"><h3 className="text-xs font-black text-slate-950 sm:text-sm">{testimonial.name}</h3><p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 sm:text-xs sm:tracking-[0.14em]">{testimonial.role}</p></div></article></Reveal>)}</div>
         </div>
       </section>
 
       <section id="faq" className="py-16 sm:py-24">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader eyebrow="FAQ" title="Common questions" text="Here are simple answers your customers may want to know before placing an order." />
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            {faqs.map((faq, index) => (
-              <Reveal key={faq.q} className={`[animation-delay:${index * 0.08}s]`}>
-                <article className="h-full rounded-[1.5rem] bg-white p-4 shadow-lg shadow-orange-100/60 sm:rounded-3xl sm:p-6">
-                  <h3 className="text-sm font-black leading-5 text-slate-950 sm:text-lg">{faq.q}</h3>
-                  <p className="mt-2 text-xs leading-5 text-slate-600 sm:mt-3 sm:text-base sm:leading-7">{faq.a}</p>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        </div>
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8"><SectionHeader eyebrow="FAQ" title="Common questions" text="Here are simple answers your customers may want to know before placing an order." /><div className="grid grid-cols-2 gap-3 sm:gap-4">{faqs.map((faq) => <Reveal key={faq.q}><article className="h-full rounded-[1.5rem] bg-white p-4 shadow-lg shadow-orange-100/60 sm:rounded-3xl sm:p-6"><h3 className="text-sm font-black leading-5 text-slate-950 sm:text-lg">{faq.q}</h3><p className="mt-2 text-xs leading-5 text-slate-600 sm:mt-3 sm:text-base sm:leading-7">{faq.a}</p></article></Reveal>)}</div></div>
       </section>
 
-      <section id="contact" className="px-4 pb-8 sm:px-6 lg:px-8">
-        <Reveal>
-          <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#ff6f31] to-[#16C1C1] p-6 text-center shadow-2xl shadow-orange-200 sm:p-10 lg:p-16">
-            <div className="mx-auto max-w-3xl">
-              <h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl">Ready to create your own Miinii?</h2>
-              <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/90 sm:text-lg">Send your reference photos and let’s turn your favorite person, pet, or memory into a custom 3D mini figure.</p>
-              <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                <a href="https://instagram.com/MiiniiStudios" className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-6 py-4 text-lg font-black text-white backdrop-blur transition hover:-translate-y-1 hover:bg-white/20 sm:text-base"><SocialIcon type="message" className="mr-2 h-5 w-5" />Message Us</a>
-                <a href="https://www.facebook.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-lg font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:text-base"><SocialIcon type="facebook" className="mr-2 h-5 w-5" />Facebook</a>
-                <a href="https://www.tiktok.com/@miiniistudios" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-lg font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:text-base"><SocialIcon type="tiktok" className="mr-2 h-5 w-5" />TikTok</a>
-                <a href="https://instagram.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-lg font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:text-base"><SocialIcon type="instagram" className="mr-2 h-5 w-5" />Instagram</a>
-              </div>
-              <div className="mt-8 text-center text-sm leading-7 text-white/90 sm:text-base">
-                <p>miinii.ariel@gmail.com</p>
-                <p>Meycauayan City of Bulacan, Philippines</p>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </section>
+      <section id="contact" className="px-4 pb-8 sm:px-6 lg:px-8"><Reveal><div className="mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#ff6f31] to-[#16C1C1] p-6 text-center shadow-2xl shadow-orange-200 sm:p-10 lg:p-16"><div className="mx-auto max-w-3xl"><h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl">Ready to create your own Miinii?</h2><p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/90">Send your reference photos and let’s turn your favorite person, pet, or memory into a custom 3D mini figure.</p><div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"><a href="https://instagram.com/MiiniiStudios" className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-6 py-4 text-lg font-black text-white backdrop-blur transition hover:-translate-y-1 hover:bg-white/20 sm:text-base"><SocialIcon type="message" className="mr-2 h-5 w-5" />Message Us</a><a href="https://www.facebook.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-lg font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:text-base"><SocialIcon type="facebook" className="mr-2 h-5 w-5" />Facebook</a><a href="https://www.tiktok.com/@miiniistudios" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-lg font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:text-base"><SocialIcon type="tiktok" className="mr-2 h-5 w-5" />TikTok</a><a href="https://instagram.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-lg font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:text-base"><SocialIcon type="instagram" className="mr-2 h-5 w-5" />Instagram</a></div><div className="mt-8 text-center text-sm leading-7 text-white/90 sm:text-base"><p>miinii.ariel@gmail.com</p><p>Meycauayan City of Bulacan, Philippines</p></div></div></div></Reveal></section>
 
-      <footer className="px-4 py-4 text-center text-sm font-medium text-slate-500 sm:px-6 lg:px-8">
-        <p>© 2026 Miinii. MiiniiStudios. 3D custom mini figures. All rights reserved.</p>
-      </footer>
+      <footer className="px-4 py-4 text-center text-sm font-medium text-slate-500 sm:px-6 lg:px-8"><p>© 2026 Miinii. MiiniiStudios. 3D custom mini figures. All rights reserved.</p></footer>
 
-      {activeProduct && <ProductLightbox product={activeProduct} onClose={() => setActiveProduct(null)} />}
-      {activeGalleryIndex !== null && <GalleryLightbox items={collageItems} activeIndex={activeGalleryIndex} setActiveIndex={setActiveGalleryIndex} onClose={() => setActiveGalleryIndex(null)} />}
+      {activeProcessIndex !== null && <SwipeModal items={processSteps} index={activeProcessIndex} setIndex={setActiveProcessIndex} onClose={() => setActiveProcessIndex(null)} mode="process" />}
+      {activeGalleryIndex !== null && <SwipeModal items={collageItems} index={activeGalleryIndex} setIndex={setActiveGalleryIndex} onClose={() => setActiveGalleryIndex(null)} />}
+      {activeProduct && <ProductModal product={activeProduct} onClose={() => setActiveProduct(null)} />}
     </main>
   );
 }
