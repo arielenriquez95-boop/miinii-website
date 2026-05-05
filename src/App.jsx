@@ -115,10 +115,9 @@ function SectionHeader({ eyebrow, title, text, dark = false }) {
   );
 }
 
-function SwipeModal({ items, index, setIndex, onClose, mode = "gallery" }) {
+function GalleryModal({ items, index, setIndex, onClose }) {
   const [touchStart, setTouchStart] = useState(null);
   const item = items[index];
-  const isProcess = mode === "process";
   const previous = () => setIndex((current) => (current === 0 ? items.length - 1 : current - 1));
   const next = () => setIndex((current) => (current === items.length - 1 ? 0 : current + 1));
 
@@ -133,33 +132,22 @@ function SwipeModal({ items, index, setIndex, onClose, mode = "gallery" }) {
   if (!item) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-slate-950/90 p-3 backdrop-blur-xl sm:flex sm:items-center sm:justify-center sm:p-6">
-      <div className="relative mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem]">
-        <button type="button" onClick={onClose} className="absolute right-3 top-3 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950" aria-label="Close preview">×</button>
-        <div className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-[0.95fr_1.05fr]" onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
-          <div className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-white to-teal-50 md:sticky md:top-0">
-            <div className="aspect-[4/5] h-full w-full overflow-hidden">
-              <img src={item.image} alt={`${item.title} preview`} className="h-full w-full object-cover" />
-            </div>
-          </div>
-          <div className="flex flex-col justify-center p-5 sm:p-8 lg:p-10">
-            {isProcess && <div className="mb-4 inline-flex w-fit rounded-full bg-[#ff6f31] px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-white">Step {index + 1}</div>}
-            <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">{item.title}</h2>
-            {item.text && <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-lg sm:leading-8">{item.text}</p>}
-            <div className="mt-6 rounded-[1.35rem] bg-[#fff8f3] p-4 ring-1 ring-orange-100 sm:p-5">
-              <h3 className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">{isProcess ? "Process Preview" : "Gallery Preview"}</h3>
-              <p className="mt-3 text-sm leading-6 text-slate-600">Swipe left or right to view the next item.</p>
-            </div>
-            <div className="mt-5 flex items-center justify-between gap-3">
-              <button type="button" onClick={previous} className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-2xl font-bold text-white transition hover:bg-[#ff6f31]" aria-label="Previous">‹</button>
-              <div className="flex justify-center gap-2">
-                {items.map((dot, dotIndex) => <button key={dot.title} type="button" onClick={() => setIndex(dotIndex)} className={`h-2.5 rounded-full transition ${dotIndex === index ? "w-8 bg-[#16C1C1]" : "w-2.5 bg-slate-300 hover:bg-slate-400"}`} aria-label={`Open ${dot.title}`} />)}
-              </div>
-              <button type="button" onClick={next} className="flex h-11 w-11 items-center justify-center rounded-full bg-slate-950 text-2xl font-bold text-white transition hover:bg-[#ff6f31]" aria-label="Next">›</button>
-            </div>
-          </div>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/95 p-3 backdrop-blur-xl sm:p-6">
+      <button type="button" onClick={onClose} className="absolute right-4 top-4 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-white/25" aria-label="Close gallery preview">×</button>
+      <button type="button" onClick={previous} className="absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Previous gallery image">‹</button>
+
+      <div className="w-full max-w-5xl" onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
+        <div className="relative mx-auto aspect-[4/5] max-h-[82vh] overflow-hidden rounded-[1.5rem] bg-slate-900 shadow-2xl shadow-black/40 sm:aspect-[16/10]">
+          <img src={item.image} alt={`${item.title} full preview`} className="h-full w-full object-contain" />
+        </div>
+        <div className="mt-4 flex items-center justify-center gap-2">
+          {items.map((dot, dotIndex) => <button key={dot.title} type="button" onClick={() => setIndex(dotIndex)} className={`h-2.5 rounded-full transition ${dotIndex === index ? "w-8 bg-[#16C1C1]" : "w-2.5 bg-white/30 hover:bg-white/50"}`} aria-label={`Open ${dot.title}`} />)}
         </div>
       </div>
+
+      <button type="button" onClick={next} className="absolute right-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Next gallery image">›</button>
+      <button type="button" onClick={previous} className="absolute bottom-5 left-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:hidden" aria-label="Previous gallery image">‹</button>
+      <button type="button" onClick={next} className="absolute bottom-5 right-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:hidden" aria-label="Next gallery image">›</button>
     </div>
   );
 }
@@ -171,8 +159,14 @@ function ProductModal({ product, onClose }) {
       <div className="relative mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem]">
         <button type="button" onClick={onClose} className="absolute right-3 top-3 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950" aria-label="Close product preview">×</button>
         <div className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-[0.95fr_1.05fr]">
-          <div className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-white to-teal-50 md:sticky md:top-0">
-            <div className="aspect-[4/5] h-full w-full overflow-hidden"><img src={product.image} alt={`${product.title} preview`} className="h-full w-full object-cover" /></div>
+          <div className="relative flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-teal-50 p-4 md:sticky md:top-0 sm:p-6">
+            <div className="aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-[1.25rem] shadow-inner">
+              <img
+                src={product.image}
+                alt={`${product.title} preview`}
+                className="h-full w-full object-cover"
+              />
+            </div>
           </div>
           <div className="flex flex-col justify-center p-5 sm:p-8 lg:p-10">
             <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">{product.title}</h2>
@@ -210,15 +204,14 @@ function ProductCard({ product, onClick }) {
   );
 }
 
-function ProcessCard({ step, index, onClick }) {
+function ProcessCard({ step, index }) {
   return (
-    <button type="button" onClick={onClick} className="group relative h-full w-full overflow-hidden rounded-[1.5rem] border border-slate-100 bg-[#fff8f3] p-3 text-left shadow-sm transition hover:-translate-y-2 hover:shadow-xl hover:shadow-orange-100/70 focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 sm:rounded-[2rem] sm:p-5" aria-label={`Open ${step.title} process details`}>
+    <article className="group relative h-full w-full overflow-hidden rounded-[1.5rem] border border-slate-100 bg-[#fff8f3] p-3 text-left shadow-sm transition hover:-translate-y-2 hover:shadow-xl hover:shadow-orange-100/70 sm:rounded-[2rem] sm:p-5">
       <div className="mb-3 aspect-[4/3] overflow-hidden rounded-[1.1rem] bg-transparent sm:mb-5 sm:rounded-[1.5rem]"><img src={step.image} alt={`${step.title} process image`} className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.04]" /></div>
       <div className="mb-3 inline-flex rounded-full bg-[#ff6f31] px-3 py-1 text-[10px] font-black uppercase tracking-wider text-white shadow-sm shadow-orange-200 sm:text-xs">Step {index + 1}</div>
       <h3 className="text-base font-black text-slate-950 sm:text-xl">{step.title}</h3>
       <p className="mt-2 text-xs leading-5 text-slate-600 sm:mt-3 sm:text-sm sm:leading-6">{step.text}</p>
-      <p className="mt-3 text-xs font-bold text-[#16C1C1] sm:text-sm">Tap to preview</p>
-    </button>
+    </article>
   );
 }
 
@@ -239,7 +232,6 @@ function GalleryCard({ item, onClick }) {
 
 export default function App() {
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(null);
-  const [activeProcessIndex, setActiveProcessIndex] = useState(null);
   const [activeProduct, setActiveProduct] = useState(null);
 
   return (
@@ -276,7 +268,7 @@ export default function App() {
       <section id="process" className="bg-white py-10 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="How it works" title="From photo to mini figure" text="A simple production flow that turns your favorite people and pets into handcrafted 3D keepsakes." />
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{processSteps.map((step, index) => <Reveal key={step.title}><ProcessCard step={step} index={index} onClick={() => setActiveProcessIndex(index)} /></Reveal>)}</div>
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{processSteps.map((step, index) => <Reveal key={step.title}><ProcessCard step={step} index={index} /></Reveal>)}</div>
         </div>
       </section>
 
@@ -317,8 +309,7 @@ export default function App() {
 
       <footer className="px-4 py-4 text-center text-sm font-medium text-slate-500 sm:px-6 lg:px-8"><p>© 2026 Miinii. MiiniiStudios. 3D custom mini figures. All rights reserved.</p></footer>
 
-      {activeProcessIndex !== null && <SwipeModal items={processSteps} index={activeProcessIndex} setIndex={setActiveProcessIndex} onClose={() => setActiveProcessIndex(null)} mode="process" />}
-      {activeGalleryIndex !== null && <SwipeModal items={collageItems} index={activeGalleryIndex} setIndex={setActiveGalleryIndex} onClose={() => setActiveGalleryIndex(null)} />}
+      {activeGalleryIndex !== null && <GalleryModal items={collageItems} index={activeGalleryIndex} setIndex={setActiveGalleryIndex} onClose={() => setActiveGalleryIndex(null)} />}
       {activeProduct && <ProductModal product={activeProduct} onClose={() => setActiveProduct(null)} />}
     </main>
   );
