@@ -271,29 +271,50 @@ function ProductLightbox({ product, onClose }) {
   if (!product) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-slate-950/90 px-4 py-6 backdrop-blur-xl">
-      <button type="button" onClick={onClose} className="fixed right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl font-bold text-white backdrop-blur transition hover:bg-white/20" aria-label="Close product preview">×</button>
+    <div className="fixed inset-0 z-[100] bg-slate-950/90 p-3 backdrop-blur-xl sm:flex sm:items-center sm:justify-center sm:p-6">
+      <button
+        type="button"
+        onClick={onClose}
+        className="fixed right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-white/25 sm:h-11 sm:w-11"
+        aria-label="Close product preview"
+      >
+        ×
+      </button>
 
-      <div className="w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/10 bg-white shadow-2xl shadow-black/40">
-        <div className="grid md:grid-cols-[0.95fr_1.05fr]">
-          <div className="relative min-h-[330px] bg-gradient-to-br from-orange-50 via-white to-teal-50 p-5 sm:min-h-[420px] sm:p-8">
-            <div className="absolute left-5 top-5 rounded-full bg-slate-950 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-white">Miinii Collection</div>
-            <img src={product.image} alt={`${product.title} full product preview`} className="h-full min-h-[300px] w-full object-contain" />
+      <div className="mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem]">
+        <div className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-[0.95fr_1.05fr]">
+          <div className="relative min-h-[300px] bg-gradient-to-br from-orange-50 via-white to-teal-50 p-4 sm:min-h-[420px] sm:p-8 md:sticky md:top-0 md:h-full">
+            <div className="absolute left-4 top-4 rounded-full bg-slate-950 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-white sm:left-5 sm:top-5 sm:px-4 sm:py-2 sm:text-xs sm:tracking-[0.18em]">
+              Miinii Collection
+            </div>
+            <img
+              src={product.image}
+              alt={`${product.title} full product preview`}
+              className="h-full min-h-[270px] w-full object-contain pt-8 sm:min-h-[360px] sm:pt-10"
+            />
           </div>
 
-          <div className="flex flex-col justify-center p-6 sm:p-10">
-            <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">What we make</p>
-            <h2 className="text-4xl font-black tracking-tight text-slate-950 sm:text-5xl">{product.title}</h2>
-            <p className="mt-4 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">{product.shortText}</p>
+          <div className="flex flex-col justify-center p-5 sm:p-8 lg:p-10">
+            <p className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-[#16C1C1] sm:mb-3 sm:text-sm sm:tracking-[0.25em]">
+              What we make
+            </p>
+            <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">{product.title}</h2>
+            <p className="mt-3 text-sm leading-7 text-slate-600 sm:mt-4 sm:text-lg sm:leading-8">{product.shortText}</p>
 
-            <div className="mt-5 flex flex-wrap items-center gap-2">
-              {product.oldPrice && <span className="rounded-full bg-slate-100 px-4 py-2 text-sm font-bold text-slate-400 line-through ring-1 ring-slate-200">{product.oldPrice}</span>}
-              <span className="rounded-full bg-[#ff6f31]/15 px-5 py-2.5 text-base font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">{product.price}</span>
+            <div className="mt-4 flex flex-nowrap items-center gap-2 sm:mt-5 sm:flex-wrap">
+              {product.oldPrice && (
+                <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-400 line-through ring-1 ring-slate-200 sm:px-4 sm:py-2 sm:text-sm">
+                  {product.oldPrice}
+                </span>
+              )}
+              <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-4 py-2 text-sm font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 sm:px-5 sm:py-2.5 sm:text-base">
+                {product.price}
+              </span>
             </div>
 
-            <div className="mt-7 rounded-[1.5rem] bg-[#fff8f3] p-5 ring-1 ring-orange-100">
-              <h3 className="text-sm font-black uppercase tracking-[0.18em] text-slate-400">Details</h3>
-              <ul className="mt-4 grid gap-3">
+            <div className="mt-5 rounded-[1.35rem] bg-[#fff8f3] p-4 ring-1 ring-orange-100 sm:mt-7 sm:rounded-[1.5rem] sm:p-5">
+              <h3 className="text-xs font-black uppercase tracking-[0.16em] text-slate-400 sm:text-sm sm:tracking-[0.18em]">Details</h3>
+              <ul className="mt-3 grid gap-2.5 sm:mt-4 sm:gap-3">
                 {product.details.map((detail) => (
                   <li key={detail} className="flex gap-3 text-sm leading-6 text-slate-600 sm:text-base">
                     <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#16C1C1]" />
@@ -303,7 +324,11 @@ function ProductLightbox({ product, onClose }) {
               </ul>
             </div>
 
-            <a href="#contact" onClick={onClose} className="mt-6 inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-base font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20]">
+            <a
+              href="#contact"
+              onClick={onClose}
+              className="mt-5 inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:mt-6 sm:text-base"
+            >
               Start Your Miinii
               <ArrowIcon className="ml-2 h-5 w-5" />
             </a>
