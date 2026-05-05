@@ -346,6 +346,8 @@ export default function App() {
             <a href="#process" className="transition hover:text-[#ff6f31]">Process</a>
             <a href="#products" className="transition hover:text-[#ff6f31]">Products</a>
             <a href="#gallery" className="transition hover:text-[#ff6f31]">Gallery</a>
+            <a href="#about" className="transition hover:text-[#ff6f31]">About Us</a>
+            <a href="#testimonials" className="transition hover:text-[#ff6f31]">Testimonials</a>
             <a href="#faq" className="transition hover:text-[#ff6f31]">FAQ</a>
           </div>
 
@@ -424,11 +426,11 @@ export default function App() {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             {processSteps.map((step, index) => (
               <Reveal key={step.title} className={`[animation-delay:${index * 0.08}s]`}>
-                <article className="group relative h-full overflow-hidden rounded-[2rem] border border-slate-100 bg-[#fff8f3] p-4 shadow-sm transition hover:-translate-y-2 hover:shadow-xl hover:shadow-orange-100/70 sm:p-5">
-                  <div className="mb-5 aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-transparent">
+                <article className="group relative h-full overflow-hidden rounded-[1.5rem] border border-slate-100 bg-[#fff8f3] p-3 shadow-sm transition hover:-translate-y-2 hover:shadow-xl hover:shadow-orange-100/70 sm:rounded-[2rem] sm:p-5">
+                  <div className="mb-3 aspect-[4/3] overflow-hidden rounded-[1.1rem] bg-transparent sm:mb-5 sm:rounded-[1.5rem]">
                     <img
                       src={step.image}
                       alt={`${step.title} process image`}
@@ -438,8 +440,8 @@ export default function App() {
                   <div className="mb-3 inline-flex rounded-full bg-[#ff6f31] px-3 py-1 text-xs font-black uppercase tracking-wider text-white shadow-sm shadow-orange-200">
                     Step {index + 1}
                   </div>
-                  <h3 className="text-2xl font-black text-slate-950 sm:text-xl">{step.title}</h3>
-                  <p className="mt-3 text-base leading-7 text-slate-600 sm:text-sm sm:leading-6">{step.text}</p>
+                  <h3 className="text-base font-black text-slate-950 sm:text-xl">{step.title}</h3>
+                  <p className="mt-2 text-xs leading-5 text-slate-600 sm:mt-3 sm:text-sm sm:leading-6">{step.text}</p>
                 </article>
               </Reveal>
             ))}
@@ -455,12 +457,12 @@ export default function App() {
             text="Choose the Miinii style that fits your gift, collection, or special memory."
           />
 
-          <div className="mx-auto grid max-w-sm gap-5 sm:max-w-none sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mx-auto grid grid-cols-2 gap-3 sm:max-w-none sm:gap-5 lg:grid-cols-4">
             {products.map((product, index) => (
               <Reveal key={product.title} className={`[animation-delay:${index * 0.08}s]`}>
-                <article className="group relative h-full overflow-hidden rounded-[2rem] border border-slate-100 bg-white p-4 shadow-[0_16px_45px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:scale-[1.015] hover:shadow-[0_24px_65px_rgba(15,23,42,0.14)] sm:p-5">
+                <article className="group relative h-full overflow-hidden rounded-[1.5rem] border border-slate-100 bg-white p-3 shadow-[0_16px_45px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:scale-[1.015] hover:shadow-[0_24px_65px_rgba(15,23,42,0.14)] sm:rounded-[2rem] sm:p-5">
                   <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-gradient-to-br from-orange-50/70 via-teal-50/40 to-white" />
-                  <div className="relative mb-5 aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#f8fafc] p-0">
+                  <div className="relative mb-3 aspect-[4/5] overflow-hidden rounded-[1.1rem] bg-[#f8fafc] p-0 sm:mb-5 sm:rounded-[1.5rem]">
                     <img
                       src={product.image}
                       alt={`${product.title} product sample`}
@@ -472,14 +474,14 @@ export default function App() {
                       Miinii Collection
                     </span>
                   </div>
-                  <h3 className="relative text-3xl font-black tracking-tight text-slate-950 sm:text-2xl">{product.title}</h3>
-                  <div className="relative mt-3 flex flex-wrap items-center gap-2">
+                  <h3 className="relative text-lg font-black tracking-tight text-slate-950 sm:text-2xl">{product.title}</h3>
+                  <div className="relative mt-2 flex flex-wrap items-center gap-1.5 sm:mt-3 sm:gap-2">
                     {product.oldPrice && (
-                      <span className="rounded-full bg-slate-100 px-3 py-1.5 text-sm font-bold text-slate-400 line-through ring-1 ring-slate-200">
+                      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-400 line-through ring-1 ring-slate-200 sm:px-3 sm:py-1.5 sm:text-sm">
                         {product.oldPrice}
                       </span>
                     )}
-                    <span className="rounded-full bg-[#ff6f31]/15 px-4 py-2 text-sm font-black text-[#ff9a6f] ring-1 ring-[#ff6f31]/20">
+                    <span className="rounded-full bg-[#ff6f31]/15 px-3 py-1.5 text-xs font-black text-[#ff9a6f] ring-1 ring-[#ff6f31]/20 sm:px-4 sm:py-2 sm:text-sm">
                       {product.price}
                     </span>
                   </div>
@@ -606,12 +608,12 @@ export default function App() {
             text="Here are simple answers your customers may want to know before placing an order."
           />
 
-          <div className="grid gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
             {faqs.map((faq, index) => (
               <Reveal key={faq.q} className={`[animation-delay:${index * 0.08}s]`}>
-                <article className="rounded-3xl bg-white p-6 shadow-lg shadow-orange-100/60">
-                  <h3 className="text-xl font-black text-slate-950 sm:text-lg">{faq.q}</h3>
-                  <p className="mt-3 text-base leading-8 text-slate-600 sm:leading-7">{faq.a}</p>
+                <article className="h-full rounded-[1.5rem] bg-white p-4 shadow-lg shadow-orange-100/60 sm:rounded-3xl sm:p-6">
+                  <h3 className="text-sm font-black leading-5 text-slate-950 sm:text-lg">{faq.q}</h3>
+                  <p className="mt-2 text-xs leading-5 text-slate-600 sm:mt-3 sm:text-base sm:leading-7">{faq.a}</p>
                 </article>
               </Reveal>
             ))}
