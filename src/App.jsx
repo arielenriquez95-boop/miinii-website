@@ -225,16 +225,10 @@ function GalleryCard({ item, onClick }) {
     >
       <img
         src={item.image}
-        alt={`${item.title} placeholder`}
+        alt={`${item.title} gallery image`}
         className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
       />
-      <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/45 text-center opacity-100 backdrop-blur-sm transition duration-500 group-hover:bg-slate-950/30">
-        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 text-white shadow-sm sm:h-14 sm:w-14">
-          <IconPlaceholder className="h-6 w-6 sm:h-7 sm:w-7" />
-        </div>
-        <p className="text-sm font-black text-white sm:text-base">{item.image.replace('/', '')}</p>
-        <p className="mt-1 text-xs font-medium text-slate-200 sm:text-sm">Square PNG placeholder</p>
-      </div>
+      <div className="pointer-events-none absolute inset-0 bg-slate-950/0 transition duration-500 group-hover:bg-slate-950/15" />
     </button>
   );
 }
