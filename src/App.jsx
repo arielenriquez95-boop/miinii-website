@@ -401,13 +401,11 @@ export default function App() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="What we make" title="Mini figures for every story" text="Choose the Miinii style that fits your gift, collection, or special memory." />
           <div className="relative">
-            {canScrollLeft && <button type="button" onClick={() => scrollProducts("previous")} className="absolute left-1 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/60 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#f05f20] sm:flex" aria-label="Scroll products left"><span className="flex h-full w-full items-center justify-center pb-1 text-3xl font-black leading-none">‹</span></button>}
-            {canScrollRight && <button type="button" onClick={() => scrollProducts("next")} className="absolute right-1 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/60 backdrop-blur transition hover:translate-x-0.5 hover:bg-[#f05f20] sm:flex" aria-label="Scroll products right"><span className="flex h-full w-full items-center justify-center pb-1 text-3xl font-black leading-none">›</span></button>}
+            {canScrollLeft && <button type="button" onClick={() => scrollProducts("previous")} className="absolute left-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#f05f20] sm:left-1 sm:h-12 sm:w-12" aria-label="Scroll products left"><span className="flex h-full w-full items-center justify-center pb-0.5 text-2xl font-black leading-none sm:pb-1 sm:text-3xl">‹</span></button>}
+            {canScrollRight && <button type="button" onClick={() => scrollProducts("next")} className="absolute right-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:translate-x-0.5 hover:bg-[#f05f20] sm:right-1 sm:h-12 sm:w-12" aria-label="Scroll products right"><span className="flex h-full w-full items-center justify-center pb-0.5 text-2xl font-black leading-none sm:pb-1 sm:text-3xl">›</span></button>}
 
-            <div className="pointer-events-none absolute bottom-5 left-0 top-5 z-10 hidden w-16 bg-gradient-to-r from-white to-transparent sm:block" />
-            <div className="pointer-events-none absolute bottom-5 right-0 top-5 z-10 hidden w-16 bg-gradient-to-l from-white to-transparent sm:block" />
 
-            <div ref={productsScrollRef} className="-mx-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 py-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-10 sm:py-6 lg:-mx-8 lg:px-12 [&::-webkit-scrollbar]:hidden">
+            <div ref={productsScrollRef} className="-mx-4 overflow-x-auto overscroll-x-contain scroll-smooth px-8 py-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-10 sm:py-6 lg:-mx-8 lg:px-12 [&::-webkit-scrollbar]:hidden">
               <div className="flex w-max snap-x snap-mandatory gap-4 pr-4 sm:gap-5 sm:pr-6 lg:pr-8">
                 {products.map((product, index) => (
                   <Reveal key={product.title} className="w-[72vw] max-w-[255px] shrink-0 snap-start p-1 sm:w-[260px] sm:max-w-[260px] lg:w-[285px] lg:max-w-[285px]">
@@ -415,11 +413,6 @@ export default function App() {
                   </Reveal>
                 ))}
               </div>
-            </div>
-
-            <div className="mt-2 flex items-center justify-center gap-3 sm:hidden">
-              <button type="button" onClick={() => scrollProducts("previous")} className="flex h-10 w-14 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-black text-white shadow-lg shadow-orange-300/60 ring-1 ring-white/60 transition hover:bg-[#f05f20]" aria-label="Scroll products left">‹</button>
-              <button type="button" onClick={() => scrollProducts("next")} className="flex h-10 w-14 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-black text-white shadow-lg shadow-orange-300/60 ring-1 ring-white/60 transition hover:bg-[#f05f20]" aria-label="Scroll products right">›</button>
             </div>
           </div>
         </div>
