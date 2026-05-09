@@ -17,6 +17,14 @@ const products = [
     details: ["Available in Solo 4\" and Duo 4\"", "Final price may vary depending on details", "Comes with Personalized Miinii Pop! Box", "Estimated production: 2–3 weeks"],
   },
   {
+    title: "Miinii Rono",
+    image: "/miinii-rono.png",
+    oldPrice: "₱3,990",
+    price: "₱2,990+",
+    shortText: "Hirono-inspired custom mini figure with a cute collectible style.",
+    details: ["Available in 4\" and 5\"", "Final price may vary depending on details", "Estimated production: 2–3 weeks"],
+  },
+  {
     title: "Miinii Me",
     image: "/miinii-me.png",
     oldPrice: "₱4,490",
@@ -31,14 +39,6 @@ const products = [
     price: "₱3,490+",
     shortText: "A custom pet keepsake made for fur parents and animal lovers.",
     details: ["Available in 2\" and 3\", and ref magnets", "Final price may vary depending on details", "Estimated production: 2–4 weeks"],
-  },
-  {
-    title: "Miinii Rono",
-    image: "/miinii-rono.png",
-    oldPrice: "₱3,990",
-    price: "₱2,990+",
-    shortText: "Hirono-inspired custom mini figure with a cute collectible style.",
-    details: ["Available in 4\" and 5\"", "Final price may vary depending on details", "Estimated production: 2–3 weeks"],
   },
   {
     title: "Miinii Mini",
@@ -229,15 +229,15 @@ function ProductModal({ products, index, setIndex, onClose }) {
 
 function ProductCard({ product, onClick }) {
   return (
-    <button type="button" onClick={onClick} className="group relative h-full w-full overflow-hidden rounded-[1.5rem] border border-slate-100 bg-white p-3 text-left shadow-[0_16px_45px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:scale-[1.015] hover:border-[#16C1C1] hover:bg-[#16C1C1] hover:shadow-[0_24px_65px_rgba(22,193,193,0.22)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 sm:rounded-[2rem] sm:p-5" aria-label={`Open ${product.title} product details`}>
+    <button type="button" onClick={onClick} className="group relative h-full w-full overflow-hidden rounded-[1.35rem] border border-slate-100 bg-white p-2.5 text-left shadow-[0_12px_36px_rgba(15,23,42,0.07)] transition duration-500 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-[#16C1C1] hover:bg-[#16C1C1] hover:shadow-[0_18px_48px_rgba(22,193,193,0.18)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 sm:rounded-[1.65rem] sm:p-4" aria-label={`Open ${product.title} product details`}>
       <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-gradient-to-br from-orange-50/70 via-teal-50/40 to-white transition duration-500 group-hover:from-[#16C1C1] group-hover:via-[#16C1C1] group-hover:to-[#16C1C1]" />
-      <div className="relative mb-3 aspect-[4/5] overflow-hidden rounded-[1.1rem] bg-[#f8fafc] sm:mb-5 sm:rounded-[1.5rem]"><img src={product.image} alt={`${product.title} product sample`} className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.03]" /></div>
-      <h3 className="relative text-lg font-black tracking-tight text-slate-950 transition duration-500 group-hover:text-white sm:text-2xl">{product.title}</h3>
-      <div className="relative mt-2 flex flex-nowrap items-center gap-1.5 sm:mt-3 sm:gap-2">
+      <div className="relative mb-2.5 aspect-[4/5] overflow-hidden rounded-[1rem] bg-[#f8fafc] sm:mb-4 sm:rounded-[1.25rem]"><img src={product.image} alt={`${product.title} product sample`} className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.03]" /></div>
+      <h3 className="relative text-base font-black tracking-tight text-slate-950 transition duration-500 group-hover:text-white sm:text-xl">{product.title}</h3>
+      <div className="relative mt-2 flex flex-nowrap items-center gap-1.5 sm:mt-2.5 sm:gap-2">
         {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200 transition duration-500 group-hover:bg-white/20 group-hover:text-white/70 group-hover:ring-white/20 sm:px-3 sm:py-1.5 sm:text-sm">{product.oldPrice}</span>}
         <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-2.5 py-1 text-[10px] font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 transition duration-500 group-hover:bg-white group-hover:text-[#ff6f31] group-hover:ring-white sm:px-4 sm:py-2 sm:text-sm">{product.price}</span>
       </div>
-      <p className="relative mt-3 text-xs font-bold text-[#16C1C1] transition duration-500 group-hover:text-white sm:text-sm">Tap to view details</p>
+      <p className="relative mt-2.5 text-xs font-bold text-[#16C1C1] transition duration-500 group-hover:text-white sm:text-sm">Tap to view details</p>
     </button>
   );
 }
@@ -322,7 +322,7 @@ export default function App() {
 
       <section id="gallery" className="bg-[#070B18] py-16 text-white sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader eyebrow="Gallery" title="Showcase your best Miinii photos" text="A premium collage-style section for product shots, packaging, client figures, and social proof." dark />
+          <SectionHeader eyebrow="Gallery" title="Every Miinii tells a story" text="Explore custom mini figures, pet keepsakes, packaging details, and finished pieces crafted from meaningful photos and stories." dark />
           <Reveal><div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">{collageItems.map((item, index) => <GalleryCard key={item.title} item={item} onClick={() => setActiveGalleryIndex(index)} />)}</div></Reveal>
         </div>
       </section>
@@ -346,7 +346,26 @@ export default function App() {
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8"><SectionHeader eyebrow="FAQ" title="Common questions" text="Here are simple answers your customers may want to know before placing an order." /><div className="grid grid-cols-2 gap-3 sm:gap-4">{faqs.map((faq) => <Reveal key={faq.q}><article className="h-full rounded-[1.5rem] bg-white p-4 shadow-lg shadow-orange-100/60 sm:rounded-3xl sm:p-6"><h3 className="text-sm font-black leading-5 text-slate-950 sm:text-lg">{faq.q}</h3><p className="mt-2 text-xs leading-5 text-slate-600 sm:mt-3 sm:text-base sm:leading-7">{faq.a}</p></article></Reveal>)}</div></div>
       </section>
 
-      <section id="contact" className="px-4 pb-8 sm:px-6 lg:px-8"><Reveal><div className="mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#ff6f31] to-[#16C1C1] p-6 text-center shadow-2xl shadow-orange-200 sm:p-10 lg:p-16"><div className="mx-auto max-w-3xl"><h2 className="text-4xl font-black tracking-tight text-white sm:text-5xl">Ready to create your own Miinii?</h2><p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/90">Send your reference photos and let’s turn your favorite person, pet, or memory into a custom 3D mini figure.</p><div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"><a href="https://instagram.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/10 px-6 py-4 text-lg font-black text-white backdrop-blur transition hover:-translate-y-1 hover:bg-white/20 sm:text-base"><SocialIcon type="message" className="mr-2 h-5 w-5" />Message Us</a><a href="https://www.facebook.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-lg font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:text-base"><SocialIcon type="facebook" className="mr-2 h-5 w-5" />Facebook</a><a href="https://www.tiktok.com/@miiniistudios" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-lg font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:text-base"><SocialIcon type="tiktok" className="mr-2 h-5 w-5" />TikTok</a><a href="https://instagram.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center rounded-full bg-white px-6 py-4 text-lg font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:text-base"><SocialIcon type="instagram" className="mr-2 h-5 w-5" />Instagram</a></div><div className="mt-8 text-center text-sm leading-7 text-white/90 sm:text-base"><p>miinii.ariel@gmail.com</p><p>Meycauayan City of Bulacan, Philippines</p></div></div></div></Reveal></section>
+      <section id="contact" className="px-4 pb-8 sm:px-6 lg:px-8">
+        <Reveal>
+          <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#ff6f31] via-[#f97316] to-[#c2410c] px-5 py-10 text-center shadow-2xl shadow-orange-300/70 sm:rounded-[2.5rem] sm:px-10 sm:py-12 lg:px-16 lg:py-16">
+            <div className="mx-auto flex max-w-4xl flex-col items-center">
+              <h2 className="max-w-3xl text-3xl font-black leading-tight tracking-tight text-white sm:text-5xl">Ready to create your own Miinii?</h2>
+              <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-white/90 sm:mt-5 sm:text-lg sm:leading-8">Send your reference photos and let’s turn your favorite person, pet, or memory into a custom 3D mini figure.</p>
+              <div className="mt-8 grid w-full max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <a href="https://instagram.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl border border-white/30 bg-white/10 px-5 py-4 text-base font-black text-white backdrop-blur transition hover:-translate-y-1 hover:bg-white/20 sm:rounded-full"><SocialIcon type="message" className="mr-2 h-5 w-5 shrink-0" />Message Us</a>
+                <a href="https://www.facebook.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="facebook" className="mr-2 h-5 w-5 shrink-0" />Facebook</a>
+                <a href="https://www.tiktok.com/@miiniistudios" target="_blank" rel="noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="tiktok" className="mr-2 h-5 w-5 shrink-0" />TikTok</a>
+                <a href="https://instagram.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="instagram" className="mr-2 h-5 w-5 shrink-0" />Instagram</a>
+              </div>
+              <div className="mt-7 flex flex-col items-center gap-1 text-center text-sm leading-6 text-white/90 sm:mt-8 sm:text-base sm:leading-7">
+                <p className="break-all font-semibold">miinii.ariel@gmail.com</p>
+                <p>Meycauayan City of Bulacan, Philippines</p>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
 
       <footer className="px-4 py-4 text-center text-sm font-medium text-slate-500 sm:px-6 lg:px-8"><p>© 2026 Miinii. MiiniiStudios. 3D custom mini figures. All rights reserved.</p></footer>
 
