@@ -207,8 +207,8 @@ function ProductModal({ products, index, setIndex, onClose }) {
               {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-400 line-through ring-1 ring-slate-200 sm:px-4 sm:py-2 sm:text-sm">{product.oldPrice}</span>}
               <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-4 py-2 text-sm font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 sm:px-5 sm:py-2.5 sm:text-base">{product.price}</span>
             </div>
-            <div className="mt-5 rounded-[1.35rem] bg-[#fff8f3] p-4 ring-1 ring-orange-100 sm:mt-7 sm:rounded-[1.5rem] sm:p-5">
-              <ul className="mt-3 grid gap-2.5 sm:mt-4 sm:gap-3">
+            <div className="mt-4 rounded-[1.35rem] bg-[#fff8f3] p-4 ring-1 ring-orange-100 sm:mt-5 sm:rounded-[1.5rem] sm:p-5">
+              <ul className="grid gap-2.5 sm:gap-3">
                 {product.details.map((detail) => <li key={detail} className="flex gap-3 text-sm leading-6 text-slate-600 sm:text-base"><span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#16C1C1]" /><span>{detail}</span></li>)}
               </ul>
             </div>
