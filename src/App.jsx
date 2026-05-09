@@ -326,7 +326,7 @@ export default function App() {
         </div>
       </section>
 
-      <section id="products" className="bg-white py-16 text-slate-950 sm:py-24">
+      <section id="products" className="bg-white pb-16 pt-6 text-slate-950 sm:pb-24 sm:pt-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="What we make" title="Mini figures for every story" text="Choose the Miinii style that fits your gift, collection, or special memory." />
           <div className="mx-auto grid grid-cols-2 gap-3 sm:max-w-none sm:gap-5 lg:grid-cols-3">{products.map((product, index) => <Reveal key={product.title}><ProductCard product={product} onClick={() => setActiveProductIndex(index)} /></Reveal>)}</div>
