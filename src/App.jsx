@@ -168,11 +168,27 @@ function GalleryModal({ items, index, setIndex, onClose }) {
   );
 }
 
-function ProductModal({ product, onClose }) {
+function ProductModal({ products, index, setIndex, onClose }) {
+  const [touchStart, setTouchStart] = useState(null);
+  const product = products[index];
+  const previous = () => setIndex((current) => (current === 0 ? products.length - 1 : current - 1));
+  const next = () => setIndex((current) => (current === products.length - 1 ? 0 : current + 1));
+
+  const onTouchEnd = (event) => {
+    if (touchStart === null) return;
+    const distance = touchStart - event.changedTouches[0].clientX;
+    if (distance > 45) next();
+    if (distance < -45) previous();
+    setTouchStart(null);
+  };
+
   if (!product) return null;
   return (
     <div className="fixed inset-0 z-[100] bg-slate-950/90 p-3 backdrop-blur-xl sm:flex sm:items-center sm:justify-center sm:p-6">
-      <div className="relative mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem]">
+      <button type="button" onClick={previous} className="absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Previous product">‹</button>
+      <button type="button" onClick={next} className="absolute right-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Next product">›</button>
+
+      <div className="relative mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem]" onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
         <button type="button" onClick={onClose} className="absolute right-3 top-3 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950" aria-label="Close product preview">×</button>
         <div className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-[0.95fr_1.05fr]">
           <div className="relative flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-teal-50 p-4 md:sticky md:top-0 sm:p-6">
@@ -197,10 +213,16 @@ function ProductModal({ product, onClose }) {
                 {product.details.map((detail) => <li key={detail} className="flex gap-3 text-sm leading-6 text-slate-600 sm:text-base"><span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#16C1C1]" /><span>{detail}</span></li>)}
               </ul>
             </div>
+            <div className="mt-5 flex items-center justify-center gap-2 sm:mt-6">
+              {products.map((item, dotIndex) => <button key={item.title} type="button" onClick={() => setIndex(dotIndex)} className={`h-2.5 rounded-full transition ${dotIndex === index ? "w-8 bg-[#16C1C1]" : "w-2.5 bg-slate-300 hover:bg-slate-400"}`} aria-label={`Open ${item.title}`} />)}
+            </div>
             <a href="#contact" onClick={onClose} className="mt-5 inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:mt-6 sm:text-base">Start Your Miinii<ArrowIcon className="ml-2 h-5 w-5" /></a>
           </div>
         </div>
       </div>
+
+      <button type="button" onClick={previous} className="absolute bottom-5 left-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:hidden" aria-label="Previous product">‹</button>
+      <button type="button" onClick={next} className="absolute bottom-5 right-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:hidden" aria-label="Next product">›</button>
     </div>
   );
 }
@@ -251,7 +273,7 @@ function GalleryCard({ item, onClick }) {
 
 export default function App() {
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(null);
-  const [activeProduct, setActiveProduct] = useState(null);
+  const [activeProductIndex, setActiveProductIndex] = useState(null);
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#fff8f3] text-slate-900 [scroll-behavior:smooth]">
@@ -294,7 +316,7 @@ export default function App() {
       <section id="products" className="bg-white py-16 text-slate-950 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="What we make" title="Mini figures for every story" text="Choose the Miinii style that fits your gift, collection, or special memory." />
-          <div className="mx-auto grid grid-cols-2 gap-3 sm:max-w-none sm:gap-5 lg:grid-cols-3">{products.map((product) => <Reveal key={product.title}><ProductCard product={product} onClick={() => setActiveProduct(product)} /></Reveal>)}</div>
+          <div className="mx-auto grid grid-cols-2 gap-3 sm:max-w-none sm:gap-5 lg:grid-cols-3">{products.map((product, index) => <Reveal key={product.title}><ProductCard product={product} onClick={() => setActiveProductIndex(index)} /></Reveal>)}</div>
         </div>
       </section>
 
@@ -329,7 +351,7 @@ export default function App() {
       <footer className="px-4 py-4 text-center text-sm font-medium text-slate-500 sm:px-6 lg:px-8"><p>© 2026 Miinii. MiiniiStudios. 3D custom mini figures. All rights reserved.</p></footer>
 
       {activeGalleryIndex !== null && <GalleryModal items={collageItems} index={activeGalleryIndex} setIndex={setActiveGalleryIndex} onClose={() => setActiveGalleryIndex(null)} />}
-      {activeProduct && <ProductModal product={activeProduct} onClose={() => setActiveProduct(null)} />}
+      {activeProductIndex !== null && <ProductModal products={products} index={activeProductIndex} setIndex={setActiveProductIndex} onClose={() => setActiveProductIndex(null)} />}
     </main>
   );
 }
