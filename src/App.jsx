@@ -447,7 +447,7 @@ export default function App() {
             <div ref={productsScrollRef} className="-mx-4 overflow-x-auto overscroll-x-contain scroll-smooth px-8 py-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-10 sm:py-6 lg:-mx-8 lg:px-12 [&::-webkit-scrollbar]:hidden">
               <div className="flex w-max snap-x snap-mandatory gap-4 pr-4 sm:gap-5 sm:pr-6 lg:pr-8">
                 {products.map((product, index) => (
-                  <ScrollReveal key={product.title} direction="right" delay={index * 130} className="w-[72vw] max-w-[255px] shrink-0 snap-center p-1 sm:w-[260px] sm:max-w-[260px] lg:w-[285px] lg:max-w-[285px]" data-product-index={index}>
+                  <ScrollReveal key={product.title} direction="right" className="w-[72vw] max-w-[255px] shrink-0 snap-center p-1 sm:w-[260px] sm:max-w-[260px] lg:w-[285px] lg:max-w-[285px]" data-product-index={index}>
                     <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
                   </ScrollReveal>
                 ))}
