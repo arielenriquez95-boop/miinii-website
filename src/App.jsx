@@ -207,15 +207,15 @@ function ProductModal({ product, onClose }) {
 
 function ProductCard({ product, onClick }) {
   return (
-    <button type="button" onClick={onClick} className="group relative h-full w-full overflow-hidden rounded-[1.5rem] border border-slate-100 bg-white p-3 text-left shadow-[0_16px_45px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:scale-[1.015] hover:shadow-[0_24px_65px_rgba(15,23,42,0.14)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 sm:rounded-[2rem] sm:p-5" aria-label={`Open ${product.title} product details`}>
-      <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-gradient-to-br from-orange-50/70 via-teal-50/40 to-white" />
+    <button type="button" onClick={onClick} className="group relative h-full w-full overflow-hidden rounded-[1.5rem] border border-slate-100 bg-white p-3 text-left shadow-[0_16px_45px_rgba(15,23,42,0.08)] transition duration-500 hover:-translate-y-2 hover:scale-[1.015] hover:border-[#16C1C1] hover:bg-[#16C1C1] hover:shadow-[0_24px_65px_rgba(22,193,193,0.22)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 sm:rounded-[2rem] sm:p-5" aria-label={`Open ${product.title} product details`}>
+      <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-gradient-to-br from-orange-50/70 via-teal-50/40 to-white transition duration-500 group-hover:from-[#16C1C1] group-hover:via-[#16C1C1] group-hover:to-[#16C1C1]" />
       <div className="relative mb-3 aspect-[4/5] overflow-hidden rounded-[1.1rem] bg-[#f8fafc] sm:mb-5 sm:rounded-[1.5rem]"><img src={product.image} alt={`${product.title} product sample`} className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.03]" /></div>
-      <h3 className="relative text-lg font-black tracking-tight text-slate-950 sm:text-2xl">{product.title}</h3>
+      <h3 className="relative text-lg font-black tracking-tight text-slate-950 transition duration-500 group-hover:text-white sm:text-2xl">{product.title}</h3>
       <div className="relative mt-2 flex flex-nowrap items-center gap-1.5 sm:mt-3 sm:gap-2">
-        {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200 sm:px-3 sm:py-1.5 sm:text-sm">{product.oldPrice}</span>}
-        <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-2.5 py-1 text-[10px] font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 sm:px-4 sm:py-2 sm:text-sm">{product.price}</span>
+        {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200 transition duration-500 group-hover:bg-white/20 group-hover:text-white/70 group-hover:ring-white/20 sm:px-3 sm:py-1.5 sm:text-sm">{product.oldPrice}</span>}
+        <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-2.5 py-1 text-[10px] font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 transition duration-500 group-hover:bg-white group-hover:text-[#ff6f31] group-hover:ring-white sm:px-4 sm:py-2 sm:text-sm">{product.price}</span>
       </div>
-      <p className="relative mt-3 text-xs font-bold text-[#16C1C1] sm:text-sm">Tap to view details</p>
+      <p className="relative mt-3 text-xs font-bold text-[#16C1C1] transition duration-500 group-hover:text-white sm:text-sm">Tap to view details</p>
     </button>
   );
 }
@@ -294,7 +294,7 @@ export default function App() {
       <section id="products" className="bg-white py-16 text-slate-950 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="What we make" title="Mini figures for every story" text="Choose the Miinii style that fits your gift, collection, or special memory." />
-          <div className="mx-auto grid grid-cols-2 gap-3 sm:max-w-none sm:gap-5 lg:grid-cols-4">{products.map((product) => <Reveal key={product.title}><ProductCard product={product} onClick={() => setActiveProduct(product)} /></Reveal>)}</div>
+          <div className="mx-auto grid grid-cols-2 gap-3 sm:max-w-none sm:gap-5 lg:grid-cols-3">{products.map((product) => <Reveal key={product.title}><ProductCard product={product} onClick={() => setActiveProduct(product)} /></Reveal>)}</div>
         </div>
       </section>
 
