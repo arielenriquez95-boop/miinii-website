@@ -117,11 +117,11 @@ function SocialIcon({ type, className = "h-5 w-5" }) {
   return <svg {...common}><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" /></svg>;
 }
 
-function Reveal({ children, className = "" }) {
-  return <div className={`animate-[fadeUp_.7s_ease-out_both] ${className}`}>{children}</div>;
+function Reveal({ children, className = "", ...props }) {
+  return <div {...props} className={`animate-[fadeUp_.7s_ease-out_both] ${className}`}>{children}</div>;
 }
 
-function ScrollReveal({ children, className = "", delay = 0 }) {
+function ScrollReveal({ children, className = "", delay = 0, direction = "up", ...props }) {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -143,12 +143,15 @@ function ScrollReveal({ children, className = "", delay = 0 }) {
     return () => observer.disconnect();
   }, []);
 
+  const hiddenPosition = direction === "right" ? "translate-x-12 opacity-0" : "translate-y-8 opacity-0";
+
   return (
     <div
       ref={ref}
+      {...props}
       style={{ transitionDelay: `${delay}ms` }}
-      className={`${className} transform-gpu transition-all duration-700 ease-out ${
-        isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+      className={`${className} transform-gpu transition-all duration-1000 ease-[cubic-bezier(.22,1,.36,1)] ${
+        isVisible ? "translate-x-0 translate-y-0 opacity-100" : hiddenPosition
       }`}
     >
       {children}
@@ -311,6 +314,7 @@ export default function App() {
   const [activeProductIndex, setActiveProductIndex] = useState(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [activeProductScrollIndex, setActiveProductScrollIndex] = useState(0);
   const productsScrollRef = useRef(null);
 
   const scrollToSection = (sectionId) => {
@@ -326,30 +330,65 @@ export default function App() {
     });
   };
 
+  const centerProductCard = (index) => {
+    const carousel = productsScrollRef.current;
+    if (!carousel) return;
+
+    const card = carousel.querySelector(`[data-product-index="${index}"]`);
+    if (!card) return;
+
+    const carouselCenter = carousel.clientWidth / 2;
+    const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+
+    carousel.scrollTo({
+      left: cardCenter - carouselCenter,
+      behavior: "smooth",
+    });
+  };
+
   const updateProductScrollButtons = () => {
     const carousel = productsScrollRef.current;
     if (!carousel) return;
 
-    const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
-    setCanScrollLeft(carousel.scrollLeft > 8);
-    setCanScrollRight(carousel.scrollLeft < maxScrollLeft - 8);
+    const cards = Array.from(carousel.querySelectorAll("[data-product-index]"));
+    const carouselCenter = carousel.scrollLeft + carousel.clientWidth / 2;
+
+    let nearestIndex = 0;
+    let nearestDistance = Infinity;
+
+    cards.forEach((card) => {
+      const index = Number(card.getAttribute("data-product-index"));
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const distance = Math.abs(cardCenter - carouselCenter);
+
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestIndex = index;
+      }
+    });
+
+    const isAtStart = carousel.scrollLeft <= 8;
+    const isAtEnd = carousel.scrollLeft >= carousel.scrollWidth - carousel.clientWidth - 8;
+
+    setActiveProductScrollIndex(nearestIndex);
+    setCanScrollLeft(!isAtStart && nearestIndex > 0);
+    setCanScrollRight(!isAtEnd && nearestIndex < products.length - 1);
   };
 
   const scrollProducts = (direction) => {
-    if (!productsScrollRef.current) return;
+    const nextIndex = direction === "next" ? activeProductScrollIndex + 1 : activeProductScrollIndex - 1;
+    const safeIndex = Math.max(0, Math.min(products.length - 1, nextIndex));
 
-    const scrollAmount = productsScrollRef.current.clientWidth * 0.85;
-    productsScrollRef.current.scrollBy({
-      left: direction === "next" ? scrollAmount : -scrollAmount,
-      behavior: "smooth",
-    });
+    setActiveProductScrollIndex(safeIndex);
+    centerProductCard(safeIndex);
   };
 
   useEffect(() => {
     const carousel = productsScrollRef.current;
     if (!carousel) return;
 
-    updateProductScrollButtons();
+    setCanScrollLeft(false);
+    requestAnimationFrame(updateProductScrollButtons);
     carousel.addEventListener("scroll", updateProductScrollButtons, { passive: true });
     window.addEventListener("resize", updateProductScrollButtons);
 
@@ -408,9 +447,9 @@ export default function App() {
             <div ref={productsScrollRef} className="-mx-4 overflow-x-auto overscroll-x-contain scroll-smooth px-8 py-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-10 sm:py-6 lg:-mx-8 lg:px-12 [&::-webkit-scrollbar]:hidden">
               <div className="flex w-max snap-x snap-mandatory gap-4 pr-4 sm:gap-5 sm:pr-6 lg:pr-8">
                 {products.map((product, index) => (
-                  <Reveal key={product.title} className="w-[72vw] max-w-[255px] shrink-0 snap-start p-1 sm:w-[260px] sm:max-w-[260px] lg:w-[285px] lg:max-w-[285px]">
+                  <ScrollReveal key={product.title} direction="right" delay={index * 130} className="w-[72vw] max-w-[255px] shrink-0 snap-center p-1 sm:w-[260px] sm:max-w-[260px] lg:w-[285px] lg:max-w-[285px]" data-product-index={index}>
                     <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
-                  </Reveal>
+                  </ScrollReveal>
                 ))}
               </div>
             </div>
