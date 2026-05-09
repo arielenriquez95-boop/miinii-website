@@ -171,9 +171,23 @@ function SectionHeader({ eyebrow, title, text, dark = false }) {
 
 function GalleryModal({ items, index, setIndex, onClose }) {
   const [touchStart, setTouchStart] = useState(null);
+  const [slideDirection, setSlideDirection] = useState("next");
   const item = items[index];
-  const previous = () => setIndex((current) => (current === 0 ? items.length - 1 : current - 1));
-  const next = () => setIndex((current) => (current === items.length - 1 ? 0 : current + 1));
+
+  const previous = () => {
+    setSlideDirection("previous");
+    setIndex((current) => (current === 0 ? items.length - 1 : current - 1));
+  };
+
+  const next = () => {
+    setSlideDirection("next");
+    setIndex((current) => (current === items.length - 1 ? 0 : current + 1));
+  };
+
+  const goToSlide = (dotIndex) => {
+    setSlideDirection(dotIndex > index ? "next" : "previous");
+    setIndex(dotIndex);
+  };
 
   const onTouchEnd = (event) => {
     if (touchStart === null) return;
@@ -192,10 +206,10 @@ function GalleryModal({ items, index, setIndex, onClose }) {
 
       <div className="w-full max-w-5xl" onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
         <div className="relative mx-auto aspect-square max-h-[82vh] max-w-[82vh] overflow-hidden rounded-[1.5rem] bg-slate-900 shadow-2xl shadow-black/40">
-          <img src={item.image} alt={`${item.title} full preview`} className="h-full w-full object-contain" />
+          <img key={item.title} src={item.image} alt={`${item.title} full preview`} className={`h-full w-full object-contain animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] ${slideDirection === "next" ? "[--slide-start:18%]" : "[--slide-start:-18%]"}`} />
         </div>
         <div className="mt-4 flex items-center justify-center gap-2">
-          {items.map((dot, dotIndex) => <button key={dot.title} type="button" onClick={() => setIndex(dotIndex)} className={`h-2.5 rounded-full transition ${dotIndex === index ? "w-8 bg-[#16C1C1]" : "w-2.5 bg-white/30 hover:bg-white/50"}`} aria-label={`Open ${dot.title}`} />)}
+          {items.map((dot, dotIndex) => <button key={dot.title} type="button" onClick={() => goToSlide(dotIndex)} className={`h-2.5 rounded-full transition ${dotIndex === index ? "w-8 bg-[#16C1C1]" : "w-2.5 bg-white/30 hover:bg-white/50"}`} aria-label={`Open ${dot.title}`} />)}
         </div>
       </div>
 
@@ -208,9 +222,23 @@ function GalleryModal({ items, index, setIndex, onClose }) {
 
 function ProductModal({ products, index, setIndex, onClose }) {
   const [touchStart, setTouchStart] = useState(null);
+  const [slideDirection, setSlideDirection] = useState("next");
   const product = products[index];
-  const previous = () => setIndex((current) => (current === 0 ? products.length - 1 : current - 1));
-  const next = () => setIndex((current) => (current === products.length - 1 ? 0 : current + 1));
+
+  const previous = () => {
+    setSlideDirection("previous");
+    setIndex((current) => (current === 0 ? products.length - 1 : current - 1));
+  };
+
+  const next = () => {
+    setSlideDirection("next");
+    setIndex((current) => (current === products.length - 1 ? 0 : current + 1));
+  };
+
+  const goToSlide = (dotIndex) => {
+    setSlideDirection(dotIndex > index ? "next" : "previous");
+    setIndex(dotIndex);
+  };
 
   const onTouchEnd = (event) => {
     if (touchStart === null) return;
@@ -226,7 +254,7 @@ function ProductModal({ products, index, setIndex, onClose }) {
       <button type="button" onClick={previous} className="absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Previous product">‹</button>
       <button type="button" onClick={next} className="absolute right-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Next product">›</button>
 
-      <div className="relative mx-auto flex h-[calc(100%-3.75rem)] w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem]" onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
+      <div key={product.title} className={`relative mx-auto flex h-[calc(100%-3.75rem)] w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem] ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
         <button type="button" onClick={onClose} className="absolute right-3 top-3 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950" aria-label="Close product preview">×</button>
         <div className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-[0.95fr_1.05fr]">
           <div className="relative flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-teal-50 p-4 md:sticky md:top-0 sm:p-6">
@@ -256,7 +284,7 @@ function ProductModal({ products, index, setIndex, onClose }) {
       </div>
 
       <div className="absolute bottom-5 left-1/2 z-30 flex -translate-x-1/2 items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-2 backdrop-blur-md">
-        {products.map((item, dotIndex) => <button key={item.title} type="button" onClick={() => setIndex(dotIndex)} className={`h-2.5 rounded-full transition ${dotIndex === index ? "w-8 bg-[#16C1C1]" : "w-2.5 bg-white/40 hover:bg-white/70"}`} aria-label={`Open ${item.title}`} />)}
+        {products.map((item, dotIndex) => <button key={item.title} type="button" onClick={() => goToSlide(dotIndex)} className={`h-2.5 rounded-full transition ${dotIndex === index ? "w-8 bg-[#16C1C1]" : "w-2.5 bg-white/40 hover:bg-white/70"}`} aria-label={`Open ${item.title}`} />)}
       </div>
 
       <button type="button" onClick={previous} className="absolute bottom-5 left-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-[#16C1C1]/20 text-2xl font-bold text-[#16C1C1] shadow-lg backdrop-blur transition hover:bg-[#16C1C1]/30 sm:hidden" aria-label="Previous product">‹</button>
@@ -404,6 +432,7 @@ export default function App() {
         @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes floatSoft { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
         @keyframes pulseSoft { 0%, 100% { transform: scale(1); opacity: .8; } 50% { transform: scale(1.08); opacity: 1; } }
+        @keyframes modalSlideIn { from { opacity: .35; transform: translateX(var(--slide-start)) scale(.985); } to { opacity: 1; transform: translateX(0) scale(1); } }
       `}</style>
 
       <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/60 bg-white/80 backdrop-blur-xl">
