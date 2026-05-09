@@ -192,11 +192,11 @@ function ProductModal({ products, index, setIndex, onClose }) {
         <button type="button" onClick={onClose} className="absolute right-3 top-3 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950" aria-label="Close product preview">×</button>
         <div className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-[0.95fr_1.05fr]">
           <div className="relative flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-teal-50 p-4 md:sticky md:top-0 sm:p-6">
-            <div className="aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-[1.25rem] shadow-inner">
+            <div className="aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-[1.25rem] bg-white ring-1 ring-slate-100 shadow-inner">
               <img
                 src={product.image}
                 alt={`${product.title} preview`}
-                className="h-full w-full object-cover"
+                className="block h-full w-full rounded-[inherit] object-contain"
               />
             </div>
           </div>
