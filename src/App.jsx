@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const processSteps = [
   { title: "3D Sculpting", text: "Your Miinii is digitally sculpted based on your reference photos.", image: "/process-sculpting.png" },
@@ -119,6 +119,41 @@ function SocialIcon({ type, className = "h-5 w-5" }) {
 
 function Reveal({ children, className = "" }) {
   return <div className={`animate-[fadeUp_.7s_ease-out_both] ${className}`}>{children}</div>;
+}
+
+function ScrollReveal({ children, className = "", delay = 0 }) {
+  const ref = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(element);
+        }
+      },
+      { threshold: 0.18 }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      style={{ transitionDelay: `${delay}ms` }}
+      className={`${className} transform-gpu transition-all duration-700 ease-out ${
+        isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+      }`}
+    >
+      {children}
+    </div>
+  );
 }
 
 function SectionHeader({ eyebrow, title, text, dark = false }) {
@@ -322,14 +357,22 @@ export default function App() {
       <section id="process" className="bg-white py-10 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="How it works" title="From photo to mini figure" text="A simple production flow that turns your favorite people and pets into handcrafted 3D keepsakes." />
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{processSteps.map((step, index) => <Reveal key={step.title}><ProcessCard step={step} index={index} /></Reveal>)}</div>
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{processSteps.map((step, index) => <ScrollReveal key={step.title} delay={index * 120}><ProcessCard step={step} index={index} /></ScrollReveal>)}</div>
         </div>
       </section>
 
       <section id="products" className="bg-white pb-16 pt-6 text-slate-950 sm:pb-24 sm:pt-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="What we make" title="Mini figures for every story" text="Choose the Miinii style that fits your gift, collection, or special memory." />
-          <div className="mx-auto grid grid-cols-2 gap-3 sm:max-w-none sm:gap-5 lg:grid-cols-3">{products.map((product, index) => <Reveal key={product.title}><ProductCard product={product} onClick={() => setActiveProductIndex(index)} /></Reveal>)}</div>
+          <div className="-mx-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 [&::-webkit-scrollbar]:hidden">
+            <div className="flex w-max snap-x snap-mandatory gap-4 pr-4 sm:gap-5 sm:pr-6 lg:pr-8">
+              {products.map((product, index) => (
+                <Reveal key={product.title} className="w-[72vw] max-w-[255px] shrink-0 snap-start sm:w-[260px] sm:max-w-[260px] lg:w-[285px] lg:max-w-[285px]">
+                  <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
+                </Reveal>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
