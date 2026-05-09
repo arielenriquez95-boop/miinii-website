@@ -188,7 +188,7 @@ function ProductModal({ products, index, setIndex, onClose }) {
       <button type="button" onClick={previous} className="absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Previous product">‹</button>
       <button type="button" onClick={next} className="absolute right-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Next product">›</button>
 
-      <div className="relative mx-auto flex h-full w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem]" onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
+      <div className="relative mx-auto flex h-[calc(100%-3.75rem)] w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem]" onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
         <button type="button" onClick={onClose} className="absolute right-3 top-3 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950" aria-label="Close product preview">×</button>
         <div className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-[0.95fr_1.05fr]">
           <div className="relative flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-teal-50 p-4 md:sticky md:top-0 sm:p-6">
@@ -208,21 +208,21 @@ function ProductModal({ products, index, setIndex, onClose }) {
               <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-4 py-2 text-sm font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 sm:px-5 sm:py-2.5 sm:text-base">{product.price}</span>
             </div>
             <div className="mt-5 rounded-[1.35rem] bg-[#fff8f3] p-4 ring-1 ring-orange-100 sm:mt-7 sm:rounded-[1.5rem] sm:p-5">
-              <h3 className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">Details</h3>
               <ul className="mt-3 grid gap-2.5 sm:mt-4 sm:gap-3">
                 {product.details.map((detail) => <li key={detail} className="flex gap-3 text-sm leading-6 text-slate-600 sm:text-base"><span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#16C1C1]" /><span>{detail}</span></li>)}
               </ul>
-            </div>
-            <div className="mt-5 flex items-center justify-center gap-2 sm:mt-6">
-              {products.map((item, dotIndex) => <button key={item.title} type="button" onClick={() => setIndex(dotIndex)} className={`h-2.5 rounded-full transition ${dotIndex === index ? "w-8 bg-[#16C1C1]" : "w-2.5 bg-slate-300 hover:bg-slate-400"}`} aria-label={`Open ${item.title}`} />)}
             </div>
             <a href="#contact" onClick={onClose} className="mt-5 inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:mt-6 sm:text-base">Start Your Miinii<ArrowIcon className="ml-2 h-5 w-5" /></a>
           </div>
         </div>
       </div>
 
-      <button type="button" onClick={previous} className="absolute bottom-5 left-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:hidden" aria-label="Previous product">‹</button>
-      <button type="button" onClick={next} className="absolute bottom-5 right-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:hidden" aria-label="Next product">›</button>
+      <div className="absolute bottom-5 left-1/2 z-30 flex -translate-x-1/2 items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-2 backdrop-blur-md">
+        {products.map((item, dotIndex) => <button key={item.title} type="button" onClick={() => setIndex(dotIndex)} className={`h-2.5 rounded-full transition ${dotIndex === index ? "w-8 bg-[#16C1C1]" : "w-2.5 bg-white/40 hover:bg-white/70"}`} aria-label={`Open ${item.title}`} />)}
+      </div>
+
+      <button type="button" onClick={previous} className="absolute bottom-5 left-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-[#16C1C1]/20 text-2xl font-bold text-[#16C1C1] shadow-lg backdrop-blur transition hover:bg-[#16C1C1]/30 sm:hidden" aria-label="Previous product">‹</button>
+      <button type="button" onClick={next} className="absolute bottom-5 right-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-[#16C1C1]/20 text-2xl font-bold text-[#16C1C1] shadow-lg backdrop-blur transition hover:bg-[#16C1C1]/30 sm:hidden" aria-label="Next product">›</button>
     </div>
   );
 }
