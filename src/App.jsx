@@ -275,6 +275,19 @@ export default function App() {
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(null);
   const [activeProductIndex, setActiveProductIndex] = useState(null);
 
+  const scrollToSection = (sectionId) => {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+
+    const headerOffset = 80;
+    const sectionPosition = section.getBoundingClientRect().top + window.scrollY;
+
+    window.scrollTo({
+      top: sectionPosition - headerOffset,
+      behavior: "smooth",
+    });
+  };
+
   return (
     <main className="min-h-screen overflow-hidden bg-[#fff8f3] text-slate-900 [scroll-behavior:smooth]">
       <style>{`
@@ -285,11 +298,11 @@ export default function App() {
 
       <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/60 bg-white/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:px-6 lg:px-8">
-          <a href="#home" className="flex items-center gap-2" aria-label="Go to Miinii home section"><img src="/miinii-logo.png" alt="Miinii Logo" className="h-12 w-auto object-contain sm:h-10" /></a>
+          <button type="button" onClick={() => scrollToSection("home")} className="flex items-center gap-2" aria-label="Go to Miinii home section"><img src="/miinii-logo.png" alt="Miinii Logo" className="h-12 w-auto object-contain sm:h-10" /></button>
           <div className="hidden items-center gap-8 text-sm font-semibold text-slate-600 md:flex">
-            {["process", "products", "gallery", "about", "testimonials", "faq"].map((section) => <a key={section} href={`#${section}`} className="capitalize transition hover:text-[#ff6f31]">{section === "about" ? "About Us" : section === "faq" ? "FAQ" : section}</a>)}
+            {["process", "products", "gallery", "about", "testimonials", "faq"].map((section) => <button key={section} type="button" onClick={() => scrollToSection(section)} className="capitalize transition hover:text-[#ff6f31]">{section === "about" ? "About Us" : section === "faq" ? "FAQ" : section}</button>)}
           </div>
-          <a href="#contact" className="rounded-full bg-slate-950 px-5 py-3 text-base font-bold text-white shadow-lg shadow-slate-300 transition hover:-translate-y-0.5 hover:bg-[#ff6f31] sm:px-5 sm:py-2.5 sm:text-sm">Order Now</a>
+          <button type="button" onClick={() => scrollToSection("contact")} className="rounded-full bg-slate-950 px-5 py-3 text-base font-bold text-white shadow-lg shadow-slate-300 transition hover:-translate-y-0.5 hover:bg-[#ff6f31] sm:px-5 sm:py-2.5 sm:text-sm">Order Now</button>
         </div>
       </nav>
 
@@ -301,7 +314,7 @@ export default function App() {
           <div className="-mt-8 text-center sm:mt-0 lg:text-left">
             <Reveal><h1 className="text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">Turn your photos into <span className="text-[#ff6f31]">custom 3D mini figures</span>.</h1></Reveal>
             <Reveal><p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-600 lg:mx-0">Miinii creates handcrafted 3D mini figures based on real people and pets. Each piece is carefully sculpted, resin printed, and hand-painted into a one-of-a-kind keepsake.</p></Reveal>
-            <Reveal><div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start"><a href="#contact" className="group inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-8 py-[18px] text-lg font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:px-7 sm:py-4 sm:text-base">Start Your Miinii<ArrowIcon className="ml-2 h-5 w-5 transition group-hover:translate-x-1" /></a><a href="#process" className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-8 py-[18px] text-lg font-black text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-[#16C1C1] sm:px-7 sm:py-4 sm:text-base">View Process</a></div></Reveal>
+            <Reveal><div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start"><button type="button" onClick={() => scrollToSection("contact")} className="group inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-8 py-[18px] text-lg font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:px-7 sm:py-4 sm:text-base">Start Your Miinii<ArrowIcon className="ml-2 h-5 w-5 transition group-hover:translate-x-1" /></button><button type="button" onClick={() => scrollToSection("process")} className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-8 py-[18px] text-lg font-black text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-[#16C1C1] sm:px-7 sm:py-4 sm:text-base">View Process</button></div></Reveal>
           </div>
         </div>
       </section>
