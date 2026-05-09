@@ -309,6 +309,9 @@ function GalleryCard({ item, onClick }) {
 export default function App() {
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(null);
   const [activeProductIndex, setActiveProductIndex] = useState(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const productsScrollRef = useRef(null);
 
   const scrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId);
@@ -322,6 +325,39 @@ export default function App() {
       behavior: "smooth",
     });
   };
+
+  const updateProductScrollButtons = () => {
+    const carousel = productsScrollRef.current;
+    if (!carousel) return;
+
+    const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+    setCanScrollLeft(carousel.scrollLeft > 8);
+    setCanScrollRight(carousel.scrollLeft < maxScrollLeft - 8);
+  };
+
+  const scrollProducts = (direction) => {
+    if (!productsScrollRef.current) return;
+
+    const scrollAmount = productsScrollRef.current.clientWidth * 0.85;
+    productsScrollRef.current.scrollBy({
+      left: direction === "next" ? scrollAmount : -scrollAmount,
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    const carousel = productsScrollRef.current;
+    if (!carousel) return;
+
+    updateProductScrollButtons();
+    carousel.addEventListener("scroll", updateProductScrollButtons, { passive: true });
+    window.addEventListener("resize", updateProductScrollButtons);
+
+    return () => {
+      carousel.removeEventListener("scroll", updateProductScrollButtons);
+      window.removeEventListener("resize", updateProductScrollButtons);
+    };
+  }, []);
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#fff8f3] text-slate-900 [scroll-behavior:smooth]">
@@ -364,13 +400,26 @@ export default function App() {
       <section id="products" className="bg-white pb-16 pt-6 text-slate-950 sm:pb-24 sm:pt-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="What we make" title="Mini figures for every story" text="Choose the Miinii style that fits your gift, collection, or special memory." />
-          <div className="-mx-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 [&::-webkit-scrollbar]:hidden">
-            <div className="flex w-max snap-x snap-mandatory gap-4 pr-4 sm:gap-5 sm:pr-6 lg:pr-8">
-              {products.map((product, index) => (
-                <Reveal key={product.title} className="w-[72vw] max-w-[255px] shrink-0 snap-start sm:w-[260px] sm:max-w-[260px] lg:w-[285px] lg:max-w-[285px]">
-                  <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
-                </Reveal>
-              ))}
+          <div className="relative">
+            {canScrollLeft && <button type="button" onClick={() => scrollProducts("previous")} className="absolute left-1 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/60 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#f05f20] sm:flex" aria-label="Scroll products left"><span className="flex h-full w-full items-center justify-center pb-1 text-3xl font-black leading-none">‹</span></button>}
+            {canScrollRight && <button type="button" onClick={() => scrollProducts("next")} className="absolute right-1 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/60 backdrop-blur transition hover:translate-x-0.5 hover:bg-[#f05f20] sm:flex" aria-label="Scroll products right"><span className="flex h-full w-full items-center justify-center pb-1 text-3xl font-black leading-none">›</span></button>}
+
+            <div className="pointer-events-none absolute bottom-5 left-0 top-5 z-10 hidden w-16 bg-gradient-to-r from-white to-transparent sm:block" />
+            <div className="pointer-events-none absolute bottom-5 right-0 top-5 z-10 hidden w-16 bg-gradient-to-l from-white to-transparent sm:block" />
+
+            <div ref={productsScrollRef} className="-mx-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 py-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-10 sm:py-6 lg:-mx-8 lg:px-12 [&::-webkit-scrollbar]:hidden">
+              <div className="flex w-max snap-x snap-mandatory gap-4 pr-4 sm:gap-5 sm:pr-6 lg:pr-8">
+                {products.map((product, index) => (
+                  <Reveal key={product.title} className="w-[72vw] max-w-[255px] shrink-0 snap-start p-1 sm:w-[260px] sm:max-w-[260px] lg:w-[285px] lg:max-w-[285px]">
+                    <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
+                  </Reveal>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-2 flex items-center justify-center gap-3 sm:hidden">
+              <button type="button" onClick={() => scrollProducts("previous")} className="flex h-10 w-14 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-black text-white shadow-lg shadow-orange-300/60 ring-1 ring-white/60 transition hover:bg-[#f05f20]" aria-label="Scroll products left">‹</button>
+              <button type="button" onClick={() => scrollProducts("next")} className="flex h-10 w-14 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-black text-white shadow-lg shadow-orange-300/60 ring-1 ring-white/60 transition hover:bg-[#f05f20]" aria-label="Scroll products right">›</button>
             </div>
           </div>
         </div>
