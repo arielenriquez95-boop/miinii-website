@@ -74,12 +74,12 @@ const faqs = [
 ].map(([q, a]) => ({ q, a }));
 
 const collageItems = [
-  ["Gallery 1", "/Gallery1.gif"],
-  ["Gallery 2", "/Gallery2.gif"],
-  ["Gallery 3", "/Gallery3.gif"],
-  ["Gallery 4", "/Gallery4.gif"],
-  ["Gallery 5", "/Gallery5.gif"],
-  ["Gallery 6", "/Gallery6.gif"],
+  ["Gallery 1", "/Gallery1.mp4"],
+  ["Gallery 2", "/Gallery2.mp4"],
+  ["Gallery 3", "/Gallery3.mp4"],
+  ["Gallery 4", "/Gallery4.mp4"],
+  ["Gallery 5", "/Gallery5.mp4"],
+  ["Gallery 6", "/Gallery6.mp4"],
 ].map(([title, image]) => ({ title, image }));
 
 function IconPlaceholder({ className = "h-6 w-6" }) {
