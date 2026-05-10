@@ -77,7 +77,7 @@ const collageItems = [
   ["Gallery 1", "/Gallery1.png"],
   ["Gallery 2", "/Gallery2.png"],
   ["Gallery 3", "/Gallery3.png"],
-  ["Gallery 4", "/Gallery4.png"],
+  ["Gallery 4", "/Gallery4.gif"],
   ["Gallery 5", "/Gallery5.png"],
   ["Gallery 6", "/Gallery6.png"],
 ].map(([title, image]) => ({ title, image }));
