@@ -319,7 +319,6 @@ function ProductCard({ product, onClick }) {
         {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200 transition duration-500 group-hover:bg-white/20 group-hover:text-white/70 group-hover:ring-white/20 sm:px-3 sm:py-1.5 sm:text-sm">{product.oldPrice}</span>}
         <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-2.5 py-1 text-[10px] font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 transition duration-500 group-hover:bg-white group-hover:text-[#ff6f31] group-hover:ring-white sm:px-4 sm:py-2 sm:text-sm">{product.price}</span>
       </div>
-      <p className="relative mt-2.5 text-xs font-bold text-[#16C1C1] transition duration-500 group-hover:text-white sm:text-sm">Tap to view details</p>
     </button>
   );
 }
