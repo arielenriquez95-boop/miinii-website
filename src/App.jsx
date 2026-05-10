@@ -82,14 +82,25 @@ const collageItems = [
   ["Gallery 6", "/Gallery6.mp4"],
 ].map(([title, image]) => ({ title, image }));
 
-function IconPlaceholder({ className = "h-6 w-6" }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="4" />
-      <path d="M7 15l3-3a1.5 1.5 0 0 1 2.1 0L17 17" />
-      <circle cx="9" cy="9" r="1.2" />
-    </svg>
-  );
+const isVideoFile = (src = "") => /\.(mp4|webm|ogg)$/i.test(src);
+
+function MediaPreview({ src, alt, className = "", videoClassName = "" }) {
+  if (isVideoFile(src)) {
+    return (
+      <video
+        src={src}
+        className={`${className} ${videoClassName}`.trim()}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-label={alt}
+      />
+    );
+  }
+
+  return <img src={src} alt={alt} className={className} loading="lazy" />;
 }
 
 function StarIcon({ className = "h-4 w-4" }) {
@@ -202,20 +213,20 @@ function GalleryModal({ items, index, setIndex, onClose }) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/95 p-3 backdrop-blur-xl sm:p-6">
       <button type="button" onClick={onClose} className="absolute right-4 top-4 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-white/25" aria-label="Close gallery preview">×</button>
-      <button type="button" onClick={previous} className="absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Previous gallery image">‹</button>
+      <button type="button" onClick={previous} className="absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Previous gallery item">‹</button>
 
       <div className="w-full max-w-5xl" onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
         <div className="relative mx-auto aspect-[4/5] max-h-[82vh] w-full max-w-[min(82vw,520px)] overflow-hidden rounded-[1.5rem] bg-slate-900 shadow-2xl shadow-black/40">
-          <img key={item.title} src={item.image} alt={`${item.title} full preview`} className={`h-full w-full object-contain animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] ${slideDirection === "next" ? "[--slide-start:18%]" : "[--slide-start:-18%]"}`} />
+          <MediaPreview key={item.title} src={item.image} alt={`${item.title} full preview`} className={`h-full w-full object-contain animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] ${slideDirection === "next" ? "[--slide-start:18%]" : "[--slide-start:-18%]"}`} />
         </div>
         <div className="mt-4 flex items-center justify-center gap-2">
           {items.map((dot, dotIndex) => <button key={dot.title} type="button" onClick={() => goToSlide(dotIndex)} className={`h-2.5 rounded-full transition ${dotIndex === index ? "w-8 bg-[#16C1C1]" : "w-2.5 bg-white/30 hover:bg-white/50"}`} aria-label={`Open ${dot.title}`} />)}
         </div>
       </div>
 
-      <button type="button" onClick={next} className="absolute right-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Next gallery image">›</button>
-      <button type="button" onClick={previous} className="absolute bottom-5 left-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:hidden" aria-label="Previous gallery image">‹</button>
-      <button type="button" onClick={next} className="absolute bottom-5 right-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:hidden" aria-label="Next gallery image">›</button>
+      <button type="button" onClick={next} className="absolute right-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Next gallery item">›</button>
+      <button type="button" onClick={previous} className="absolute bottom-5 left-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:hidden" aria-label="Previous gallery item">‹</button>
+      <button type="button" onClick={next} className="absolute bottom-5 right-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-2xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:hidden" aria-label="Next gallery item">›</button>
     </div>
   );
 }
@@ -275,7 +286,12 @@ function ProductModal({ products, index, setIndex, onClose }) {
             </div>
             <div className="mt-4 rounded-[1.35rem] bg-[#fff8f3] p-4 ring-1 ring-orange-100 sm:mt-5 sm:rounded-[1.5rem] sm:p-5">
               <ul className="grid gap-2.5 sm:gap-3">
-                {product.details.map((detail) => <li key={detail} className="flex gap-3 text-sm leading-6 text-slate-600 sm:text-base"><span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#16C1C1]" /><span>{detail}</span></li>)}
+                {product.details.map((detail) => (
+                  <li key={detail} className="flex gap-3 text-sm leading-6 text-slate-600 sm:text-base">
+                    <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#16C1C1]" />
+                    <span>{detail}</span>
+                  </li>
+                ))}
               </ul>
             </div>
             <a href="#contact" onClick={onClose} className="mt-5 inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:mt-6 sm:text-base">Start Your Miinii<ArrowIcon className="ml-2 h-5 w-5" /></a>
@@ -325,11 +341,11 @@ function GalleryCard({ item, onClick }) {
       type="button"
       onClick={onClick}
       className="group relative aspect-[4/5] overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/5 p-0 text-left shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition duration-500 hover:z-20 hover:scale-105 hover:bg-white/10 hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 focus:ring-offset-[#070B18] sm:rounded-[1.75rem]"
-      aria-label={`Open ${item.title} gallery image`}
+      aria-label={`Open ${item.title} gallery item`}
     >
-      <img
+      <MediaPreview
         src={item.image}
-        alt={`${item.title} gallery image`}
+        alt={`${item.title} gallery item`}
         className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
       />
       <div className="pointer-events-none absolute inset-0 bg-slate-950/0 transition duration-500 group-hover:bg-slate-950/15" />
@@ -471,7 +487,6 @@ export default function App() {
           <div className="relative">
             {canScrollLeft && <button type="button" onClick={() => scrollProducts("previous")} className="absolute left-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#f05f20] sm:left-1 sm:h-12 sm:w-12" aria-label="Scroll products left"><span className="flex h-full w-full items-center justify-center pb-0.5 text-2xl font-black leading-none sm:pb-1 sm:text-3xl">‹</span></button>}
             {canScrollRight && <button type="button" onClick={() => scrollProducts("next")} className="absolute right-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:translate-x-0.5 hover:bg-[#f05f20] sm:right-1 sm:h-12 sm:w-12" aria-label="Scroll products right"><span className="flex h-full w-full items-center justify-center pb-0.5 text-2xl font-black leading-none sm:pb-1 sm:text-3xl">›</span></button>}
-
 
             <div ref={productsScrollRef} className="-mx-4 overflow-x-auto overscroll-x-contain scroll-smooth px-8 py-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-10 sm:py-6 lg:-mx-8 lg:px-12 [&::-webkit-scrollbar]:hidden">
               <div className="flex w-max snap-x snap-mandatory gap-4 pr-4 sm:gap-5 sm:pr-6 lg:pr-8">
