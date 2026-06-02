@@ -73,6 +73,9 @@ const faqs = [
   ["Do I get to approve the design before printing?", "Yes. We send a digital preview first, and printing only starts after your approval."],
   ["How long does it take to make?", "Production usually takes around 2–4 weeks, depending on the complexity and current order queue."],
   ["How much is the down payment?", "A 50% down payment is required to start the project. The remaining balance is paid before shipping or delivery."],
+  ["Are the figures hand-painted?", "Yes. Each figure is individually painted by hand, so small variations may happen, making every piece unique."],
+  ["Are Miinii figures fragile?", "They are made for display, not rough handling. Please handle them with care, especially small parts like hands, ears, tails, glasses, or accessories."],
+  ["Do you accept international orders?", "Yes, international orders may be accepted depending on the destination and shipping options available."],
 ].map(([q, a]) => ({ q, a }));
 
 const collageItems = [
