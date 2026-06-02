@@ -527,7 +527,7 @@ export default function App() {
       </section>
 
       <section id="faq" className="py-16 sm:py-24">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8"><SectionHeader eyebrow="FAQ" title="Common questions" text="Simple answers to help you before ordering your custom Miinii." /><div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{faqs.map((faq) => <Reveal key={faq.q}><article className="h-full rounded-[1.25rem] bg-white p-4 shadow-md shadow-orange-100/50 ring-1 ring-orange-100/70 transition hover:-translate-y-1 hover:shadow-lg sm:p-5"><h3 className="text-sm font-black leading-5 text-slate-950">{faq.q}</h3><p className="mt-2 text-xs leading-5 text-slate-600">{faq.a}</p></article></Reveal>)}</div></div>
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8"><SectionHeader eyebrow="FAQ" title="Common questions" text="Simple answers to help you before ordering your custom Miinii." /><div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{faqs.map((faq) => <Reveal key={faq.q}><article className="h-full rounded-[1.25rem] bg-white p-4 shadow-md shadow-orange-100/50 ring-1 ring-orange-100/70 transition hover:-translate-y-1 hover:shadow-lg sm:p-5"><h3 className="text-sm font-black leading-5 text-slate-950 sm:text-lg">{faq.q}</h3><p className="mt-2 text-sm leading-5 text-slate-600">{faq.a}</p></article></Reveal>)}</div></div>
       </section>
 
       <section id="contact" className="px-4 pb-8 sm:px-6 lg:px-8">
