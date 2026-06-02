@@ -58,12 +58,12 @@ const products = [
 ];
 
 const testimonials = [
-  ["Joie, TikTok", "Miinii Pop!", "What you see is what you get 😍 Expectations are met! Can't wait for my tito's reaction pag nakita nya to 😁 Thank you po ulit! 🫶"],
-  ["Gilbert, Facebook", "Miinii Me", "Miinii captured the features and likeness of my son and sinigurado nilang pulido ang pagkakagawa. Very affordable and it was neatly packed. Thank you Miinii for the wonderful art figure."],
-  ["Jah, TikTok", "Miinii Pop!", "I love love love their works! already bought 2 miinii pops and will for sure order more next time! owner is very responsive and kind!"],
-  ["Michael, Facebook", "Miinii Rono", "I am absolutely obsessed with my new custom Hirono! He managed to shrink me down and make me look adorable..."],
-  ["Alyaurs, Instagram", "Miinii Pop!", "We totally love the customized mini pop of our best girl, Lena! 🥹 The quality, details, and effort put into every part of it exceeded our expectations."],
-  ["Kiamika, Facebook", "Miinii Pet", "Nagpagawa ako ng miinii figure ng deceased dog ko at sobrang detailed nung pagkakagawa.  Kamukhang kamukha din!"],
+  ["Joie, Miinii Pop!", "TikTok", "What you see is what you get 😍 Expectations are met! Can't wait for my tito's reaction pag nakita nya to 😁 Thank you po ulit! 🫶"],
+  ["Gilbert, Miinii Me", "Facebook", "Miinii captured the features and likeness of my son and sinigurado nilang pulido ang pagkakagawa. Very affordable and it was neatly packed. Thank you Miinii for the wonderful art figure."],
+  ["Jah, Miinii Pop!", "TikTok", "I love love love their works! already bought 2 miinii pops and will for sure order more next time! owner is very responsive and kind!"],
+  ["Michael, Miinii Rono", "Facebook", "I am absolutely obsessed with my new custom Hirono! He managed to shrink me down and make me look adorable..."],
+  ["Alyaurs, Miinii Pop!", "Instagram", "We totally love the customized mini pop of our best girl, Lena! 🥹 The quality, details, and effort put into every part of it exceeded our expectations."],
+  ["Kiamika, Miinii Pet", "Facebook", "Nagpagawa ako ng miinii figure ng deceased dog ko at sobrang detailed nung pagkakagawa.  Kamukhang kamukha din!"],
 ].map(([name, role, text]) => ({ name, role, text }));
 
 const faqs = [
