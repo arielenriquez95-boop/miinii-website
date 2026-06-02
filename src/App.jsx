@@ -522,7 +522,7 @@ export default function App() {
       <section id="testimonials" className="relative overflow-hidden bg-gradient-to-br from-[#0F766E] via-[#16C1C1] to-[#0E7490] py-10 text-white sm:py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Reveal className="mx-auto mb-8 max-w-2xl text-center"><p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-white/80">Testimonials</p><h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Kind words from Miinii clients</h2><p className="mt-3 text-base leading-7 text-white/80">Heartfelt notes from customers who turned meaningful moments into custom keepsakes.</p></Reveal>
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">{testimonials.map((testimonial) => <Reveal key={testimonial.name}><article className="group relative h-full overflow-hidden rounded-[1.35rem] border border-white/25 bg-white/90 p-4 shadow-xl shadow-teal-950/10 backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-white/50 hover:bg-white hover:shadow-2xl hover:shadow-teal-950/20 sm:p-5"><div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" /><div className="relative mb-4 flex gap-0.5 text-[#ff6f31]">{[...Array(5)].map((_, i) => <StarIcon key={i} className="h-3.5 w-3.5" />)}</div><p className="relative text-sm font-medium leading-6 text-slate-600">“{testimonial.text}”</p><div className="relative mt-4 border-t border-slate-100 pt-4"><h3 className="text-xs font-black text-slate-950 sm:text-sm">{testimonial.name}</h3><p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 sm:text-xs sm:tracking-[0.14em]">{testimonial.role}</p></div></article></Reveal>)}</div>
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">{testimonials.map((testimonial) => <Reveal key={testimonial.name}><article className="group relative flex h-full flex-col overflow-hidden rounded-[1.35rem] border border-white/25 bg-white/90 p-4 shadow-xl shadow-teal-950/10 backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-white/50 hover:bg-white hover:shadow-2xl hover:shadow-teal-950/20 sm:p-5"><div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" /><div className="relative mb-4 flex gap-0.5 text-[#ff6f31]">{[...Array(5)].map((_, i) => <StarIcon key={i} className="h-3.5 w-3.5" />)}</div><p className="relative text-sm font-medium leading-6 text-slate-600">“{testimonial.text}”</p><div className="relative mt-auto border-t border-slate-100 pt-4"><h3 className="text-xs font-black text-slate-950 sm:text-sm">{testimonial.name}</h3><p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 sm:text-xs sm:tracking-[0.14em]">{testimonial.role}</p></div></article></Reveal>)}</div>
         </div>
       </section>
 
@@ -542,9 +542,22 @@ export default function App() {
                 <a href="https://www.tiktok.com/@miiniistudios" target="_blank" rel="noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="tiktok" className="mr-2 h-5 w-5 shrink-0" />TikTok</a>
                 <a href="https://instagram.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="instagram" className="mr-2 h-5 w-5 shrink-0" />Instagram</a>
               </div>
-              <div className="mt-7 flex flex-col items-center gap-1 text-center text-sm leading-6 text-white/90 sm:mt-8 sm:text-base sm:leading-7">
-                <p className="break-all font-semibold">miinii.ariel@gmail.com</p>
-                <p>Meycauayan City of Bulacan, Philippines</p>
+              <div className="mt-7 flex flex-col items-center gap-2 text-center text-sm leading-6 text-white/90 sm:mt-8 sm:text-base sm:leading-7">
+                <p className="flex items-center justify-center gap-2 break-all font-semibold">
+                  <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                    <path d="M3 7l9 6 9-6" />
+                  </svg>
+                  miinii.ariel@gmail.com
+                </p>
+              
+                <p className="flex items-center justify-center gap-2">
+                  <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M12 21s7-4.4 7-11a7 7 0 1 0-14 0c0 6.6 7 11 7 11z" />
+                    <circle cx="12" cy="10" r="2.5" />
+                  </svg>
+                  Meycauayan City of Bulacan, Philippines
+                </p>
               </div>
             </div>
           </div>
