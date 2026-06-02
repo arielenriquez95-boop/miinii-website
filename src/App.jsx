@@ -58,7 +58,7 @@ const products = [
 ];
 
 const testimonials = [
-  ["Joie, TikTok", "Miinii Pop!", "What you see is what you get 😍 Expectations are met!"],
+  ["Joie, TikTok", "Miinii Pop!", "What you see is what you get 😍 Expectations are met! Can't wait for my tito's reaction pag nakita nya to 😁 Thank you po ulit! 🫶"],
   ["Gilbert, Facebook", "Miinii Me", "Miinii captured the features and likeness of my son and sinigurado nilang pulido ang pagkakagawa. Very affordable and it was neatly packed. Thank you Miinii for the wonderful art figure."],
   ["Jah, TikTok", "Miinii Pop!", "I love love love their works! already bought 2 miinii pops and will for sure order more next time! owner is very responsive and kind!"],
   ["Michael, Facebook", "Miinii Rono", "I am absolutely obsessed with my new custom Hirono! He managed to shrink me down and make me look adorable..."],
