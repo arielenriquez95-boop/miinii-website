@@ -58,12 +58,12 @@ const products = [
 ];
 
 const testimonials = [
-  ["Happy Client", "Miinii Gift", "The final figure felt personal, cute, and gift-ready."],
-  ["Pet Owner", "Miinii Pet", "Our pet became a tiny keepsake we can display at home."],
-  ["Collector", "Miinii Pop", "A fun collectible with a handmade, premium feel."],
-  ["Gift Buyer", "Birthday Gift", "It was unique, thoughtful, and different from regular gifts."],
-  ["Couple Client", "Custom Duo", "The preview made the process easy before production started."],
-  ["Fur Parent", "Pet Keepsake", "A small piece, but it carried a lot of emotion."],
+  ["Joie, TikTok", "Miinii Pop!", "What you see is what you get 😍 Expectations are met!"],
+  ["Gilbert, Facebook", "Miinii Me", "Miinii captured the features and likeness of my son and sinigurado nilang pulido ang pagkakagawa. Very affordable and it was neatly packed. Thank you Miinii for the wonderful art figure."],
+  ["Jah, TikTok", "Miinii Pop!", "I love love love their works! already bought 2 miinii pops and will for sure order more next time! owner is very responsive and kind!"],
+  ["Michael, Facebook", "Miinii Rono", "I am absolutely obsessed with my new custom Hirono! He managed to shrink me down and make me look adorable..."],
+  ["Alyaurs, Instagram", "Miinii Pop!", "We totally love the customized mini pop of our best girl, Lena! 🥹 The quality, details, and effort put into every part of it exceeded our expectations."],
+  ["Kiamika, Facebook", "Miinii Pet", "Nagpagawa ako ng miinii figure ng deceased dog ko at sobrang detailed nung pagkakagawa.  Kamukhang kamukha din!"],
 ].map(([name, role, text]) => ({ name, role, text }));
 
 const faqs = [
