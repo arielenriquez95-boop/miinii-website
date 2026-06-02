@@ -67,10 +67,12 @@ const testimonials = [
 ].map(([name, role, text]) => ({ name, role, text }));
 
 const faqs = [
-  ["How does the process work?", "Send your reference photos, review the 3D preview, then we print, paint, finish, and pack your Miinii."],
-  ["Can I request revisions?", "Yes. You can review the 3D preview before printing and request minor adjustments before production starts."],
-  ["Is it good as a gift?", "Yes. Miinii figures are made as personal gifts, keepsakes, display pieces, and collectibles."],
-  ["How long does production usually take?", "Production time depends on the queue, design complexity, and quantity. You can ask us directly for the current turnaround time before placing your order."],
+  ["What is Miinii?", "Miinii creates custom 3D mini figures based on your photos, pets, favorite moments, or special requests."],
+  ["How does the process work?", "Send your reference photos, we create a digital 3D preview, you approve the design, then we print, paint, and prepare your Miinii."],
+  ["What kind of photos should I send?", "Clear front, side, and back photos are best. For pets, include photos showing their face, body, color, markings, and pose."],
+  ["Do I get to approve the design before printing?", "Yes. We send a digital preview first, and printing only starts after your approval."],
+  ["How long does it take to make?", "Production usually takes around 2–4 weeks, depending on the complexity and current order queue."],
+  ["How much is the down payment?", "A 50% down payment is required to start the project. The remaining balance is paid before shipping or delivery."],
 ].map(([q, a]) => ({ q, a }));
 
 const collageItems = [
