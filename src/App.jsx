@@ -74,7 +74,6 @@ const faqs = [
   ["How long does it take to make?", "Production usually takes around 2–4 weeks, depending on the complexity and current order queue."],
   ["How much is the down payment?", "A 50% down payment is required to start the project. The remaining balance is paid before shipping or delivery."],
   ["Are the figures hand-painted?", "Yes. Each figure is individually painted by hand, so small variations may happen, making every piece unique."],
-  ["Are Miinii figures fragile?", "They are made for display, not rough handling. Please handle them with care, especially small parts like hands, ears, tails, glasses, or accessories."],
   ["Do you accept international orders?", "Yes, international orders may be accepted depending on the destination and shipping options available."],
 ].map(([q, a]) => ({ q, a }));
 
@@ -528,7 +527,7 @@ export default function App() {
       </section>
 
       <section id="faq" className="py-16 sm:py-24">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8"><SectionHeader eyebrow="FAQ" title="Common questions" text="Here are simple answers your customers may want to know before placing an order." /><div className="grid grid-cols-2 gap-3 sm:gap-4">{faqs.map((faq) => <Reveal key={faq.q}><article className="h-full rounded-[1.5rem] bg-white p-4 shadow-lg shadow-orange-100/60 sm:rounded-3xl sm:p-6"><h3 className="text-sm font-black leading-5 text-slate-950 sm:text-lg">{faq.q}</h3><p className="mt-2 text-xs leading-5 text-slate-600 sm:mt-3 sm:text-base sm:leading-7">{faq.a}</p></article></Reveal>)}</div></div>
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8"><SectionHeader eyebrow="FAQ" title="Common questions" text="Simple answers to help you before ordering your custom Miinii." /><div className="grid grid-cols-2 gap-3 sm:gap-4">{faqs.map((faq) => <Reveal key={faq.q}><article className="h-full rounded-[1.5rem] bg-white p-4 shadow-lg shadow-orange-100/60 sm:rounded-3xl sm:p-6"><h3 className="text-sm font-black leading-5 text-slate-950 sm:text-lg">{faq.q}</h3><p className="mt-2 text-xs leading-5 text-slate-600 sm:mt-3 sm:text-base sm:leading-7">{faq.a}</p></article></Reveal>)}</div></div>
       </section>
 
       <section id="contact" className="px-4 pb-8 sm:px-6 lg:px-8">
