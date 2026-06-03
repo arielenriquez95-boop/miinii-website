@@ -541,15 +541,76 @@ export default function App() {
         </div></div></Reveal></div>
       </section>
 
-      <section id="testimonials" className="relative overflow-hidden bg-gradient-to-br from-[#0F766E] via-[#16C1C1] to-[#0E7490] py-10 text-white sm:py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto mb-8 max-w-2xl text-center"><p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-white/80">Testimonials</p><h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Kind words from Miinii clients</h2><p className="mt-3 text-base leading-7 text-white/80">Heartfelt notes from customers who turned meaningful moments into custom keepsakes.</p></Reveal>
-          <div className="grid grid-flow-col grid-rows-2 auto-cols-[100%] gap-3 overflow-x-auto snap-x snap-mandatory pb-4 lg:grid-flow-row lg:grid-cols-3 lg:grid-rows-none lg:overflow-visible lg:pb-0">{testimonials.map((testimonial) => <Reveal key={testimonial.name}><article className="group relative flex h-full flex-col overflow-hidden rounded-[1.35rem] border border-white/25 bg-white/90 p-4 shadow-xl shadow-teal-950/10 backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-white/50 hover:bg-white hover:shadow-2xl hover:shadow-teal-950/20 snap-start sm:p-5"><div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" /><div className="relative mb-4 flex gap-0.5 text-[#ff6f31]">{[...Array(5)].map((_, i) => <StarIcon key={i} className="h-3.5 w-3.5" />)}</div><p className="relative text-sm font-medium leading-6 text-slate-600">“{testimonial.text}”</p><div className="relative mt-auto border-t border-slate-100 pt-4"><h3 className="text-xs font-black text-slate-950 sm:text-sm">{testimonial.name}</h3><p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 sm:text-xs sm:tracking-[0.14em]">{testimonial.role}</p></div></article></Reveal>)}</div>
+     <section id="testimonials" className="relative overflow-hidden bg-gradient-to-br from-[#0F766E] via-[#16C1C1] to-[#0E7490] py-10 text-white sm:py-14 lg:py-16">
+        <div className="absolute -left-24 top-10 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+        <div className="absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-[#ff6f31]/20 blur-3xl" />
+      
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal className="mx-auto mb-8 max-w-2xl text-center">
+            <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-white/80">Testimonials</p>
+            <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Kind words from Miinii clients</h2>
+            <p className="mt-3 text-base leading-7 text-white/80">Heartfelt notes from customers who turned meaningful moments into custom keepsakes.</p>
+          </Reveal>
+      
+          <div className="-mx-4 overflow-x-auto px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden">
+            <div className="grid auto-cols-[100%] grid-flow-col grid-cols-none grid-rows-2 gap-3 snap-x snap-mandatory sm:auto-cols-[82%] sm:gap-4 md:auto-cols-[68%] lg:grid-flow-row lg:auto-cols-auto lg:grid-cols-3 lg:grid-rows-2 lg:overflow-visible">
+              {testimonials.map((testimonial) => (
+                <Reveal key={testimonial.name} className="snap-start">
+                  <article className="group relative flex min-h-[235px] h-full flex-col overflow-hidden rounded-[1.35rem] border border-white/25 bg-white/95 p-4 shadow-xl shadow-teal-950/10 backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-white/50 hover:bg-white hover:shadow-2xl hover:shadow-teal-950/20 sm:min-h-[245px] sm:p-5 lg:min-h-[260px]">
+                    <div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" />
+      
+                    <div className="relative mb-3 flex gap-0.5 text-[#ff6f31] sm:mb-4">
+                      {[...Array(5)].map((_, i) => (
+                        <StarIcon key={i} className="h-3.5 w-3.5" />
+                      ))}
+                    </div>
+      
+                    <p className="relative line-clamp-6 text-sm font-medium leading-6 text-slate-600">
+                      “{testimonial.text}”
+                    </p>
+      
+                    <div className="relative mt-auto border-t border-slate-100 pt-4">
+                      <h3 className="text-xs font-black text-slate-950 sm:text-sm">{testimonial.name}</h3>
+                      <p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 sm:text-xs sm:tracking-[0.14em]">{testimonial.role}</p>
+                    </div>
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+      
+          <p className="mt-1 text-center text-xs font-semibold text-white/70 lg:hidden">Swipe to see more reviews →</p>
         </div>
       </section>
 
-      <section id="faq" className="py-16 sm:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"><SectionHeader eyebrow="FAQ" title="Common questions" text="Simple answers to help you before ordering your custom Miinii." /><div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{faqs.map((faq) => <Reveal key={faq.q}><article className="h-full rounded-[1.25rem] bg-white p-4 shadow-md shadow-orange-100/50 ring-1 ring-orange-100/70 transition hover:-translate-y-1 hover:shadow-lg sm:p-5"><h3 className="text-sm font-black leading-5 text-slate-950 sm:text-lg">{faq.q}</h3><p className="mt-2 text-sm leading-5 text-slate-600">{faq.a}</p></article></Reveal>)}</div></div>
+      <section id="faq" className="relative overflow-hidden py-16 sm:py-24">
+        <div className="absolute left-0 top-20 h-64 w-64 rounded-full bg-[#16C1C1]/10 blur-3xl" />
+        <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#ff6f31]/10 blur-3xl" />
+      
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionHeader eyebrow="FAQ" title="Common questions" text="Simple answers to help you before ordering your custom Miinii." />
+      
+          <div className="-mx-4 overflow-x-auto px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden">
+            <div className="grid auto-cols-[100%] grid-flow-col grid-cols-none grid-rows-2 gap-3 snap-x snap-mandatory sm:auto-cols-[82%] sm:gap-4 md:auto-cols-[68%] lg:grid-flow-row lg:auto-cols-auto lg:grid-cols-4 lg:grid-rows-2">
+              {faqs.map((faq) => (
+                <Reveal key={faq.q} className="snap-start">
+                  <article className="group relative flex min-h-[190px] h-full flex-col overflow-hidden rounded-[1.35rem] bg-white p-4 shadow-md shadow-orange-100/50 ring-1 ring-orange-100/70 transition duration-500 hover:-translate-y-1 hover:shadow-xl sm:min-h-[205px] sm:p-5 lg:min-h-[220px]">
+                    <div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#ff6f31]/10 transition duration-500 group-hover:scale-125" />
+      
+                    <div className="relative mb-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#16C1C1]/12 text-sm font-black text-[#0F766E] ring-1 ring-[#16C1C1]/20">
+                      ?
+                    </div>
+      
+                    <h3 className="relative text-sm font-black leading-5 text-slate-950 sm:text-lg sm:leading-6">{faq.q}</h3>
+                    <p className="relative mt-2 text-sm leading-5 text-slate-600 sm:leading-6">{faq.a}</p>
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+      
+          <p className="mt-1 text-center text-xs font-semibold text-slate-500 lg:hidden">Swipe to see more questions →</p>
+        </div>
       </section>
 
       <section id="contact" className="px-4 pb-8 sm:px-6 lg:px-8">
