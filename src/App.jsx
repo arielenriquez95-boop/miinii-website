@@ -146,7 +146,7 @@ function MediaPreview({ src, alt, className = "", videoClassName = "", lazy = fa
     );
   }
 
-  return <img src={src} alt={alt} className={className} loading={lazy ? "lazy" : "lazy"} />;
+  return <img src={src} alt={alt} className={className} loading={lazy ? "lazy" : "eager"} />;
 }
 
 function StarIcon({ className = "h-4 w-4" }) {
@@ -572,10 +572,6 @@ export default function App() {
     }
 
     setActiveProductScrollIndex(nearestIndex);
-  };
-
-  const updateProductScrollButtons = () => {
-    setActiveProductScrollIndex(getNearestProductIndex());
   };
 
   const scrollProducts = (direction) => {
@@ -1229,10 +1225,10 @@ export default function App() {
               <h2 className="max-w-3xl text-3xl font-black leading-tight tracking-tight text-white sm:text-5xl">Ready to create your own Miinii?</h2>
               <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-white/90 sm:mt-5 sm:text-lg sm:leading-8">Send your reference photos and let’s turn your favorite person, pet, or memory into a custom 3D mini figure.</p>
               <div className="mt-8 grid w-full max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                <a href="https://instagram.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl border border-white/30 bg-white/10 px-5 py-4 text-base font-black text-white backdrop-blur transition hover:-translate-y-1 hover:bg-white/20 sm:rounded-full"><SocialIcon type="message" className="mr-2 h-5 w-5 shrink-0" />Message Us</a>
-                <a href="https://www.facebook.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="facebook" className="mr-2 h-5 w-5 shrink-0" />Facebook</a>
-                <a href="https://www.tiktok.com/@miiniistudios" target="_blank" rel="noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="tiktok" className="mr-2 h-5 w-5 shrink-0" />TikTok</a>
-                <a href="https://instagram.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="instagram" className="mr-2 h-5 w-5 shrink-0" />Instagram</a>
+                <a href="https://instagram.com/MiiniiStudios" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl border border-white/30 bg-white/10 px-5 py-4 text-base font-black text-white backdrop-blur transition hover:-translate-y-1 hover:bg-white/20 sm:rounded-full"><SocialIcon type="message" className="mr-2 h-5 w-5 shrink-0" />Message Us</a>
+                <a href="https://www.facebook.com/MiiniiStudios" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="facebook" className="mr-2 h-5 w-5 shrink-0" />Facebook</a>
+                <a href="https://www.tiktok.com/@miiniistudios" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="tiktok" className="mr-2 h-5 w-5 shrink-0" />TikTok</a>
+                <a href="https://instagram.com/MiiniiStudios" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="instagram" className="mr-2 h-5 w-5 shrink-0" />Instagram</a>
               </div>
               <div className="mt-7 flex flex-col items-center gap-2 text-center text-sm leading-6 text-white/90 sm:mt-8 sm:text-base sm:leading-7">
                 <p className="flex items-center justify-center gap-2">
