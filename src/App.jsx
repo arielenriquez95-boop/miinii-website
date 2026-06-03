@@ -401,29 +401,27 @@ function ProductModal({ products, index, setIndex, onClose }) {
       <div key={product.title} className={`relative flex h-[100dvh] w-full max-w-none flex-col overflow-hidden rounded-none border-0 bg-white shadow-none animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:mx-auto sm:h-auto sm:max-h-[90vh] sm:max-w-5xl sm:rounded-[2rem] sm:border sm:border-white/10 sm:shadow-2xl sm:shadow-black/40 md:h-auto ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
         <button type="button" onClick={onClose} className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top,0px))] z-30 flex h-10 w-10 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950 sm:h-11 sm:w-11" aria-label="Close product preview">×</button>
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:grid md:max-h-[90vh] md:grid-cols-[0.95fr_1.05fr] md:overflow-y-auto">
-          <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:hidden">
-            <div className="relative flex min-h-0 flex-[1.2] items-center justify-center bg-gradient-to-br from-orange-50 via-white to-teal-50 px-5 pb-4 pt-[calc(max(0.75rem,env(safe-area-inset-top,0px))+2.75rem)]">
-              <div className="flex h-full w-full max-w-[min(88vw,340px)] items-center justify-center">
-                <img
-                  src={product.image}
-                  alt={`${product.title} preview`}
-                  className="max-h-full max-w-full object-contain drop-shadow-[0_18px_40px_rgba(15,23,42,0.12)]"
-                />
-              </div>
+          <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1.65fr)_minmax(0,1fr)] overflow-hidden md:hidden">
+            <div className="relative flex min-h-0 items-center justify-center bg-gradient-to-br from-orange-50 via-white to-teal-50 px-3 pb-2 pt-[calc(max(0.75rem,env(safe-area-inset-top,0px))+2.5rem)]">
+              <img
+                src={product.image}
+                alt={`${product.title} preview`}
+                className="h-full w-full max-h-[min(72dvh,560px)] max-w-[min(96vw,420px)] object-contain drop-shadow-[0_18px_40px_rgba(15,23,42,0.12)]"
+              />
             </div>
 
-            <div className="flex min-h-0 flex-1 flex-col justify-between gap-3 border-t border-orange-100/80 bg-white px-4 py-4 pb-[max(1.25rem,env(safe-area-inset-bottom,0px))]">
-              <div className="min-h-0 flex-1 space-y-3 overflow-y-auto">
+            <div className="min-h-0 overflow-y-auto overscroll-contain border-t border-orange-100/80 bg-white px-4 py-3.5 pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
+              <div className="space-y-3">
                 <div>
                   <h2 className="text-xl font-black leading-tight tracking-tight text-slate-950">{product.title}</h2>
-                  <p className="mt-1.5 text-sm leading-6 text-slate-600">{product.shortText}</p>
-                  <div className="mt-2.5 flex flex-wrap items-center gap-2">
+                  <p className="mt-1 text-sm leading-snug text-slate-600">{product.shortText}</p>
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
                     {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-400 line-through ring-1 ring-slate-200">{product.oldPrice}</span>}
                     <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-3 py-1.5 text-sm font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">{product.price}</span>
                   </div>
                 </div>
-                <div className="rounded-[1.15rem] bg-[#fff8f3] p-3.5 ring-1 ring-orange-100">
-                  <ul className="grid gap-2.5">
+                <div className="rounded-[1.15rem] bg-[#fff8f3] p-3 ring-1 ring-orange-100">
+                  <ul className="grid gap-2">
                     {product.details.map((detail) => (
                       <li key={detail} className="flex gap-2.5 text-sm leading-5 text-slate-600">
                         <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#16C1C1]" />
@@ -432,30 +430,30 @@ function ProductModal({ products, index, setIndex, onClose }) {
                     ))}
                   </ul>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+
+                    setTimeout(() => {
+                      const contactSection = document.getElementById("contact");
+                      if (!contactSection) return;
+
+                      const headerOffset = 80;
+                      const sectionPosition = contactSection.getBoundingClientRect().top + window.scrollY;
+
+                      window.scrollTo({
+                        top: sectionPosition - headerOffset,
+                        behavior: "smooth",
+                      });
+                    }, 120);
+                  }}
+                  className="inline-flex w-full items-center justify-center rounded-full bg-[#ff6f31] px-6 py-3.5 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:bg-[#f05f20]"
+                >
+                  Start Your Miinii
+                  <ArrowIcon className="ml-2 h-5 w-5" />
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => {
-                  onClose();
-
-                  setTimeout(() => {
-                    const contactSection = document.getElementById("contact");
-                    if (!contactSection) return;
-
-                    const headerOffset = 80;
-                    const sectionPosition = contactSection.getBoundingClientRect().top + window.scrollY;
-
-                    window.scrollTo({
-                      top: sectionPosition - headerOffset,
-                      behavior: "smooth",
-                    });
-                  }, 120);
-                }}
-                className="inline-flex w-full shrink-0 items-center justify-center rounded-full bg-[#ff6f31] px-6 py-4 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:bg-[#f05f20]"
-              >
-                Start Your Miinii
-                <ArrowIcon className="ml-2 h-5 w-5" />
-              </button>
             </div>
           </div>
 
