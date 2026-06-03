@@ -357,30 +357,42 @@ function ProductModal({ products, index, setIndex, onClose }) {
       <button type="button" onClick={previous} className="absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Previous product">‹</button>
       <button type="button" onClick={next} className="absolute right-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Next product">›</button>
 
-      <div key={product.title} className={`relative mx-auto flex h-[calc(100%-1.5rem)] w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem] ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
-        <button type="button" onClick={onClose} className="absolute right-3 top-3 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950" aria-label="Close product preview">×</button>
-        <div className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-[0.95fr_1.05fr]">
-          <div className="relative flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-teal-50 p-4 md:sticky md:top-0 sm:p-6">
-            <div className="aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-[1.25rem] bg-white ring-1 ring-slate-100 shadow-inner">
-              <img
-                src={product.image}
-                alt={`${product.title} preview`}
-                className="block h-full w-full rounded-[inherit] object-contain"
-              />
+      <div key={product.title} className={`relative mx-auto flex max-h-[92dvh] w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:max-h-[90vh] sm:rounded-[2rem] md:h-auto ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
+        <button type="button" onClick={onClose} className="absolute right-2.5 top-2.5 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950 sm:right-3 sm:top-3 sm:h-11 sm:w-11" aria-label="Close product preview">×</button>
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:grid md:max-h-[90vh] md:grid-cols-[0.95fr_1.05fr] md:overflow-y-auto">
+          <div className="relative flex shrink-0 items-center gap-3 border-b border-orange-100/80 bg-gradient-to-br from-orange-50 via-white to-teal-50 p-3 pr-12 md:block md:border-0 md:p-6 md:pr-6">
+            <div className="w-[6.75rem] shrink-0 overflow-hidden rounded-xl bg-white ring-1 ring-slate-100 shadow-inner sm:w-[7.5rem] md:mx-auto md:w-full md:max-w-[420px] md:rounded-[1.25rem]">
+              <div className="aspect-[4/5]">
+                <img
+                  src={product.image}
+                  alt={`${product.title} preview`}
+                  className="block h-full w-full object-contain"
+                />
+              </div>
+            </div>
+            <div className="min-w-0 flex-1 md:hidden">
+              <h2 className="text-lg font-black leading-tight tracking-tight text-slate-950">{product.title}</h2>
+              <p className="mt-1 text-xs leading-5 text-slate-600">{product.shortText}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200">{product.oldPrice}</span>}
+                <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-2.5 py-1 text-[11px] font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">{product.price}</span>
+              </div>
             </div>
           </div>
-          <div className="flex flex-col justify-center p-5 sm:p-8 lg:p-10">
-            <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">{product.title}</h2>
-            <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-lg sm:leading-8">{product.shortText}</p>
-            <div className="mt-4 flex flex-nowrap items-center gap-2 sm:mt-5 sm:flex-wrap">
-              {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-400 line-through ring-1 ring-slate-200 sm:px-4 sm:py-2 sm:text-sm">{product.oldPrice}</span>}
-              <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-4 py-2 text-sm font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 sm:px-5 sm:py-2.5 sm:text-base">{product.price}</span>
+          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-3 sm:p-8 lg:p-10">
+            <div className="hidden md:block">
+              <h2 className="text-3xl font-black tracking-tight text-slate-950 lg:text-5xl">{product.title}</h2>
+              <p className="mt-3 text-lg leading-8 text-slate-600">{product.shortText}</p>
+              <div className="mt-5 flex flex-wrap items-center gap-2">
+                {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-4 py-2 text-sm font-bold text-slate-400 line-through ring-1 ring-slate-200">{product.oldPrice}</span>}
+                <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-5 py-2.5 text-base font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">{product.price}</span>
+              </div>
             </div>
-            <div className="mt-4 rounded-[1.35rem] bg-[#fff8f3] p-4 ring-1 ring-orange-100 sm:mt-5 sm:rounded-[1.5rem] sm:p-5">
-              <ul className="grid gap-2.5 sm:gap-3">
+            <div className="rounded-[1.15rem] bg-[#fff8f3] p-3 ring-1 ring-orange-100 md:mt-5 md:rounded-[1.5rem] md:p-5">
+              <ul className="grid gap-2 md:gap-3">
                 {product.details.map((detail) => (
-                  <li key={detail} className="flex gap-3 text-sm leading-6 text-slate-600 sm:text-base">
-                    <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#16C1C1]" />
+                  <li key={detail} className="flex gap-2.5 text-xs leading-5 text-slate-600 md:gap-3 md:text-base md:leading-6">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#16C1C1] md:mt-2 md:h-2 md:w-2" />
                     <span>{detail}</span>
                   </li>
                 ))}
@@ -390,21 +402,21 @@ function ProductModal({ products, index, setIndex, onClose }) {
               type="button"
               onClick={() => {
                 onClose();
-            
+
                 setTimeout(() => {
                   const contactSection = document.getElementById("contact");
                   if (!contactSection) return;
-            
+
                   const headerOffset = 80;
                   const sectionPosition = contactSection.getBoundingClientRect().top + window.scrollY;
-            
+
                   window.scrollTo({
                     top: sectionPosition - headerOffset,
                     behavior: "smooth",
                   });
                 }, 120);
               }}
-              className="mt-5 inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:mt-6 sm:text-base"
+              className="mt-3 shrink-0 inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-6 py-3.5 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] md:mt-6 md:px-7 md:py-4"
             >
               Start Your Miinii
               <ArrowIcon className="ml-2 h-5 w-5" />
