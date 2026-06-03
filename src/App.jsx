@@ -573,8 +573,8 @@ function ProductDeckCarousel({ products, activeIndex, onIndexChange, onOpenProdu
   return (
     <div className="lg:hidden">
       <div
-        className="relative mx-auto w-[72vw] max-w-[255px] touch-pan-y select-none py-8"
-        style={{ height: "calc(72vw * 1.35 + 4rem)", maxHeight: "380px" }}
+        className="relative mx-auto w-[84vw] max-w-[290px] touch-pan-y select-none py-8"
+        style={{ height: "calc(84vw * 1.35 + 4rem)", maxHeight: "430px" }}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
@@ -592,7 +592,7 @@ function ProductDeckCarousel({ products, activeIndex, onIndexChange, onOpenProdu
             <div
               key={product.title}
               data-product-index={index}
-              className="absolute inset-x-0 top-8 mx-auto w-full max-w-[255px] px-3 will-change-transform"
+              className="absolute inset-x-0 top-8 mx-auto w-full max-w-[290px] px-2 will-change-transform"
               style={style}
             >
               <ProductCard product={product} onClick={() => onOpenProduct(index)} />
