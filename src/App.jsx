@@ -412,33 +412,34 @@ function ProductModal({ products, index, setIndex, onClose }) {
       <div key={product.title} className={`relative flex h-[100dvh] w-full max-w-none flex-col overflow-hidden rounded-none border-0 bg-white shadow-none animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:mx-auto sm:h-auto sm:max-h-[90vh] sm:max-w-5xl sm:rounded-[2rem] sm:border sm:border-white/10 sm:shadow-2xl sm:shadow-black/40 md:h-auto ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
         <button type="button" onClick={onClose} className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top,0px))] z-30 flex h-10 w-10 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950 sm:h-11 sm:w-11" aria-label="Close product preview">×</button>
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:grid md:max-h-[90vh] md:grid-cols-[0.95fr_1.05fr] md:overflow-y-auto">
-          <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:hidden">
-            <div className="relative aspect-square w-full shrink-0 overflow-hidden bg-[#f4f6f8]">
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-white md:hidden">
+            <div className="relative aspect-square w-full max-h-[min(100vw,50dvh)] shrink-0 self-center overflow-hidden bg-[#f4f6f8]">
               <img
                 src={product.image}
                 alt={`${product.title} preview`}
-                className="h-full w-full object-cover object-center"
+                className="size-full object-cover object-center"
               />
               <div
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-[min(48%,11rem)] bg-gradient-to-t from-white from-[18%] via-white/88 via-[48%] to-transparent"
+                className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-slate-950/35 to-transparent"
                 aria-hidden="true"
               />
-              <div className="absolute inset-x-0 bottom-0 z-10 px-4 pb-4 pt-14">
-                <h2 className="text-[1.35rem] font-black leading-tight tracking-tight text-slate-950">{product.title}</h2>
-              </div>
             </div>
 
-            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-white px-4 py-3.5 pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
-              <div className="space-y-3">
-                <div>
-                  <p className="text-sm leading-snug text-slate-600">{product.shortText}</p>
-                  <div className="mt-2 flex flex-wrap items-center gap-2">
-                    {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-400 line-through ring-1 ring-slate-200">{product.oldPrice}</span>}
-                    <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-3 py-1.5 text-sm font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">{product.price}</span>
+            <div className="relative z-10 -mt-5 flex min-h-0 flex-1 flex-col rounded-t-[1.75rem] bg-white shadow-[0_-10px_36px_rgba(15,23,42,0.1)]">
+              <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain px-5 pt-5 pb-3">
+                <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
+                  <h2 className="min-w-0 flex-1 text-[1.4rem] font-black leading-tight tracking-tight text-slate-950">{product.title}</h2>
+                  <div className="flex shrink-0 flex-wrap items-center justify-end gap-1.5">
+                    {product.oldPrice && <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-400 line-through ring-1 ring-slate-200">{product.oldPrice}</span>}
+                    <span className="rounded-full bg-[#ff6f31]/15 px-2.5 py-1 text-xs font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">{product.price}</span>
                   </div>
                 </div>
-                <div className="rounded-[1.15rem] bg-[#fff8f3] p-3 ring-1 ring-orange-100">
-                  <ul className="grid gap-2">
+
+                <p className="mt-3 text-sm leading-6 text-slate-600">{product.shortText}</p>
+
+                <div className="mt-4 rounded-[1.2rem] bg-[#fff8f3] p-3.5 ring-1 ring-orange-100">
+                  <p className="mb-2.5 text-[11px] font-bold uppercase tracking-[0.18em] text-[#16C1C1]">What&apos;s included</p>
+                  <ul className="grid gap-2.5">
                     {product.details.map((detail) => (
                       <li key={detail} className="flex gap-2.5 text-sm leading-5 text-slate-600">
                         <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#16C1C1]" />
@@ -447,6 +448,9 @@ function ProductModal({ products, index, setIndex, onClose }) {
                     ))}
                   </ul>
                 </div>
+              </div>
+
+              <div className="shrink-0 border-t border-slate-100 bg-white px-5 py-3.5 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))]">
                 <button
                   type="button"
                   onClick={() => {
@@ -465,7 +469,7 @@ function ProductModal({ products, index, setIndex, onClose }) {
                       });
                     }, 120);
                   }}
-                  className="inline-flex w-full items-center justify-center rounded-full bg-[#ff6f31] px-6 py-3.5 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:bg-[#f05f20]"
+                  className="inline-flex w-full items-center justify-center rounded-full bg-[#ff6f31] px-6 py-4 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:bg-[#f05f20]"
                 >
                   Start Your Miinii
                   <ArrowIcon className="ml-2 h-5 w-5" />
