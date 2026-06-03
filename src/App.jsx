@@ -320,7 +320,29 @@ function ProductModal({ products, index, setIndex, onClose }) {
                 ))}
               </ul>
             </div>
-            <a href="#contact" onClick={onClose} className="mt-5 inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:mt-6 sm:text-base">Start Your Miinii<ArrowIcon className="ml-2 h-5 w-5" /></a>
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+            
+                setTimeout(() => {
+                  const contactSection = document.getElementById("contact");
+                  if (!contactSection) return;
+            
+                  const headerOffset = 80;
+                  const sectionPosition = contactSection.getBoundingClientRect().top + window.scrollY;
+            
+                  window.scrollTo({
+                    top: sectionPosition - headerOffset,
+                    behavior: "smooth",
+                  });
+                }, 120);
+              }}
+              className="mt-5 inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:mt-6 sm:text-base"
+            >
+              Start Your Miinii
+              <ArrowIcon className="ml-2 h-5 w-5" />
+            </button>
           </div>
         </div>
       </div>
