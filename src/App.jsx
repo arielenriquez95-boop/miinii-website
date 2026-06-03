@@ -470,35 +470,60 @@ export default function App() {
         };
       }, []);
     
-      const scrollTestimonialsToPage = (pageIndex) => {
+     const scrollTestimonialsToPage = (pageIndex) => {
         const carousel = testimonialsScrollRef.current;
         if (!carousel) return;
-    
-        carousel.scrollTo({
-          left: carousel.clientWidth * pageIndex,
+      
+        const page = carousel.querySelector(`[data-testimonial-page="${pageIndex}"]`);
+        if (!page) return;
+      
+        page.scrollIntoView({
           behavior: "smooth",
+          inline: "center",
+          block: "nearest",
         });
-    
+      
         setActiveTestimonialPage(pageIndex);
       };
     
       useEffect(() => {
         const carousel = testimonialsScrollRef.current;
         if (!carousel) return;
-    
+      
         const updateTestimonialPage = () => {
-          const pageIndex = Math.round(carousel.scrollLeft / carousel.clientWidth);
-          setActiveTestimonialPage(pageIndex);
+          const pages = Array.from(carousel.querySelectorAll("[data-testimonial-page]"));
+          const carouselCenter = carousel.getBoundingClientRect().left + carousel.clientWidth / 2;
+      
+          let nearestPage = 0;
+          let nearestDistance = Infinity;
+      
+          pages.forEach((page) => {
+            const pageIndex = Number(page.getAttribute("data-testimonial-page"));
+            const pageCenter = page.getBoundingClientRect().left + page.clientWidth / 2;
+            const distance = Math.abs(pageCenter - carouselCenter);
+      
+            if (distance < nearestDistance) {
+              nearestDistance = distance;
+              nearestPage = pageIndex;
+            }
+          });
+      
+          setActiveTestimonialPage(nearestPage);
         };
-    
+      
         carousel.addEventListener("scroll", updateTestimonialPage, { passive: true });
         window.addEventListener("resize", updateTestimonialPage);
-    
+      
         return () => {
           carousel.removeEventListener("scroll", updateTestimonialPage);
           window.removeEventListener("resize", updateTestimonialPage);
         };
       }, []);
+  
+        const testimonialPages = Array.from(
+        { length: Math.ceil(testimonials.length / 4) },
+        (_, pageIndex) => testimonials.slice(pageIndex * 4, pageIndex * 4 + 4)
+      );
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#fff8f3] text-slate-900 [scroll-behavior:smooth]">
