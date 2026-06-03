@@ -410,9 +410,202 @@ function ProductModal({ products, index, setIndex, onClose }) {
   );
 }
 
+const PRODUCT_DECK_SWIPE_THRESHOLD = 56;
+
+function getProductDeckCardStyle(offset, dragX, isDragging) {
+  const transition = isDragging
+    ? "none"
+    : "transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1)";
+
+  if (offset < -1) {
+    return {
+      transform: "translate3d(-115%, 0, 0) scale(0.88)",
+      opacity: 0,
+      zIndex: 0,
+      pointerEvents: "none",
+      transition,
+    };
+  }
+
+  if (offset === -1) {
+    const enter = Math.min(1, Math.max(0, dragX) / 130);
+    if (!isDragging && enter === 0) {
+      return {
+        transform: "translate3d(-115%, 0, 0) scale(0.88)",
+        opacity: 0,
+        zIndex: 0,
+        pointerEvents: "none",
+        transition,
+      };
+    }
+
+    return {
+      transform: `translate3d(${-96 + enter * 96}%, 0, 0) scale(${0.9 + enter * 0.1})`,
+      opacity: enter,
+      zIndex: 35,
+      pointerEvents: "none",
+      transition,
+    };
+  }
+
+  if (offset === 0) {
+    return {
+      transform: `translate3d(${dragX}px, 0, 0) scale(1)`,
+      opacity: 1,
+      zIndex: 40,
+      pointerEvents: "auto",
+      transition,
+    };
+  }
+
+  if (offset === 1) {
+    const pullForward = isDragging ? Math.min(1, Math.max(0, -dragX) / 130) : 0;
+    const x = 24 * (1 - pullForward);
+    const y = 16 * (1 - pullForward);
+    const scale = 0.93 + 0.07 * pullForward;
+
+    return {
+      transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`,
+      opacity: 0.9 + 0.1 * pullForward,
+      zIndex: 30 - Math.round(pullForward * 5),
+      pointerEvents: "none",
+      transition,
+    };
+  }
+
+  if (offset === 2) {
+    const pullForward = isDragging ? Math.min(1, Math.max(0, -dragX) / 130) * 0.45 : 0;
+    const x = 38 * (1 - pullForward);
+    const y = 24 * (1 - pullForward);
+    const scale = 0.87 + 0.05 * pullForward;
+
+    return {
+      transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`,
+      opacity: 0.72,
+      zIndex: 20,
+      pointerEvents: "none",
+      transition,
+    };
+  }
+
+  return {
+    transform: "translate3d(44px, 30px, 0) scale(0.82)",
+    opacity: 0,
+    zIndex: 0,
+    pointerEvents: "none",
+    transition,
+  };
+}
+
+function ProductDeckCarousel({ products, activeIndex, onIndexChange, onOpenProduct }) {
+  const [dragX, setDragX] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+  const dragAxis = useRef(null);
+
+  const goToIndex = (index) => {
+    const safeIndex = Math.max(0, Math.min(products.length - 1, index));
+    onIndexChange(safeIndex);
+    setDragX(0);
+    setIsDragging(false);
+    dragAxis.current = null;
+  };
+
+  const onTouchStart = (event) => {
+    touchStartX.current = event.touches[0].clientX;
+    touchStartY.current = event.touches[0].clientY;
+    dragAxis.current = null;
+    setIsDragging(true);
+  };
+
+  const onTouchMove = (event) => {
+    if (!isDragging) return;
+
+    const deltaX = event.touches[0].clientX - touchStartX.current;
+    const deltaY = event.touches[0].clientY - touchStartY.current;
+
+    if (dragAxis.current === null) {
+      if (Math.abs(deltaX) < 8 && Math.abs(deltaY) < 8) return;
+      dragAxis.current = Math.abs(deltaX) > Math.abs(deltaY) ? "x" : "y";
+    }
+
+    if (dragAxis.current !== "x") return;
+
+    const atStart = activeIndex === 0;
+    const atEnd = activeIndex === products.length - 1;
+    const resistedDelta = atStart && deltaX > 0 ? deltaX * 0.35 : atEnd && deltaX < 0 ? deltaX * 0.35 : deltaX;
+
+    setDragX(resistedDelta);
+  };
+
+  const onTouchEnd = () => {
+    if (dragAxis.current === "x") {
+      if (dragX <= -PRODUCT_DECK_SWIPE_THRESHOLD && activeIndex < products.length - 1) {
+        goToIndex(activeIndex + 1);
+        return;
+      }
+
+      if (dragX >= PRODUCT_DECK_SWIPE_THRESHOLD && activeIndex > 0) {
+        goToIndex(activeIndex - 1);
+        return;
+      }
+    }
+
+    setDragX(0);
+    setIsDragging(false);
+    dragAxis.current = null;
+  };
+
+  return (
+    <div className="lg:hidden">
+      <div
+        className="relative mx-auto w-[72vw] max-w-[255px] touch-pan-y select-none py-8"
+        style={{ height: "calc(72vw * 1.35 + 4rem)", maxHeight: "380px" }}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        onTouchCancel={onTouchEnd}
+        aria-roledescription="carousel"
+        aria-label="Product cards"
+      >
+        {products.map((product, index) => {
+          const offset = index - activeIndex;
+          if (offset > 2 || offset < -1) return null;
+
+          const style = getProductDeckCardStyle(offset, dragX, isDragging);
+
+          return (
+            <div
+              key={product.title}
+              data-product-index={index}
+              className="absolute inset-x-0 top-8 mx-auto w-full max-w-[255px] px-3 will-change-transform"
+              style={style}
+            >
+              <ProductCard product={product} onClick={() => onOpenProduct(index)} />
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="mt-1 flex justify-center gap-1.5" aria-label="Product slides">
+        {products.map((product, index) => (
+          <button
+            key={product.title}
+            type="button"
+            onClick={() => goToIndex(index)}
+            className={`h-1.5 rounded-full transition-all duration-300 ${activeIndex === index ? "w-6 bg-[#ff6f31]" : "w-1.5 bg-slate-300"}`}
+            aria-label={`Go to ${product.title}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ProductCard({ product, onClick }) {
   return (
-    <div className="group/card relative h-full w-full rounded-[1.35rem] shadow-[0_2px_8px_rgba(15,23,42,0.03),0_8px_24px_rgba(15,23,42,0.05),0_20px_48px_rgba(15,23,42,0.07)] transition duration-500 hover:-translate-y-1.5 hover:scale-[1.01] hover:shadow-[0_4px_12px_rgba(22,193,193,0.08),0_12px_32px_rgba(22,193,193,0.12),0_28px_64px_rgba(22,193,193,0.16)] sm:rounded-[1.65rem]">
+    <div className="group/card relative h-full w-full rounded-[1.35rem] shadow-[0_2px_8px_rgba(15,23,42,0.03),0_8px_24px_rgba(15,23,42,0.05),0_20px_48px_rgba(15,23,42,0.07)] transition duration-500 hover:-translate-y-1.5 hover:scale-[1.01] hover:shadow-[0_4px_12px_rgba(22,193,193,0.08),0_12px_32px_rgba(22,193,193,0.12),0_28px_64px_rgba(22,193,193,0.16)] sm:rounded-[1.65rem] max-lg:hover:translate-y-0 max-lg:hover:scale-100 max-lg:hover:shadow-[0_2px_8px_rgba(15,23,42,0.03),0_8px_24px_rgba(15,23,42,0.05),0_20px_48px_rgba(15,23,42,0.07)]">
       <button
         type="button"
         onClick={onClick}
@@ -727,14 +920,15 @@ export default function App() {
 
     let scrollEndTimer = null;
     let isTouching = false;
+    let isActive = false;
+
+    const isDesktopProducts = () => window.matchMedia("(min-width: 1024px)").matches;
 
     const updateProductLayout = () => {
-      if (window.matchMedia("(min-width: 1024px)").matches) {
-        const gap = 16;
-        carousel.style.setProperty("--product-slide-w", `${(carousel.clientWidth - gap * 2) / PRODUCT_DESKTOP_VISIBLE}px`);
-      } else {
-        carousel.style.removeProperty("--product-slide-w");
-      }
+      if (!isDesktopProducts()) return;
+
+      const gap = 16;
+      carousel.style.setProperty("--product-slide-w", `${(carousel.clientWidth - gap * 2) / PRODUCT_DESKTOP_VISIBLE}px`);
 
       const index = getNearestProductIndex();
       scrollToProductIndex(index, "auto");
@@ -760,22 +954,41 @@ export default function App() {
       scheduleSnap(50);
     };
 
-    const onResize = () => updateProductLayout();
+    const bindDesktopCarousel = () => {
+      if (!isDesktopProducts() || isActive) return;
+      isActive = true;
+      requestAnimationFrame(updateProductLayout);
+      carousel.addEventListener("scroll", onScroll, { passive: true });
+      carousel.addEventListener("scrollend", snapProductCarousel, { passive: true });
+      carousel.addEventListener("touchstart", onTouchStart, { passive: true });
+      carousel.addEventListener("touchend", onTouchEnd, { passive: true });
+    };
 
-    requestAnimationFrame(updateProductLayout);
-
-    carousel.addEventListener("scroll", onScroll, { passive: true });
-    carousel.addEventListener("scrollend", snapProductCarousel, { passive: true });
-    carousel.addEventListener("touchstart", onTouchStart, { passive: true });
-    carousel.addEventListener("touchend", onTouchEnd, { passive: true });
-    window.addEventListener("resize", onResize);
-
-    return () => {
+    const unbindDesktopCarousel = () => {
+      if (!isActive) return;
+      isActive = false;
       clearTimeout(scrollEndTimer);
       carousel.removeEventListener("scroll", onScroll);
       carousel.removeEventListener("scrollend", snapProductCarousel);
       carousel.removeEventListener("touchstart", onTouchStart);
       carousel.removeEventListener("touchend", onTouchEnd);
+      carousel.style.removeProperty("--product-slide-w");
+    };
+
+    const onResize = () => {
+      if (isDesktopProducts()) {
+        bindDesktopCarousel();
+        updateProductLayout();
+      } else {
+        unbindDesktopCarousel();
+      }
+    };
+
+    onResize();
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      unbindDesktopCarousel();
       window.removeEventListener("resize", onResize);
     };
   }, []);
@@ -1014,11 +1227,18 @@ export default function App() {
             {activeProductScrollIndex > 0 && <button type="button" onClick={() => scrollProducts("previous")} className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-bold text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#f05f20] lg:flex" aria-label="Scroll products left"><span className="flex h-full w-full items-center justify-center pb-0.5 leading-none">‹</span></button>}
             {activeProductScrollIndex < getMaxProductScrollIndex() && <button type="button" onClick={() => scrollProducts("next")} className="absolute right-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-bold text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:translate-x-0.5 hover:bg-[#f05f20] lg:flex" aria-label="Scroll products right"><span className="flex h-full w-full items-center justify-center pb-0.5 leading-none">›</span></button>}
 
-            <div className="relative overflow-visible -mx-4 sm:-mx-6 lg:mx-0">
-            <div ref={productsScrollRef} className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:4rem] [scrollbar-width:none] [-ms-overflow-style:none] px-10 sm:px-12 sm:py-3 lg:px-8 lg:py-4 [&::-webkit-scrollbar]:hidden">
-              <div className="flex w-max items-stretch gap-4 px-[calc(50%-min(36vw,127.5px))] sm:gap-5 sm:px-[calc(50%-130px)] lg:gap-4 lg:px-4">
+            <ProductDeckCarousel
+              products={products}
+              activeIndex={activeProductScrollIndex}
+              onIndexChange={setActiveProductScrollIndex}
+              onOpenProduct={setActiveProductIndex}
+            />
+
+            <div className="relative hidden overflow-visible lg:block">
+            <div ref={productsScrollRef} className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:4rem] [scrollbar-width:none] [-ms-overflow-style:none] px-8 py-4 [&::-webkit-scrollbar]:hidden">
+              <div className="flex w-max items-stretch gap-4 lg:px-4">
                 {products.map((product, index) => (
-                  <div key={product.title} data-product-index={index} className="w-[72vw] max-w-[255px] shrink-0 snap-center snap-always px-5 py-8 sm:w-[260px] sm:max-w-[260px] sm:px-6 sm:py-9 lg:w-[var(--product-slide-w)] lg:max-w-none lg:snap-start lg:px-5 lg:py-10">
+                  <div key={product.title} data-product-index={index} className="w-[var(--product-slide-w)] max-w-none shrink-0 snap-start px-5 py-10">
                     <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
                   </div>
                 ))}
