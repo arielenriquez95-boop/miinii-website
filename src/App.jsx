@@ -435,59 +435,101 @@ export default function App() {
 
     const carouselCenter = carousel.clientWidth / 2;
     const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+    const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+    const targetLeft = Math.max(0, Math.min(maxScrollLeft, cardCenter - carouselCenter));
 
     carousel.scrollTo({
-      left: cardCenter - carouselCenter,
+      left: targetLeft,
       behavior: "smooth",
     });
   };
 
-    const scrollProducts = (direction) => {
-      const carousel = productsScrollRef.current;
-      if (!carousel) return;
-    
-      const cards = Array.from(carousel.querySelectorAll("[data-product-index]"));
-      const lastIndex = products.length - 1;
-    
-      const nextIndex =
-        direction === "next"
-          ? activeProductScrollIndex + 1
-          : activeProductScrollIndex - 1;
-    
-      const safeIndex = Math.max(0, Math.min(lastIndex, nextIndex));
-    
-      setActiveProductScrollIndex(safeIndex);
-      centerProductCard(safeIndex);
-    
-        requestAnimationFrame(() => {
+  const updateProductScrollButtons = () => {
+    const carousel = productsScrollRef.current;
+    if (!carousel) return;
+
+    const cards = Array.from(carousel.querySelectorAll("[data-product-index]"));
+    if (!cards.length) return;
+
+    const carouselCenter = carousel.scrollLeft + carousel.clientWidth / 2;
+    const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+
+    let nearestIndex = 0;
+    let nearestDistance = Infinity;
+
+    cards.forEach((card) => {
+      const index = Number(card.getAttribute("data-product-index"));
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const distance = Math.abs(cardCenter - carouselCenter);
+
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestIndex = index;
+      }
+    });
+
+    const lastIndex = products.length - 1;
+    const isAtStart = carousel.scrollLeft <= 10;
+    const isAtEnd = nearestIndex >= lastIndex || carousel.scrollLeft >= maxScrollLeft - 10;
+
+    setActiveProductScrollIndex(nearestIndex);
+    setCanScrollLeft(!isAtStart || nearestIndex > 0);
+    setCanScrollRight(!isAtEnd);
+  };
+
+  const scrollProducts = (direction) => {
+    const lastIndex = products.length - 1;
+    const nextIndex = direction === "next" ? activeProductScrollIndex + 1 : activeProductScrollIndex - 1;
+    const safeIndex = Math.max(0, Math.min(lastIndex, nextIndex));
+
+    setActiveProductScrollIndex(safeIndex);
+    setCanScrollLeft(safeIndex > 0);
+    setCanScrollRight(safeIndex < lastIndex);
+
+    centerProductCard(safeIndex);
+
+    requestAnimationFrame(() => {
+      updateProductScrollButtons();
+      setTimeout(updateProductScrollButtons, 250);
+      setTimeout(updateProductScrollButtons, 600);
+    });
+  };
+
+  useEffect(() => {
+    const carousel = productsScrollRef.current;
+    if (!carousel) return;
+
+    setCanScrollLeft(false);
+    requestAnimationFrame(() => {
       updateProductScrollButtons();
       setTimeout(updateProductScrollButtons, 300);
     });
 
-  const scrollProducts = (direction) => {
-    const nextIndex = direction === "next" ? activeProductScrollIndex + 1 : activeProductScrollIndex - 1;
-    const safeIndex = Math.max(0, Math.min(products.length - 1, nextIndex));
+    carousel.addEventListener("scroll", updateProductScrollButtons, { passive: true });
+    window.addEventListener("resize", updateProductScrollButtons);
 
-    setActiveProductScrollIndex(safeIndex);
-    centerProductCard(safeIndex);
-  };
+    return () => {
+      carousel.removeEventListener("scroll", updateProductScrollButtons);
+      window.removeEventListener("resize", updateProductScrollButtons);
+    };
+  }, []);
 
-      useEffect(() => {
-        const isModalOpen = activeGalleryIndex !== null || activeProductIndex !== null;
-      
-        if (!isModalOpen) return;
-      
-        const originalBodyOverflow = document.body.style.overflow;
-        const originalHtmlOverflow = document.documentElement.style.overflow;
-      
-        document.body.style.overflow = "hidden";
-        document.documentElement.style.overflow = "hidden";
-      
-        return () => {
-          document.body.style.overflow = originalBodyOverflow;
-          document.documentElement.style.overflow = originalHtmlOverflow;
-        };
-      }, [activeGalleryIndex, activeProductIndex]);
+  useEffect(() => {
+    const isModalOpen = activeGalleryIndex !== null || activeProductIndex !== null;
+
+    if (!isModalOpen) return;
+
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = originalBodyOverflow;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+    };
+  }, [activeGalleryIndex, activeProductIndex]);
 
   const testimonialPages = Array.from(
     { length: Math.ceil(testimonials.length / 2) },
