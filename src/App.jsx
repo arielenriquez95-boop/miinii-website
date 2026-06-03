@@ -473,8 +473,8 @@ export default function App() {
   }, []);
 
   const testimonialPages = Array.from(
-    { length: Math.ceil(testimonials.length / 4) },
-    (_, pageIndex) => testimonials.slice(pageIndex * 4, pageIndex * 4 + 4)
+    { length: Math.ceil(testimonials.length / 2) },
+    (_, pageIndex) => testimonials.slice(pageIndex * 2, pageIndex * 2 + 2)
   );
 
   const faqPages = Array.from(
@@ -712,7 +712,7 @@ export default function App() {
               <div
                 key={pageIndex}
                 data-testimonial-page={pageIndex}
-                className="grid min-w-full snap-center scroll-mx-4 grid-cols-2 grid-rows-2 gap-3 sm:scroll-mx-6 sm:gap-4 lg:contents"
+                className="grid min-w-full snap-center scroll-mx-4 grid-cols-1 grid-rows-2 gap-3 sm:scroll-mx-6 sm:gap-4 lg:contents"
               >
                 {page.map((testimonial) => (
                   <Reveal key={testimonial.name}>
