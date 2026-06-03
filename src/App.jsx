@@ -426,12 +426,12 @@ function ProductModal({ products, index, setIndex, onClose }) {
       <button type="button" onClick={previous} className="absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 md:flex" aria-label="Previous product">‹</button>
       <button type="button" onClick={next} className="absolute right-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 md:flex" aria-label="Next product">›</button>
 
-      <div key={product.title} className={`relative flex max-h-[min(90dvh,720px)] w-full max-w-[380px] flex-col overflow-hidden rounded-[1.8rem] border border-white/20 bg-white shadow-2xl shadow-black/30 animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:max-w-[430px] md:mx-auto md:h-auto md:max-h-[90vh] md:max-w-5xl md:rounded-[2rem] md:border-white/10 md:shadow-black/40 ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
+      <div key={product.title} className={`relative flex max-h-[min(88dvh,660px)] w-full max-w-[360px] flex-col overflow-hidden rounded-[1.65rem] border border-white/20 bg-white shadow-2xl shadow-black/30 animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:max-w-[400px] md:mx-auto md:h-auto md:max-h-[90vh] md:max-w-5xl md:rounded-[2rem] md:border-white/10 md:shadow-black/40 ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
         <button type="button" onClick={onClose} className="absolute right-3 top-3 z-30 flex h-9 w-9 items-center justify-center rounded-full bg-slate-950/75 text-xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950 md:right-3 md:top-3 md:h-11 md:w-11 md:text-2xl" aria-label="Close product preview">×</button>
 
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:grid md:max-h-[90vh] md:grid-cols-[0.95fr_1.05fr] md:overflow-y-auto">
           <div className="flex min-h-0 flex-1 flex-col bg-white md:hidden">
-            <div className="relative aspect-[4/5] w-full shrink-0 overflow-hidden bg-gradient-to-br from-orange-50 via-white to-teal-50">
+            <div className="relative aspect-square w-full shrink-0 overflow-hidden bg-gradient-to-br from-orange-50 via-white to-teal-50">
               <img
                 src={product.image}
                 alt={`${product.title} preview`}
@@ -439,22 +439,21 @@ function ProductModal({ products, index, setIndex, onClose }) {
               />
             </div>
 
-            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-3.5">
               <div className="flex flex-wrap items-start justify-between gap-2">
-                <h2 className="min-w-0 flex-1 text-2xl font-black leading-tight tracking-tight text-slate-950">{product.title}</h2>
+                <h2 className="min-w-0 flex-1 text-xl font-black leading-tight tracking-tight text-slate-950">{product.title}</h2>
                 <div className="flex shrink-0 flex-wrap justify-end gap-1.5 pt-0.5">
-                  {product.oldPrice && <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-400 line-through ring-1 ring-slate-200">{product.oldPrice}</span>}
-                  <span className="rounded-full bg-[#ff6f31]/15 px-3 py-1 text-xs font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">{product.price}</span>
+                  {product.oldPrice && <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200">{product.oldPrice}</span>}
+                  <span className="rounded-full bg-[#ff6f31]/15 px-3 py-1 text-[11px] font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">{product.price}</span>
                 </div>
               </div>
 
-              <p className="mt-3 text-sm leading-6 text-slate-600">{product.shortText}</p>
+              <p className="mt-2 text-xs leading-5 text-slate-600">{product.shortText}</p>
 
-              <div className="mt-4 rounded-[1.25rem] bg-[#fff8f3] p-4 ring-1 ring-orange-100">
-                <p className="mb-3 text-[10px] font-black uppercase tracking-[0.18em] text-[#16C1C1]">What&apos;s included</p>
-                <ul className="grid gap-2.5">
+              <div className="mt-3 rounded-[1rem] bg-[#fff8f3] p-3 ring-1 ring-orange-100">
+                <ul className="grid gap-2">
                   {product.details.map((detail) => (
-                    <li key={detail} className="flex gap-2.5 text-sm leading-5 text-slate-600">
+                    <li key={detail} className="flex gap-2 text-xs leading-5 text-slate-600">
                       <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#16C1C1]" />
                       <span>{detail}</span>
                     </li>
@@ -463,7 +462,7 @@ function ProductModal({ products, index, setIndex, onClose }) {
               </div>
             </div>
 
-            <div className="shrink-0 border-t border-slate-100 bg-white px-5 pb-[max(1rem,env(safe-area-inset-bottom,0px))] pt-3">
+            <div className="shrink-0 border-t border-slate-100 bg-white px-4 pb-[max(0.9rem,env(safe-area-inset-bottom,0px))] pt-2.5">
               <button
                 type="button"
                 onClick={startOrder}
