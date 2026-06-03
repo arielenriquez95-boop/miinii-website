@@ -1226,35 +1226,71 @@ export default function App() {
     (_, pageIndex) => faqs.slice(pageIndex * 4, pageIndex * 4 + 4)
   );
 
-  const scrollTestimonialsToPage = (pageIndex) => {
+  const getMobilePageScrollLeft = (carousel, page) => {
+    const carouselRect = carousel.getBoundingClientRect();
+    const pageRect = page.getBoundingClientRect();
+    const styles = window.getComputedStyle(carousel);
+    const paddingLeft = parseFloat(styles.paddingLeft) || 0;
+    const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+    const targetLeft = carousel.scrollLeft + (pageRect.left - carouselRect.left) - paddingLeft;
+
+    return Math.max(0, Math.min(maxScrollLeft, targetLeft));
+  };
+
+  const getNearestMobilePage = (carousel, selector) => {
+    const pages = Array.from(carousel.querySelectorAll(selector));
+    if (!pages.length) return { pageIndex: 0, page: null };
+
+    const styles = window.getComputedStyle(carousel);
+    const paddingLeft = parseFloat(styles.paddingLeft) || 0;
+    const paddingRight = parseFloat(styles.paddingRight) || 0;
+    const carouselRect = carousel.getBoundingClientRect();
+    const visibleCenter = carouselRect.left + paddingLeft + (carousel.clientWidth - paddingLeft - paddingRight) / 2;
+
+    let nearestPage = pages[0];
+    let nearestPageIndex = Number(pages[0].dataset.testimonialPage ?? pages[0].dataset.faqPage ?? 0);
+    let nearestDistance = Infinity;
+
+    pages.forEach((page) => {
+      const pageIndex = Number(page.dataset.testimonialPage ?? page.dataset.faqPage ?? 0);
+      const pageRect = page.getBoundingClientRect();
+      const pageCenter = pageRect.left + pageRect.width / 2;
+      const distance = Math.abs(pageCenter - visibleCenter);
+
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestPage = page;
+        nearestPageIndex = pageIndex;
+      }
+    });
+
+    return { pageIndex: nearestPageIndex, page: nearestPage };
+  };
+
+  const scrollMobilePageIntoPlace = (carousel, page, behavior = "smooth") => {
+    if (!carousel || !page) return;
+    carousel.scrollTo({ left: getMobilePageScrollLeft(carousel, page), behavior });
+  };
+
+  const scrollTestimonialsToPage = (pageIndex, behavior = "smooth") => {
     const carousel = testimonialsScrollRef.current;
     if (!carousel) return;
 
     const page = carousel.querySelector(`[data-testimonial-page="${pageIndex}"]`);
     if (!page) return;
 
-    page.scrollIntoView({
-      behavior: "smooth",
-      inline: "center",
-      block: "nearest",
-    });
-
+    scrollMobilePageIntoPlace(carousel, page, behavior);
     setActiveTestimonialPage(pageIndex);
   };
 
-  const scrollFaqsToPage = (pageIndex) => {
+  const scrollFaqsToPage = (pageIndex, behavior = "smooth") => {
     const carousel = faqsScrollRef.current;
     if (!carousel) return;
 
     const page = carousel.querySelector(`[data-faq-page="${pageIndex}"]`);
     if (!page) return;
 
-    page.scrollIntoView({
-      behavior: "smooth",
-      inline: "center",
-      block: "nearest",
-    });
-
+    scrollMobilePageIntoPlace(carousel, page, behavior);
     setActiveFaqPage(pageIndex);
   };
 
@@ -1262,34 +1298,61 @@ export default function App() {
     const carousel = testimonialsScrollRef.current;
     if (!carousel) return;
 
+    let snapTimer = null;
+    let isPointerDown = false;
+
     const updateTestimonialPage = () => {
-      const pages = Array.from(carousel.querySelectorAll("[data-testimonial-page]"));
-      const carouselCenter = carousel.getBoundingClientRect().left + carousel.clientWidth / 2;
-
-      let nearestPage = 0;
-      let nearestDistance = Infinity;
-
-      pages.forEach((page) => {
-        const pageIndex = Number(page.getAttribute("data-testimonial-page"));
-        const pageCenter = page.getBoundingClientRect().left + page.clientWidth / 2;
-        const distance = Math.abs(pageCenter - carouselCenter);
-
-        if (distance < nearestDistance) {
-          nearestDistance = distance;
-          nearestPage = pageIndex;
-        }
-      });
-
-      setActiveTestimonialPage(nearestPage);
+      const { pageIndex } = getNearestMobilePage(carousel, "[data-testimonial-page]");
+      setActiveTestimonialPage(pageIndex);
     };
 
-    requestAnimationFrame(updateTestimonialPage);
-    carousel.addEventListener("scroll", updateTestimonialPage, { passive: true });
-    window.addEventListener("resize", updateTestimonialPage);
+    const snapToNearestPage = (behavior = "smooth") => {
+      const { pageIndex, page } = getNearestMobilePage(carousel, "[data-testimonial-page]");
+      setActiveTestimonialPage(pageIndex);
+      scrollMobilePageIntoPlace(carousel, page, behavior);
+    };
+
+    const scheduleSnap = () => {
+      window.clearTimeout(snapTimer);
+      snapTimer = window.setTimeout(() => {
+        if (!isPointerDown) snapToNearestPage();
+      }, 90);
+    };
+
+    const onScroll = () => {
+      updateTestimonialPage();
+      scheduleSnap();
+    };
+
+    const onPointerDown = () => {
+      isPointerDown = true;
+      window.clearTimeout(snapTimer);
+    };
+
+    const onPointerUp = () => {
+      isPointerDown = false;
+      scheduleSnap();
+    };
+
+    const onResize = () => snapToNearestPage("auto");
+    const onScrollEnd = () => snapToNearestPage("auto");
+
+    requestAnimationFrame(() => snapToNearestPage("auto"));
+    carousel.addEventListener("scroll", onScroll, { passive: true });
+    carousel.addEventListener("scrollend", onScrollEnd, { passive: true });
+    carousel.addEventListener("pointerdown", onPointerDown, { passive: true });
+    carousel.addEventListener("pointerup", onPointerUp, { passive: true });
+    carousel.addEventListener("pointercancel", onPointerUp, { passive: true });
+    window.addEventListener("resize", onResize);
 
     return () => {
-      carousel.removeEventListener("scroll", updateTestimonialPage);
-      window.removeEventListener("resize", updateTestimonialPage);
+      window.clearTimeout(snapTimer);
+      carousel.removeEventListener("scroll", onScroll);
+      carousel.removeEventListener("scrollend", onScrollEnd);
+      carousel.removeEventListener("pointerdown", onPointerDown);
+      carousel.removeEventListener("pointerup", onPointerUp);
+      carousel.removeEventListener("pointercancel", onPointerUp);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 
@@ -1297,34 +1360,61 @@ export default function App() {
     const carousel = faqsScrollRef.current;
     if (!carousel) return;
 
+    let snapTimer = null;
+    let isPointerDown = false;
+
     const updateFaqPage = () => {
-      const pages = Array.from(carousel.querySelectorAll("[data-faq-page]"));
-      const carouselCenter = carousel.getBoundingClientRect().left + carousel.clientWidth / 2;
-
-      let nearestPage = 0;
-      let nearestDistance = Infinity;
-
-      pages.forEach((page) => {
-        const pageIndex = Number(page.getAttribute("data-faq-page"));
-        const pageCenter = page.getBoundingClientRect().left + page.clientWidth / 2;
-        const distance = Math.abs(pageCenter - carouselCenter);
-
-        if (distance < nearestDistance) {
-          nearestDistance = distance;
-          nearestPage = pageIndex;
-        }
-      });
-
-      setActiveFaqPage(nearestPage);
+      const { pageIndex } = getNearestMobilePage(carousel, "[data-faq-page]");
+      setActiveFaqPage(pageIndex);
     };
 
-    requestAnimationFrame(updateFaqPage);
-    carousel.addEventListener("scroll", updateFaqPage, { passive: true });
-    window.addEventListener("resize", updateFaqPage);
+    const snapToNearestPage = (behavior = "smooth") => {
+      const { pageIndex, page } = getNearestMobilePage(carousel, "[data-faq-page]");
+      setActiveFaqPage(pageIndex);
+      scrollMobilePageIntoPlace(carousel, page, behavior);
+    };
+
+    const scheduleSnap = () => {
+      window.clearTimeout(snapTimer);
+      snapTimer = window.setTimeout(() => {
+        if (!isPointerDown) snapToNearestPage();
+      }, 90);
+    };
+
+    const onScroll = () => {
+      updateFaqPage();
+      scheduleSnap();
+    };
+
+    const onPointerDown = () => {
+      isPointerDown = true;
+      window.clearTimeout(snapTimer);
+    };
+
+    const onPointerUp = () => {
+      isPointerDown = false;
+      scheduleSnap();
+    };
+
+    const onResize = () => snapToNearestPage("auto");
+    const onScrollEnd = () => snapToNearestPage("auto");
+
+    requestAnimationFrame(() => snapToNearestPage("auto"));
+    carousel.addEventListener("scroll", onScroll, { passive: true });
+    carousel.addEventListener("scrollend", onScrollEnd, { passive: true });
+    carousel.addEventListener("pointerdown", onPointerDown, { passive: true });
+    carousel.addEventListener("pointerup", onPointerUp, { passive: true });
+    carousel.addEventListener("pointercancel", onPointerUp, { passive: true });
+    window.addEventListener("resize", onResize);
 
     return () => {
-      carousel.removeEventListener("scroll", updateFaqPage);
-      window.removeEventListener("resize", updateFaqPage);
+      window.clearTimeout(snapTimer);
+      carousel.removeEventListener("scroll", onScroll);
+      carousel.removeEventListener("scrollend", onScrollEnd);
+      carousel.removeEventListener("pointerdown", onPointerDown);
+      carousel.removeEventListener("pointerup", onPointerUp);
+      carousel.removeEventListener("pointercancel", onPointerUp);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 
@@ -1582,13 +1672,13 @@ export default function App() {
 
           <div
             ref={testimonialsScrollRef}
-            className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:hidden [&::-webkit-scrollbar]:hidden"
+            className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-5 touch-pan-x [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:hidden [&::-webkit-scrollbar]:hidden"
           >
             {testimonialPages.map((page, pageIndex) => (
               <div
                 key={pageIndex}
                 data-testimonial-page={pageIndex}
-                className="grid min-w-full snap-center scroll-mx-4 grid-cols-1 grid-rows-2 gap-3 sm:scroll-mx-6 sm:gap-4"
+                className="grid basis-full shrink-0 snap-start snap-always scroll-ml-4 grid-cols-1 grid-rows-2 gap-3 sm:scroll-ml-6 sm:gap-4"
               >
                 {page.map((testimonial, cardIndex) => {
                   const revealIndex = pageIndex * 2 + cardIndex;
@@ -1635,13 +1725,13 @@ export default function App() {
 
           <div
             ref={faqsScrollRef}
-            className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:hidden [&::-webkit-scrollbar]:hidden"
+            className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-5 touch-pan-x [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:hidden [&::-webkit-scrollbar]:hidden"
           >
             {faqPages.map((page, pageIndex) => (
               <div
                 key={pageIndex}
                 data-faq-page={pageIndex}
-                className="grid min-w-full snap-center scroll-mx-4 grid-cols-2 grid-rows-2 gap-3 sm:scroll-mx-6 sm:gap-4"
+                className="grid basis-full shrink-0 snap-start snap-always scroll-ml-4 grid-cols-2 grid-rows-2 gap-3 sm:scroll-ml-6 sm:gap-4"
               >
                 {page.map((faq, cardIndex) => {
                   const revealIndex = pageIndex * 4 + cardIndex;
