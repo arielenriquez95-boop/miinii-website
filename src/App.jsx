@@ -158,36 +158,6 @@ function ScrollReveal({ children, className = "", delay = 0, direction = "up", .
     return () => observer.disconnect();
   }, []);
 
-  const scrollTestimonialsToPage = (pageIndex) => {
-  const carousel = testimonialsScrollRef.current;
-  if (!carousel) return;
-
-    carousel.scrollTo({
-      left: carousel.clientWidth * pageIndex,
-      behavior: "smooth",
-    });
-  
-    setActiveTestimonialPage(pageIndex);
-  };
-  
-  useEffect(() => {
-    const carousel = testimonialsScrollRef.current;
-    if (!carousel) return;
-  
-    const updateTestimonialPage = () => {
-      const pageIndex = Math.round(carousel.scrollLeft / carousel.clientWidth);
-      setActiveTestimonialPage(pageIndex);
-    };
-  
-    carousel.addEventListener("scroll", updateTestimonialPage, { passive: true });
-    window.addEventListener("resize", updateTestimonialPage);
-  
-    return () => {
-      carousel.removeEventListener("scroll", updateTestimonialPage);
-      window.removeEventListener("resize", updateTestimonialPage);
-    };
-  }, []);
-
   const hiddenPosition = direction === "right" ? "translate-x-12 opacity-0" : "translate-y-8 opacity-0";
 
   return (
