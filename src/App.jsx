@@ -650,61 +650,34 @@ export default function App() {
         </div>
       </section>
 
-      <section id="about" className="relative overflow-hidden bg-white py-14 sm:py-24">
+      <section id="about" className="relative overflow-hidden bg-white py-16 sm:py-24">
         <div className="absolute left-0 top-10 h-64 w-64 rounded-full bg-[#16C1C1]/10 blur-3xl" />
         <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#ff6f31]/10 blur-3xl" />
       
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <div className="overflow-hidden rounded-[2rem] border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)] sm:rounded-[2.5rem]">
+            <div className="overflow-hidden rounded-[2rem] border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
               <div className="grid gap-0 md:grid-cols-[0.85fr_1.15fr]">
-                <div className="relative overflow-hidden bg-gradient-to-br from-slate-100 to-white p-4 sm:p-5 md:min-h-[420px]">
+                <div className="relative min-h-[320px] overflow-hidden bg-gradient-to-br from-slate-100 to-white p-4 sm:min-h-[380px]">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(22,193,193,0.18),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(255,111,49,0.16),transparent_35%)]" />
-      
-                  <div className="relative mx-auto aspect-[4/5] max-h-[390px] w-full max-w-[310px] overflow-hidden rounded-[1.5rem] border border-white/70 bg-white shadow-inner sm:max-w-[380px] md:h-full md:max-h-none md:max-w-none">
+                  <div className="relative h-full overflow-hidden rounded-[1.5rem] border border-white/70 bg-white shadow-inner">
                     <img
                       src="/about-portrait.png"
                       alt="Miinii artist portrait"
                       className="h-full w-full object-cover"
                     />
                   </div>
-      
-                  <div className="relative mx-auto -mt-8 flex max-w-[260px] flex-col items-center rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-center shadow-xl shadow-slate-200/70 backdrop-blur sm:max-w-[300px]">
-                    <img
-                      src="/miinii-logo.png"
-                      alt="Miinii logo"
-                      className="h-10 w-auto object-contain sm:h-12"
-                    />
-                    <p className="mt-1 text-sm font-bold text-slate-700">3D custom mini figures</p>
-                  </div>
                 </div>
       
-                <div className="flex flex-col justify-center p-6 pt-7 sm:p-10 lg:p-12">
+                <div className="flex flex-col justify-center p-6 pt-0 sm:p-10 lg:p-12 md:pt-10">
                   <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">About us</p>
-      
-                  <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">
-                    Meet the artist behind Miinii.
-                  </h2>
-      
-                  <p className="mt-5 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">
+                  <h2 className="text-4xl font-black tracking-tight text-slate-950 sm:text-5xl">Meet the artist behind Miinii.</h2>
+                  <p className="mt-5 text-lg leading-8 text-slate-600">
                     Hi, I’m Ariel, the creator of Miinii. Miinii started from my love for 3D art, design, and meaningful custom gifts. What began as a creative idea became a mini studio that turns real people, pets, and special memories into handcrafted 3D miniatures.
                   </p>
-      
-                  <p className="mt-4 text-sm leading-7 text-slate-500 sm:text-base">
+                  <p className="mt-4 text-base leading-7 text-slate-500">
                     Each Miinii is carefully made through digital sculpting, resin 3D printing, hand painting, finishing, and packaging. As Miinii continues to grow, we’re working toward building a bigger creative team so we can create more personalized mini figures for everyone while keeping the same care, quality, and handmade feel in every piece.
                   </p>
-      
-                  <div className="mt-6 grid grid-cols-2 gap-3">
-                    <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
-                      <p className="text-xl font-black text-[#ff6f31]">Handmade</p>
-                      <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">Every piece is painted and finished with care.</p>
-                    </div>
-      
-                    <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
-                      <p className="text-xl font-black text-[#16C1C1]">Personal</p>
-                      <p className="mt-1 text-xs font-semibold leading-5 text-slate-500">Made from your photos, stories, and memories.</p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
