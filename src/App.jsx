@@ -442,32 +442,24 @@ export default function App() {
     });
   };
 
-    const updateProductScrollButtons = () => {
+    const scrollProducts = (direction) => {
       const carousel = productsScrollRef.current;
       if (!carousel) return;
     
       const cards = Array.from(carousel.querySelectorAll("[data-product-index]"));
-      const carouselCenter = carousel.scrollLeft + carousel.clientWidth / 2;
-    
-      let nearestIndex = 0;
-      let nearestDistance = Infinity;
-    
-      cards.forEach((card) => {
-        const index = Number(card.getAttribute("data-product-index"));
-        const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-        const distance = Math.abs(cardCenter - carouselCenter);
-    
-        if (distance < nearestDistance) {
-          nearestDistance = distance;
-          nearestIndex = index;
-        }
-      });
-    
       const lastIndex = products.length - 1;
     
-      setActiveProductScrollIndex(nearestIndex);
-      setCanScrollLeft(nearestIndex > 0);
-      setCanScrollRight(nearestIndex < lastIndex);
+      const nextIndex =
+        direction === "next"
+          ? activeProductScrollIndex + 1
+          : activeProductScrollIndex - 1;
+    
+      const safeIndex = Math.max(0, Math.min(lastIndex, nextIndex));
+    
+      setActiveProductScrollIndex(safeIndex);
+      centerProductCard(safeIndex);
+    
+      setTimeout(updateProductScrollButtons, 500);
     };
 
   const scrollProducts = (direction) => {
