@@ -133,14 +133,25 @@ function MediaPreview({ src, alt, className = "", videoClassName = "", lazy = fa
     return (
       <div
         ref={containerRef}
-        className="relative size-full min-h-0 overflow-hidden bg-[#0f1424]"
+        className="relative size-full min-h-0 overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950"
         aria-label={alt}
         role="img"
       >
+        <div className={`absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(22,193,193,0.28),transparent_34%),radial-gradient(circle_at_70%_80%,rgba(255,111,49,0.24),transparent_38%),linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] transition-opacity duration-500 ${isReady ? "opacity-0" : "opacity-100"}`} />
         {showVideo && (
           <video
             src={src}
-            className={`absolute inset-0 size-full ${fitClass} transition-opacity duration-300 ${isReady ? "opacity-100" : "opacity-0"} ${effectClass} ${videoClassName}`.trim()}
+            className={`absolute inset-0 size-full ${fitClass} scale-110 blur-xl transition-opacity duration-500 ${isReady ? "opacity-0" : "opacity-75"} ${effectClass}`.trim()}
+            muted
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+          />
+        )}
+        {showVideo && (
+          <video
+            src={src}
+            className={`absolute inset-0 size-full ${fitClass} transition-opacity duration-500 ${isReady ? "opacity-100" : "opacity-0"} ${effectClass} ${videoClassName}`.trim()}
             autoPlay
             muted
             loop
