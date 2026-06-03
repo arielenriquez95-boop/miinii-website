@@ -415,7 +415,7 @@ export default function App() {
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [activeProductScrollIndex, setActiveProductScrollIndex] = useState(0);
   const [activeTestimonialPage, setActiveTestimonialPage] = useState(0);
-
+  
   const productsScrollRef = useRef(null);
   const testimonialsScrollRef = useRef(null);
 
@@ -485,20 +485,50 @@ export default function App() {
     centerProductCard(safeIndex);
   };
 
-  useEffect(() => {
-    const carousel = productsScrollRef.current;
-    if (!carousel) return;
-
-    setCanScrollLeft(false);
-    requestAnimationFrame(updateProductScrollButtons);
-    carousel.addEventListener("scroll", updateProductScrollButtons, { passive: true });
-    window.addEventListener("resize", updateProductScrollButtons);
-
-    return () => {
-      carousel.removeEventListener("scroll", updateProductScrollButtons);
-      window.removeEventListener("resize", updateProductScrollButtons);
-    };
-  }, []);
+       useEffect(() => {
+        const carousel = productsScrollRef.current;
+        if (!carousel) return;
+    
+        setCanScrollLeft(false);
+        requestAnimationFrame(updateProductScrollButtons);
+        carousel.addEventListener("scroll", updateProductScrollButtons, { passive: true });
+        window.addEventListener("resize", updateProductScrollButtons);
+    
+        return () => {
+          carousel.removeEventListener("scroll", updateProductScrollButtons);
+          window.removeEventListener("resize", updateProductScrollButtons);
+        };
+      }, []);
+    
+      const scrollTestimonialsToPage = (pageIndex) => {
+        const carousel = testimonialsScrollRef.current;
+        if (!carousel) return;
+    
+        carousel.scrollTo({
+          left: carousel.clientWidth * pageIndex,
+          behavior: "smooth",
+        });
+    
+        setActiveTestimonialPage(pageIndex);
+      };
+    
+      useEffect(() => {
+        const carousel = testimonialsScrollRef.current;
+        if (!carousel) return;
+    
+        const updateTestimonialPage = () => {
+          const pageIndex = Math.round(carousel.scrollLeft / carousel.clientWidth);
+          setActiveTestimonialPage(pageIndex);
+        };
+    
+        carousel.addEventListener("scroll", updateTestimonialPage, { passive: true });
+        window.addEventListener("resize", updateTestimonialPage);
+    
+        return () => {
+          carousel.removeEventListener("scroll", updateTestimonialPage);
+          window.removeEventListener("resize", updateTestimonialPage);
+        };
+      }, []);
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#fff8f3] text-slate-900 [scroll-behavior:smooth]">
