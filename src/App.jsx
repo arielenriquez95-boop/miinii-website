@@ -459,8 +459,10 @@ export default function App() {
       setActiveProductScrollIndex(safeIndex);
       centerProductCard(safeIndex);
     
-      setTimeout(updateProductScrollButtons, 500);
-    };
+        requestAnimationFrame(() => {
+      updateProductScrollButtons();
+      setTimeout(updateProductScrollButtons, 300);
+    });
 
   const scrollProducts = (direction) => {
     const nextIndex = direction === "next" ? activeProductScrollIndex + 1 : activeProductScrollIndex - 1;
