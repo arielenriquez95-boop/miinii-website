@@ -204,7 +204,7 @@ function ScrollReveal({ children, className = "", delay = 0, direction = "up", .
           observer.unobserve(element);
         }
       },
-      { rootMargin: "0px 0px -10% 0px", threshold: 0.1 }
+      { rootMargin: "0px 0px -5% 0px", threshold: 0.08 }
     );
 
     observer.observe(element);
@@ -215,17 +215,17 @@ function ScrollReveal({ children, className = "", delay = 0, direction = "up", .
     direction === "right"
       ? isVisible
         ? "translate-x-0"
-        : "translate-x-6"
+        : "translate-x-6 lg:translate-x-8"
       : isVisible
         ? "translate-y-0"
-        : "translate-y-5";
+        : "translate-y-5 lg:translate-y-8";
 
   return (
     <div
       ref={ref}
       {...props}
       style={{ transitionDelay: `${delay}ms` }}
-      className={`${className} transform-gpu transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${offsetClass} ${isVisible ? "opacity-100" : "opacity-0"}`}
+      className={`${className} transform-gpu transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none lg:duration-[850ms] ${offsetClass} ${isVisible ? "opacity-100" : "opacity-0"}`}
     >
       {children}
     </div>
@@ -1226,45 +1226,52 @@ export default function App() {
       <section id="process" className="bg-white py-10 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="How it works" title="From photo to mini figure" text="A simple production flow that turns your favorite people and pets into handcrafted 3D keepsakes." />
-          <SectionReveal delay={80}>
-            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{processSteps.map((step, index) => <ProcessCard key={step.title} step={step} index={index} />)}</div>
-          </SectionReveal>
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+            {processSteps.map((step, index) => (
+              <ScrollReveal key={step.title} delay={index * 90} className="h-full">
+                <ProcessCard step={step} index={index} />
+              </ScrollReveal>
+            ))}
+          </div>
         </div>
       </section>
 
       <section id="products" className="overflow-visible bg-white pb-16 pt-6 text-slate-950 sm:pb-24 sm:pt-10">
         <div className="mx-auto max-w-7xl overflow-visible px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="What we make" title="Mini figures for every story" text="Choose the Miinii style that fits your gift, collection, or special memory." />
-          <SectionReveal delay={80} className="relative overflow-visible">
+          <div className="relative overflow-visible">
             {activeProductScrollIndex > 0 && <button type="button" onClick={() => scrollProducts("previous")} className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-bold text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#f05f20] lg:flex" aria-label="Scroll products left"><span className="flex h-full w-full items-center justify-center pb-0.5 leading-none">‹</span></button>}
             {activeProductScrollIndex < getMaxProductScrollIndex() && <button type="button" onClick={() => scrollProducts("next")} className="absolute right-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-bold text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:translate-x-0.5 hover:bg-[#f05f20] lg:flex" aria-label="Scroll products right"><span className="flex h-full w-full items-center justify-center pb-0.5 leading-none">›</span></button>}
 
-            <ProductDeckCarousel
-              products={products}
-              activeIndex={activeProductScrollIndex}
-              onIndexChange={setActiveProductScrollIndex}
-              onOpenProduct={setActiveProductIndex}
-            />
+            <SectionReveal delay={80} className="lg:hidden">
+              <ProductDeckCarousel
+                products={products}
+                activeIndex={activeProductScrollIndex}
+                onIndexChange={setActiveProductScrollIndex}
+                onOpenProduct={setActiveProductIndex}
+              />
+            </SectionReveal>
 
             <div className="relative hidden overflow-visible lg:block">
             <div ref={productsScrollRef} className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:4rem] [scrollbar-width:none] [-ms-overflow-style:none] px-8 py-4 [&::-webkit-scrollbar]:hidden">
               <div className="flex w-max items-stretch gap-4 lg:px-4">
                 {products.map((product, index) => (
-                  <div key={product.title} data-product-index={index} className="w-[var(--product-slide-w)] max-w-none shrink-0 snap-start px-5 py-10">
-                    <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
-                  </div>
+                  <ScrollReveal key={product.title} delay={index * 100} className="h-full w-[var(--product-slide-w)] max-w-none shrink-0 snap-start px-5 py-10">
+                    <div data-product-index={index}>
+                      <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
+                    </div>
+                  </ScrollReveal>
                 ))}
               </div>
             </div>
             </div>
-          </SectionReveal>
+          </div>
         </div>
       </section>
 
       <section id="gallery" className="bg-[#070B18] py-16 text-white sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="Gallery" title="Every Miinii tells a story" text="Explore custom mini figures, pet keepsakes, packaging details, and finished pieces crafted from meaningful photos and stories." dark />
-          <SectionReveal delay={80}>
             <div className="relative">
               {activeGalleryScrollIndex > 0 && (
                 <button type="button" onClick={() => scrollGallery("previous")} className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#16C1C1] text-2xl font-bold text-white shadow-xl shadow-teal-900/40 ring-1 ring-white/20 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#12a8a8] lg:flex" aria-label="Scroll gallery left">
@@ -1280,9 +1287,11 @@ export default function App() {
               <div ref={galleryScrollRef} className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:2.5rem] [scrollbar-width:none] [-ms-overflow-style:none] px-6 sm:px-8 lg:px-4 [&::-webkit-scrollbar]:hidden">
                 <div className="flex w-max gap-3 px-[calc(50%-min(42.5vw,200px))] sm:gap-4 lg:gap-4 lg:px-2">
                   {collageItems.map((item, index) => (
-                    <div key={item.title} data-gallery-index={index} className="w-[85vw] max-w-[400px] shrink-0 snap-center snap-always px-2 lg:w-[var(--gallery-slide-w)] lg:max-w-none lg:snap-start lg:px-3">
-                      <GalleryCard item={item} onClick={() => setActiveGalleryIndex(index)} />
-                    </div>
+                    <ScrollReveal key={item.title} delay={index * 100} className="h-full w-[85vw] max-w-[400px] shrink-0 snap-center snap-always px-2 lg:w-[var(--gallery-slide-w)] lg:max-w-none lg:snap-start lg:px-3">
+                      <div data-gallery-index={index}>
+                        <GalleryCard item={item} onClick={() => setActiveGalleryIndex(index)} />
+                      </div>
+                    </ScrollReveal>
                   ))}
                 </div>
               </div>
@@ -1299,7 +1308,6 @@ export default function App() {
                 ))}
               </div>
             </div>
-          </SectionReveal>
         </div>
       </section>
 
@@ -1368,7 +1376,6 @@ export default function App() {
             <p className="mt-3 text-base leading-7 text-white/80">Heartfelt notes from customers who turned meaningful moments into custom keepsakes.</p>
           </ScrollReveal>
 
-          <SectionReveal delay={80}>
           <div
             ref={testimonialsScrollRef}
             className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-4 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
@@ -1379,8 +1386,11 @@ export default function App() {
                 data-testimonial-page={pageIndex}
                 className="grid min-w-full snap-center scroll-mx-4 grid-cols-1 grid-rows-2 gap-3 sm:scroll-mx-6 sm:gap-4 lg:contents"
               >
-                {page.map((testimonial) => (
-                    <article key={testimonial.name} className="group relative flex min-h-[235px] h-full flex-col overflow-hidden rounded-[1.35rem] border border-white/25 bg-white/95 p-4 shadow-xl shadow-teal-950/10 backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-white/50 hover:bg-white hover:shadow-2xl hover:shadow-teal-950/20 sm:min-h-[245px] sm:p-5 lg:min-h-[260px]">
+                {page.map((testimonial, cardIndex) => {
+                  const revealIndex = pageIndex * 2 + cardIndex;
+                  return (
+                  <ScrollReveal key={testimonial.name} delay={revealIndex * 90} className="h-full min-w-0">
+                    <article className="group relative flex min-h-[235px] h-full flex-col overflow-hidden rounded-[1.35rem] border border-white/25 bg-white/95 p-4 shadow-xl shadow-teal-950/10 backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-white/50 hover:bg-white hover:shadow-2xl hover:shadow-teal-950/20 sm:min-h-[245px] sm:p-5 lg:min-h-[260px]">
                       <div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" />
 
                       <div className="relative mb-3 flex gap-0.5 text-[#ff6f31] sm:mb-4">
@@ -1400,7 +1410,9 @@ export default function App() {
                         </p>
                       </div>
                     </article>
-                ))}
+                  </ScrollReveal>
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -1418,7 +1430,6 @@ export default function App() {
               />
             ))}
           </div>
-          </SectionReveal>
         </div>
       </section>
 
@@ -1429,7 +1440,6 @@ export default function App() {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="FAQ" title="Common questions" text="Simple answers to help you before ordering your custom Miinii." />
 
-          <SectionReveal delay={80}>
           <div
             ref={faqsScrollRef}
             className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-4 lg:grid-rows-2 lg:gap-4 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
@@ -1440,15 +1450,20 @@ export default function App() {
                 data-faq-page={pageIndex}
                 className="grid min-w-full snap-center scroll-mx-4 grid-cols-2 grid-rows-2 gap-3 sm:scroll-mx-6 sm:gap-4 lg:contents"
               >
-                {page.map((faq) => (
-                    <article key={faq.q} className="group relative flex min-h-[185px] h-full flex-col overflow-hidden rounded-[1.35rem] bg-white p-4 shadow-md shadow-orange-100/50 ring-1 ring-orange-100/70 transition duration-500 hover:-translate-y-1 hover:shadow-xl hover:ring-[#16C1C1]/30 sm:min-h-[205px] sm:p-5 lg:min-h-[220px]">
+                {page.map((faq, cardIndex) => {
+                  const revealIndex = pageIndex * 4 + cardIndex;
+                  return (
+                  <ScrollReveal key={faq.q} delay={revealIndex * 70} className="h-full min-w-0">
+                    <article className="group relative flex min-h-[185px] h-full flex-col overflow-hidden rounded-[1.35rem] bg-white p-4 shadow-md shadow-orange-100/50 ring-1 ring-orange-100/70 transition duration-500 hover:-translate-y-1 hover:shadow-xl hover:ring-[#16C1C1]/30 sm:min-h-[205px] sm:p-5 lg:min-h-[220px]">
                       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#0F766E] via-[#16C1C1] to-[#0E7490]" />
                       <div className="absolute -right-12 -top-12 h-28 w-28 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" />
 
                       <h3 className="relative pr-2 text-sm font-black leading-5 text-slate-950 sm:text-lg sm:leading-6">{faq.q}</h3>
                       <p className="relative mt-3 text-sm leading-5 text-slate-600 sm:leading-6">{faq.a}</p>
                     </article>
-                ))}
+                  </ScrollReveal>
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -1466,7 +1481,6 @@ export default function App() {
               />
             ))}
           </div>
-          </SectionReveal>
         </div>
       </section>
 
