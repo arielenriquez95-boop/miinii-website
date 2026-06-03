@@ -403,8 +403,6 @@ function GalleryCard({ item, onClick }) {
 export default function App() {
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(null);
   const [activeProductIndex, setActiveProductIndex] = useState(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
   const [activeProductScrollIndex, setActiveProductScrollIndex] = useState(0);
   const [activeTestimonialPage, setActiveTestimonialPage] = useState(0);
   const [activeFaqPage, setActiveFaqPage] = useState(0);
@@ -426,40 +424,23 @@ export default function App() {
     });
   };
 
-  const centerProductCard = (index) => {
+  const getNearestProductIndex = () => {
     const carousel = productsScrollRef.current;
-    if (!carousel) return;
-
-    const card = carousel.querySelector(`[data-product-index="${index}"]`);
-    if (!card) return;
-
-    const carouselCenter = carousel.clientWidth / 2;
-    const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-    const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
-    const targetLeft = Math.max(0, Math.min(maxScrollLeft, cardCenter - carouselCenter));
-
-    carousel.scrollTo({
-      left: targetLeft,
-      behavior: "smooth",
-    });
-  };
-
-  const updateProductScrollButtons = () => {
-    const carousel = productsScrollRef.current;
-    if (!carousel) return;
+    if (!carousel) return 0;
 
     const cards = Array.from(carousel.querySelectorAll("[data-product-index]"));
-    if (!cards.length) return;
+    if (!cards.length) return 0;
 
-    const carouselCenter = carousel.scrollLeft + carousel.clientWidth / 2;
-    const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+    const carouselRect = carousel.getBoundingClientRect();
+    const carouselCenter = carouselRect.left + carouselRect.width / 2;
 
     let nearestIndex = 0;
     let nearestDistance = Infinity;
 
     cards.forEach((card) => {
       const index = Number(card.getAttribute("data-product-index"));
-      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const cardRect = card.getBoundingClientRect();
+      const cardCenter = cardRect.left + cardRect.width / 2;
       const distance = Math.abs(cardCenter - carouselCenter);
 
       if (distance < nearestDistance) {
@@ -468,13 +449,51 @@ export default function App() {
       }
     });
 
-    const lastIndex = products.length - 1;
-    const isAtStart = carousel.scrollLeft <= 10;
-    const isAtEnd = nearestIndex >= lastIndex || carousel.scrollLeft >= maxScrollLeft - 10;
+    return nearestIndex;
+  };
+
+  const centerProductCard = (index, behavior = "smooth") => {
+    const carousel = productsScrollRef.current;
+    if (!carousel) return;
+
+    const card = carousel.querySelector(`[data-product-index="${index}"]`);
+    if (!card) return;
+
+    const carouselRect = carousel.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const carouselCenter = carouselRect.left + carouselRect.width / 2;
+    const cardCenter = cardRect.left + cardRect.width / 2;
+    const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+    const targetLeft = Math.max(0, Math.min(maxScrollLeft, carousel.scrollLeft + (cardCenter - carouselCenter)));
+
+    carousel.scrollTo({
+      left: targetLeft,
+      behavior,
+    });
+  };
+
+  const snapProductCarousel = () => {
+    const nearestIndex = getNearestProductIndex();
+    const carousel = productsScrollRef.current;
+    if (!carousel) return;
+
+    const card = carousel.querySelector(`[data-product-index="${nearestIndex}"]`);
+    if (!card) return;
+
+    const carouselRect = carousel.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const carouselCenter = carouselRect.left + carouselRect.width / 2;
+    const cardCenter = cardRect.left + cardRect.width / 2;
+
+    if (Math.abs(cardCenter - carouselCenter) > 2) {
+      centerProductCard(nearestIndex);
+    }
 
     setActiveProductScrollIndex(nearestIndex);
-    setCanScrollLeft(!isAtStart || nearestIndex > 0);
-    setCanScrollRight(!isAtEnd);
+  };
+
+  const updateProductScrollButtons = () => {
+    setActiveProductScrollIndex(getNearestProductIndex());
   };
 
   const scrollProducts = (direction) => {
@@ -483,34 +502,58 @@ export default function App() {
     const safeIndex = Math.max(0, Math.min(lastIndex, nextIndex));
 
     setActiveProductScrollIndex(safeIndex);
-    setCanScrollLeft(safeIndex > 0);
-    setCanScrollRight(safeIndex < lastIndex);
-
     centerProductCard(safeIndex);
-
-    requestAnimationFrame(() => {
-      updateProductScrollButtons();
-      setTimeout(updateProductScrollButtons, 250);
-      setTimeout(updateProductScrollButtons, 600);
-    });
   };
 
   useEffect(() => {
     const carousel = productsScrollRef.current;
     if (!carousel) return;
 
-    setCanScrollLeft(false);
-    requestAnimationFrame(() => {
+    let scrollEndTimer = null;
+    let isTouching = false;
+
+    const scheduleSnap = (delay = 80) => {
+      clearTimeout(scrollEndTimer);
+      scrollEndTimer = setTimeout(snapProductCarousel, delay);
+    };
+
+    const onScroll = () => {
+      if (!isTouching) scheduleSnap();
+    };
+
+    const onTouchStart = () => {
+      isTouching = true;
+      clearTimeout(scrollEndTimer);
+    };
+
+    const onTouchEnd = () => {
+      isTouching = false;
+      scheduleSnap(50);
+    };
+
+    const onResize = () => {
+      centerProductCard(getNearestProductIndex(), "auto");
       updateProductScrollButtons();
-      setTimeout(updateProductScrollButtons, 300);
+    };
+
+    requestAnimationFrame(() => {
+      centerProductCard(0, "auto");
+      requestAnimationFrame(updateProductScrollButtons);
     });
 
-    carousel.addEventListener("scroll", updateProductScrollButtons, { passive: true });
-    window.addEventListener("resize", updateProductScrollButtons);
+    carousel.addEventListener("scroll", onScroll, { passive: true });
+    carousel.addEventListener("scrollend", snapProductCarousel, { passive: true });
+    carousel.addEventListener("touchstart", onTouchStart, { passive: true });
+    carousel.addEventListener("touchend", onTouchEnd, { passive: true });
+    window.addEventListener("resize", onResize);
 
     return () => {
-      carousel.removeEventListener("scroll", updateProductScrollButtons);
-      window.removeEventListener("resize", updateProductScrollButtons);
+      clearTimeout(scrollEndTimer);
+      carousel.removeEventListener("scroll", onScroll);
+      carousel.removeEventListener("scrollend", snapProductCarousel);
+      carousel.removeEventListener("touchstart", onTouchStart);
+      carousel.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("resize", onResize);
     };
   }, []);
 
@@ -686,13 +729,13 @@ export default function App() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="What we make" title="Mini figures for every story" text="Choose the Miinii style that fits your gift, collection, or special memory." />
           <div className="relative">
-            {canScrollLeft && <button type="button" onClick={() => scrollProducts("previous")} className="absolute left-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#f05f20] sm:left-1 sm:h-12 sm:w-12" aria-label="Scroll products left"><span className="flex h-full w-full items-center justify-center pb-0.5 text-2xl font-black leading-none sm:pb-1 sm:text-3xl">‹</span></button>}
-            {canScrollRight && <button type="button" onClick={() => scrollProducts("next")} className="absolute right-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:translate-x-0.5 hover:bg-[#f05f20] sm:right-1 sm:h-12 sm:w-12" aria-label="Scroll products right"><span className="flex h-full w-full items-center justify-center pb-0.5 text-2xl font-black leading-none sm:pb-1 sm:text-3xl">›</span></button>}
+            {activeProductScrollIndex > 0 && <button type="button" onClick={() => scrollProducts("previous")} className="absolute left-2 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#f05f20] md:flex sm:left-1 sm:h-12 sm:w-12" aria-label="Scroll products left"><span className="flex h-full w-full items-center justify-center pb-0.5 text-2xl font-black leading-none sm:pb-1 sm:text-3xl">‹</span></button>}
+            {activeProductScrollIndex < products.length - 1 && <button type="button" onClick={() => scrollProducts("next")} className="absolute right-2 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:translate-x-0.5 hover:bg-[#f05f20] md:flex sm:right-1 sm:h-12 sm:w-12" aria-label="Scroll products right"><span className="flex h-full w-full items-center justify-center pb-0.5 text-2xl font-black leading-none sm:pb-1 sm:text-3xl">›</span></button>}
 
-            <div ref={productsScrollRef} className="-mx-4 overflow-x-auto overscroll-x-contain scroll-smooth px-8 py-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-10 sm:py-6 lg:-mx-8 lg:px-12 [&::-webkit-scrollbar]:hidden">
-              <div className="flex w-max snap-x snap-mandatory gap-4 pr-4 sm:gap-5 sm:pr-6 lg:pr-8">
+            <div ref={productsScrollRef} className="-mx-4 snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:py-6 lg:-mx-8 [&::-webkit-scrollbar]:hidden">
+              <div className="flex w-max gap-4 px-[calc(50%-min(36vw,127.5px))] sm:gap-5 sm:px-[calc(50%-130px)] lg:px-[calc(50%-142.5px)]">
                 {products.map((product, index) => (
-                  <ScrollReveal key={product.title} direction="right" className="w-[72vw] max-w-[255px] shrink-0 snap-center p-1 sm:w-[260px] sm:max-w-[260px] lg:w-[285px] lg:max-w-[285px]" data-product-index={index}>
+                  <ScrollReveal key={product.title} direction="right" className="w-[72vw] max-w-[255px] shrink-0 snap-center snap-always p-1 sm:w-[260px] sm:max-w-[260px] lg:w-[285px] lg:max-w-[285px]" data-product-index={index}>
                     <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
                   </ScrollReveal>
                 ))}
@@ -709,42 +752,47 @@ export default function App() {
         </div>
       </section>
 
-     <section id="about" className="relative overflow-hidden bg-white py-12 sm:py-24">
+     <section id="about" className="relative overflow-hidden bg-white py-8 sm:py-24">
         <div className="absolute left-0 top-10 h-64 w-64 rounded-full bg-[#16C1C1]/10 blur-3xl" />
         <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#ff6f31]/10 blur-3xl" />
-      
+
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <div className="overflow-hidden rounded-[1.6rem] border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)] sm:rounded-[2rem]">
-              <div className="grid gap-0 md:grid-cols-[0.85fr_1.15fr]">
-                <div className="relative overflow-hidden bg-gradient-to-br from-slate-100 to-white p-3 sm:min-h-[380px] sm:p-4 md:min-h-[420px]">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(22,193,193,0.18),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(255,111,49,0.16),transparent_35%)]" />
-      
-                  <div className="relative mx-auto aspect-[4/4.5] max-h-[260px] w-full overflow-hidden rounded-[1.25rem] border border-white/70 bg-white shadow-inner sm:aspect-auto sm:h-full sm:max-h-none sm:rounded-[1.5rem]">
+            <div className="overflow-hidden rounded-2xl border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)] sm:rounded-[2rem]">
+              <div className="flex flex-col md:grid md:grid-cols-[0.85fr_1.15fr]">
+                <div className="relative flex items-center gap-3.5 p-4 pb-0 md:block md:min-h-[420px] md:p-4">
+                  <div className="absolute inset-0 hidden bg-gradient-to-br from-slate-100 to-white md:block" />
+                  <div className="absolute inset-0 hidden bg-[radial-gradient(circle_at_top_left,rgba(22,193,193,0.18),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(255,111,49,0.16),transparent_35%)] md:block" />
+
+                  <div className="relative h-[4.75rem] w-[4.75rem] shrink-0 overflow-hidden rounded-2xl border border-white/70 bg-white shadow-md ring-1 ring-slate-100 md:mx-auto md:aspect-[4/4.5] md:h-full md:w-full md:max-h-none md:rounded-[1.5rem] md:shadow-inner">
                     <img
                       src="/about-portrait.png"
                       alt="Miinii artist portrait"
                       className="h-full w-full object-cover"
                     />
                   </div>
+
+                  <div className="min-w-0 md:hidden">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#16C1C1]">About us</p>
+                    <h2 className="mt-1 text-lg font-black leading-snug tracking-tight text-slate-950">Meet the artist behind Miinii.</h2>
+                  </div>
                 </div>
-      
-                <div className="flex flex-col justify-center p-5 pt-4 sm:p-10 lg:p-12 md:pt-10">
-                  <p className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-[#16C1C1] sm:mb-3 sm:text-sm sm:tracking-[0.25em]">
-                    About us
-                  </p>
-      
-                  <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">
+
+                <div className="flex flex-col justify-center p-4 md:p-10 lg:p-12">
+                  <div className="hidden md:block">
+                    <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">About us</p>
+                    <h2 className="text-5xl font-black tracking-tight text-slate-950">
                       Meet the artist
                       <br />
                       behind Miinii.
-                  </h2>
-      
-                  <p className="mt-4 text-base leading-7 text-slate-600 sm:mt-5 sm:text-lg sm:leading-8">
+                    </h2>
+                  </div>
+
+                  <p className="mt-0 text-sm leading-6 text-slate-600 md:mt-5 md:text-lg md:leading-8">
                     Hi, I’m Ariel, the creator of Miinii. Miinii started from my love for 3D art, design, and meaningful custom gifts. What began as a creative idea became a mini studio that turns real people, pets, and special memories into handcrafted 3D miniatures.
                   </p>
-      
-                  <p className="mt-3 text-sm leading-6 text-slate-500 sm:mt-4 sm:text-base sm:leading-7">
+
+                  <p className="mt-2 text-xs leading-5 text-slate-500 md:mt-4 md:text-base md:leading-7">
                     Each Miinii is carefully made through digital sculpting, resin 3D printing, hand painting, finishing, and packaging. As Miinii continues to grow, we’re working toward building a bigger creative team so we can create more personalized mini figures for everyone while keeping the same care, quality, and handmade feel in every piece.
                   </p>
                 </div>
@@ -880,14 +928,6 @@ export default function App() {
                 <a href="https://instagram.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="instagram" className="mr-2 h-5 w-5 shrink-0" />Instagram</a>
               </div>
               <div className="mt-7 flex flex-col items-center gap-2 text-center text-sm leading-6 text-white/90 sm:mt-8 sm:text-base sm:leading-7">
-                <p className="flex items-center justify-center gap-2 break-all font-semibold">
-                  <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <rect x="3" y="5" width="18" height="14" rx="2" />
-                    <path d="M3 7l9 6 9-6" />
-                  </svg>
-                  miinii.ariel@gmail.com
-                </p>
-              
                 <p className="flex items-center justify-center gap-2">
                   <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M12 21s7-4.4 7-11a7 7 0 1 0-14 0c0 6.6 7 11 7 11z" />
