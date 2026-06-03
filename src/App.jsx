@@ -600,18 +600,6 @@ function ProductDeckCarousel({ products, activeIndex, onIndexChange, onOpenProdu
           );
         })}
       </div>
-
-      <div className="mt-1 flex justify-center gap-1.5" aria-label="Product slides">
-        {products.map((product, index) => (
-          <button
-            key={product.title}
-            type="button"
-            onClick={() => goToIndex(index)}
-            className={`h-1.5 rounded-full transition-all duration-300 ${activeIndex === index ? "w-6 bg-[#ff6f31]" : "w-1.5 bg-slate-300"}`}
-            aria-label={`Go to ${product.title}`}
-          />
-        ))}
-      </div>
     </div>
   );
 }
@@ -1325,7 +1313,7 @@ export default function App() {
                     </h2>
                   </div>
 
-                  <div className="relative h-[7.75rem] w-[7.75rem] shrink-0 overflow-hidden rounded-2xl border border-white/70 bg-white shadow-md ring-1 ring-slate-100 md:mx-auto md:aspect-[4/4.5] md:h-full md:w-full md:max-h-none md:rounded-[1.5rem] md:shadow-inner">
+                  <div className="relative h-[7.75rem] w-[7.75rem] shrink-0 overflow-hidden rounded-full border border-white/70 bg-white shadow-md ring-1 ring-slate-100 md:mx-auto md:aspect-[4/4.5] md:h-full md:w-full md:max-h-none md:rounded-[1.5rem] md:shadow-inner">
                     <img
                       src="/about-portrait.png"
                       alt="Miinii artist portrait"
