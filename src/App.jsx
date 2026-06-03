@@ -93,28 +93,33 @@ const isVideoFile = (src = "") => /\.(mp4|webm|ogg)$/i.test(src);
 
 function MediaPreview({ src, alt, className = "", videoClassName = "", lazy = false }) {
   const containerRef = useRef(null);
-  const [inView, setInView] = useState(!lazy);
+  const [shouldRender, setShouldRender] = useState(!lazy);
 
   useEffect(() => {
-    if (!lazy) return;
+    if (!lazy || shouldRender) return;
 
     const element = containerRef.current;
     if (!element) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { rootMargin: "120px", threshold: 0.15 }
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldRender(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "160px", threshold: 0.01 }
     );
 
     observer.observe(element);
     return () => observer.disconnect();
-  }, [lazy]);
+  }, [lazy, shouldRender]);
 
   if (isVideoFile(src)) {
     if (lazy) {
       return (
         <div ref={containerRef} className="h-full w-full">
-          {inView ? (
+          {shouldRender ? (
             <video
               src={src}
               className={`${className} ${videoClassName}`.trim()}
@@ -174,7 +179,11 @@ function SocialIcon({ type, className = "h-5 w-5" }) {
   return <svg {...common}><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" /></svg>;
 }
 
-function Reveal({ children, className = "", ...props }) {
+function Reveal({ children, className = "", animate = true, ...props }) {
+  if (!animate) {
+    return <div {...props} className={className}>{children}</div>;
+  }
+
   return <div {...props} className={`animate-[fadeUp_.7s_ease-out_both] ${className}`}>{children}</div>;
 }
 
@@ -193,7 +202,7 @@ function ScrollReveal({ children, className = "", delay = 0, direction = "up", .
           observer.unobserve(element);
         }
       },
-      { threshold: 0.18 }
+      { threshold: 0.12 }
     );
 
     observer.observe(element);
@@ -206,19 +215,17 @@ function ScrollReveal({ children, className = "", delay = 0, direction = "up", .
     <div
       ref={ref}
       {...props}
-      style={{ transitionDelay: `${delay}ms` }}
-      className={`${className} transform-gpu transition-all duration-1000 ease-[cubic-bezier(.22,1,.36,1)] ${
-        isVisible ? "translate-x-0 translate-y-0 opacity-100" : hiddenPosition
-      }`}
+      style={{ transitionDelay: isVisible ? `${delay}ms` : undefined }}
+      className={`${className} transform-gpu ${isVisible ? "animate-[fadeUp_.7s_ease-out_both]" : hiddenPosition}`}
     >
       {children}
     </div>
   );
 }
 
-function SectionHeader({ eyebrow, title, text, dark = false }) {
+function SectionHeader({ eyebrow, title, text, dark = false, animate = true }) {
   return (
-    <Reveal className="mx-auto mb-10 max-w-2xl text-center">
+    <Reveal animate={animate} className="mx-auto mb-10 max-w-2xl text-center">
       <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">{eyebrow}</p>
       <h2 className={`text-4xl font-black tracking-tight md:text-5xl ${dark ? "text-white" : "text-slate-950"}`}>{title}</h2>
       <p className={`mt-4 text-lg leading-8 ${dark ? "text-slate-300" : "text-slate-600"}`}>{text}</p>
@@ -436,7 +443,7 @@ function GalleryCard({ item, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="group relative aspect-[4/5] overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/5 p-0 text-left shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition duration-500 hover:z-20 hover:scale-105 hover:bg-white/10 hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 focus:ring-offset-[#070B18] sm:rounded-[1.75rem]"
+      className="group relative aspect-[4/5] overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/5 p-0 text-left shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition duration-500 [@media(hover:hover)]:hover:z-20 [@media(hover:hover)]:hover:scale-105 [@media(hover:hover)]:hover:bg-white/10 [@media(hover:hover)]:hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 focus:ring-offset-[#070B18] sm:rounded-[1.75rem]"
       aria-label={`Open ${item.title} gallery item`}
     >
       <MediaPreview
@@ -997,20 +1004,22 @@ export default function App() {
       </section>
 
       <section id="products" className="overflow-visible bg-white pb-16 pt-6 text-slate-950 sm:pb-24 sm:pt-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl overflow-visible px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="What we make" title="Mini figures for every story" text="Choose the Miinii style that fits your gift, collection, or special memory." />
           <div className="relative overflow-visible">
             {activeProductScrollIndex > 0 && <button type="button" onClick={() => scrollProducts("previous")} className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-bold text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#f05f20] lg:flex" aria-label="Scroll products left"><span className="flex h-full w-full items-center justify-center pb-0.5 leading-none">‹</span></button>}
             {activeProductScrollIndex < getMaxProductScrollIndex() && <button type="button" onClick={() => scrollProducts("next")} className="absolute right-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-bold text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:translate-x-0.5 hover:bg-[#f05f20] lg:flex" aria-label="Scroll products right"><span className="flex h-full w-full items-center justify-center pb-0.5 leading-none">›</span></button>}
 
-            <div ref={productsScrollRef} className="-mx-4 snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:py-3 lg:mx-0 lg:px-3 lg:py-4 [&::-webkit-scrollbar]:hidden">
-              <div className="flex w-max items-stretch gap-4 px-[calc(50%-min(36vw,127.5px))] sm:gap-5 sm:px-[calc(50%-130px)] lg:gap-4 lg:px-2">
+            <div className="relative overflow-visible -mx-4 sm:-mx-6 lg:mx-0">
+            <div ref={productsScrollRef} className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:4rem] [scrollbar-width:none] [-ms-overflow-style:none] px-10 sm:px-12 sm:py-3 lg:px-8 lg:py-4 [&::-webkit-scrollbar]:hidden">
+              <div className="flex w-max items-stretch gap-4 px-[calc(50%-min(36vw,127.5px))] sm:gap-5 sm:px-[calc(50%-130px)] lg:gap-4 lg:px-4">
                 {products.map((product, index) => (
-                  <div key={product.title} data-product-index={index} className="w-[72vw] max-w-[255px] shrink-0 snap-center snap-always px-3 py-8 sm:w-[260px] sm:max-w-[260px] sm:px-4 sm:py-9 lg:w-[var(--product-slide-w)] lg:max-w-none lg:snap-start lg:px-3 lg:py-10">
+                  <div key={product.title} data-product-index={index} className="w-[72vw] max-w-[255px] shrink-0 snap-center snap-always px-5 py-8 sm:w-[260px] sm:max-w-[260px] sm:px-6 sm:py-9 lg:w-[var(--product-slide-w)] lg:max-w-none lg:snap-start lg:px-5 lg:py-10">
                     <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
                   </div>
                 ))}
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -1018,8 +1027,8 @@ export default function App() {
 
       <section id="gallery" className="bg-[#070B18] py-16 text-white sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader eyebrow="Gallery" title="Every Miinii tells a story" text="Explore custom mini figures, pet keepsakes, packaging details, and finished pieces crafted from meaningful photos and stories." dark />
-          <Reveal>
+          <SectionHeader eyebrow="Gallery" title="Every Miinii tells a story" text="Explore custom mini figures, pet keepsakes, packaging details, and finished pieces crafted from meaningful photos and stories." dark animate={false} />
+          <Reveal animate={false}>
             <div className="relative">
               {activeGalleryScrollIndex > 0 && (
                 <button type="button" onClick={() => scrollGallery("previous")} className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#16C1C1] text-2xl font-bold text-white shadow-xl shadow-teal-900/40 ring-1 ring-white/20 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#12a8a8] lg:flex" aria-label="Scroll gallery left">
@@ -1032,10 +1041,10 @@ export default function App() {
                 </button>
               )}
 
-              <div ref={galleryScrollRef} className="-mx-4 snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [scrollbar-width:none] [-ms-overflow-style:none] lg:mx-0 [&::-webkit-scrollbar]:hidden">
-                <div className="flex w-max gap-3 px-[calc(50%-min(42.5vw,200px))] lg:gap-4 lg:px-0">
+              <div ref={galleryScrollRef} className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:2.5rem] [scrollbar-width:none] [-ms-overflow-style:none] px-6 sm:px-8 lg:px-4 [&::-webkit-scrollbar]:hidden">
+                <div className="flex w-max gap-3 px-[calc(50%-min(42.5vw,200px))] sm:gap-4 lg:gap-4 lg:px-2">
                   {collageItems.map((item, index) => (
-                    <div key={item.title} data-gallery-index={index} className="w-[85vw] max-w-[400px] shrink-0 snap-center snap-always lg:w-[var(--gallery-slide-w)] lg:max-w-none lg:snap-start">
+                    <div key={item.title} data-gallery-index={index} className="w-[85vw] max-w-[400px] shrink-0 snap-center snap-always px-2 lg:w-[var(--gallery-slide-w)] lg:max-w-none lg:snap-start lg:px-3">
                       <GalleryCard item={item} onClick={() => setActiveGalleryIndex(index)} />
                     </div>
                   ))}
@@ -1058,13 +1067,13 @@ export default function App() {
         </div>
       </section>
 
-     <section id="about" className="relative overflow-hidden bg-white py-8 sm:py-24">
-        <div className="absolute left-0 top-10 h-64 w-64 rounded-full bg-[#16C1C1]/10 blur-3xl" />
-        <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#ff6f31]/10 blur-3xl" />
+     <section id="about" className="relative overflow-x-hidden bg-white py-8 sm:py-24">
+        <div className="pointer-events-none absolute left-0 top-10 h-64 w-64 rounded-full bg-[#16C1C1]/10 blur-3xl" aria-hidden="true" />
+        <div className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#ff6f31]/10 blur-3xl" aria-hidden="true" />
 
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <Reveal>
-            <div className="overflow-hidden rounded-2xl border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)] sm:rounded-[2rem]">
+          <Reveal animate={false}>
+            <div className="overflow-hidden rounded-2xl border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)] sm:rounded-[2rem] [transform:translateZ(0)]">
               <div className="flex flex-col md:grid md:grid-cols-[0.85fr_1.15fr]">
                 <div className="relative flex items-center gap-3.5 p-4 pb-0 md:block md:min-h-[420px] md:p-4">
                   <div className="absolute inset-0 hidden bg-gradient-to-br from-slate-100 to-white md:block" />
