@@ -457,20 +457,22 @@ export default function App() {
     centerProductCard(safeIndex);
   };
 
-  useEffect(() => {
-    const carousel = productsScrollRef.current;
-    if (!carousel) return;
-
-    setCanScrollLeft(false);
-    requestAnimationFrame(updateProductScrollButtons);
-    carousel.addEventListener("scroll", updateProductScrollButtons, { passive: true });
-    window.addEventListener("resize", updateProductScrollButtons);
-
-    return () => {
-      carousel.removeEventListener("scroll", updateProductScrollButtons);
-      window.removeEventListener("resize", updateProductScrollButtons);
-    };
-  }, []);
+      useEffect(() => {
+        const isModalOpen = activeGalleryIndex !== null || activeProductIndex !== null;
+      
+        if (!isModalOpen) return;
+      
+        const originalBodyOverflow = document.body.style.overflow;
+        const originalHtmlOverflow = document.documentElement.style.overflow;
+      
+        document.body.style.overflow = "hidden";
+        document.documentElement.style.overflow = "hidden";
+      
+        return () => {
+          document.body.style.overflow = originalBodyOverflow;
+          document.documentElement.style.overflow = originalHtmlOverflow;
+        };
+      }, [activeGalleryIndex, activeProductIndex]);
 
   const testimonialPages = Array.from(
     { length: Math.ceil(testimonials.length / 2) },
