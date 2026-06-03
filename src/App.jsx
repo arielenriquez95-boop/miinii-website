@@ -676,7 +676,9 @@ export default function App() {
                   </p>
       
                   <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">
-                    Meet the artist behind Miinii.
+                      Meet the artist
+                      <br />
+                      behind Miinii.
                   </h2>
       
                   <p className="mt-4 text-base leading-7 text-slate-600 sm:mt-5 sm:text-lg sm:leading-8">
