@@ -353,14 +353,14 @@ function ProductModal({ products, index, setIndex, onClose }) {
 
   if (!product) return null;
   return (
-    <div className="fixed inset-0 z-[100] bg-slate-950/90 p-3 backdrop-blur-xl sm:flex sm:items-center sm:justify-center sm:p-6">
+    <div className="fixed inset-0 z-[100] flex flex-col bg-white sm:bg-slate-950/90 sm:items-center sm:justify-center sm:p-6 sm:backdrop-blur-xl">
       <button type="button" onClick={previous} className="absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Previous product">‹</button>
       <button type="button" onClick={next} className="absolute right-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Next product">›</button>
 
-      <div key={product.title} className={`relative mx-auto flex max-h-[92dvh] w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:max-h-[90vh] sm:rounded-[2rem] md:h-auto ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
-        <button type="button" onClick={onClose} className="absolute right-2.5 top-2.5 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950 sm:right-3 sm:top-3 sm:h-11 sm:w-11" aria-label="Close product preview">×</button>
+      <div key={product.title} className={`relative flex h-[100dvh] w-full max-w-none flex-col overflow-hidden rounded-none border-0 bg-white shadow-none animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:mx-auto sm:h-auto sm:max-h-[90vh] sm:max-w-5xl sm:rounded-[2rem] sm:border sm:border-white/10 sm:shadow-2xl sm:shadow-black/40 md:h-auto ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
+        <button type="button" onClick={onClose} className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top,0px))] z-30 flex h-10 w-10 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950 sm:h-11 sm:w-11" aria-label="Close product preview">×</button>
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:grid md:max-h-[90vh] md:grid-cols-[0.95fr_1.05fr] md:overflow-y-auto">
-          <div className="relative flex shrink-0 items-center gap-3 border-b border-orange-100/80 bg-gradient-to-br from-orange-50 via-white to-teal-50 p-3 pr-12 md:block md:border-0 md:p-6 md:pr-6">
+          <div className="relative flex shrink-0 items-center gap-3 border-b border-orange-100/80 bg-gradient-to-br from-orange-50 via-white to-teal-50 p-3 pr-14 pt-[max(0.75rem,env(safe-area-inset-top,0px))] md:block md:border-0 md:p-6 md:pr-6 md:pt-6">
             <div className="w-[6.75rem] shrink-0 overflow-hidden rounded-xl bg-white ring-1 ring-slate-100 shadow-inner sm:w-[7.5rem] md:mx-auto md:w-full md:max-w-[420px] md:rounded-[1.25rem]">
               <div className="aspect-[4/5]">
                 <img
@@ -379,7 +379,7 @@ function ProductModal({ products, index, setIndex, onClose }) {
               </div>
             </div>
           </div>
-          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-3 sm:p-8 lg:p-10">
+          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-3 pb-[max(1rem,env(safe-area-inset-bottom,0px))] sm:p-8 lg:p-10">
             <div className="hidden md:block">
               <h2 className="text-3xl font-black tracking-tight text-slate-950 lg:text-5xl">{product.title}</h2>
               <p className="mt-3 text-lg leading-8 text-slate-600">{product.shortText}</p>
