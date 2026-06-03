@@ -223,14 +223,14 @@ function ScrollReveal({ children, className = "", delay = 0, direction = "up", s
         const rootRect = root.getBoundingClientRect();
         const overlapX = Math.min(rect.right, rootRect.right) - Math.max(rect.left, rootRect.left);
         const overlapY = Math.min(rect.bottom, rootRect.bottom) - Math.max(rect.top, rootRect.top);
-        if (overlapX > 12 && overlapY > 12) reveal();
+        if (overlapX > 18 && overlapY > 18) reveal();
         return;
       }
 
       const viewHeight = window.innerHeight || document.documentElement.clientHeight;
       const viewWidth = window.innerWidth || document.documentElement.clientWidth;
-      const visibleY = rect.top < viewHeight * 0.92 && rect.bottom > viewHeight * 0.04;
-      const visibleX = rect.left < viewWidth * 0.99 && rect.right > viewWidth * 0.01;
+      const visibleY = rect.top < viewHeight * 0.84 && rect.bottom > viewHeight * 0.08;
+      const visibleX = rect.left < viewWidth * 0.98 && rect.right > viewWidth * 0.02;
       if (visibleY && visibleX) reveal();
     };
 
@@ -240,8 +240,8 @@ function ScrollReveal({ children, className = "", delay = 0, direction = "up", s
       },
       {
         root,
-        rootMargin: root ? "0px 16px" : "0px 0px -6% 0px",
-        threshold: 0,
+        rootMargin: root ? "0px 18px" : "0px 0px -14% 0px",
+        threshold: root ? 0.01 : 0.12,
       }
     );
 
@@ -270,7 +270,7 @@ function ScrollReveal({ children, className = "", delay = 0, direction = "up", s
     };
   }, [scrollRoot, scrollRootElement]);
 
-  const directionClass = direction === "right" ? "scroll-reveal--right" : "";
+  const directionClass = direction === "right" ? "scroll-reveal--right" : direction === "left" ? "scroll-reveal--left" : direction === "scale" ? "scroll-reveal--scale" : "";
 
   return (
     <div
@@ -379,6 +379,23 @@ function ProductModal({ products, index, setIndex, onClose }) {
     setIndex((current) => (current === products.length - 1 ? 0 : current + 1));
   };
 
+  const startOrder = () => {
+    onClose();
+
+    setTimeout(() => {
+      const contactSection = document.getElementById("contact");
+      if (!contactSection) return;
+
+      const headerOffset = 80;
+      const sectionPosition = contactSection.getBoundingClientRect().top + window.scrollY;
+
+      window.scrollTo({
+        top: sectionPosition - headerOffset,
+        behavior: "smooth",
+      });
+    }, 120);
+  };
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "ArrowLeft") previous();
@@ -405,72 +422,66 @@ function ProductModal({ products, index, setIndex, onClose }) {
 
   if (!product) return null;
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col bg-white sm:bg-slate-950/90 sm:items-center sm:justify-center sm:p-6 sm:backdrop-blur-xl">
-      <button type="button" onClick={previous} className="absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Previous product">‹</button>
-      <button type="button" onClick={next} className="absolute right-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Next product">›</button>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/75 p-3 backdrop-blur-xl sm:bg-slate-950/90 sm:p-6">
+      <button type="button" onClick={previous} className="absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 md:flex" aria-label="Previous product">‹</button>
+      <button type="button" onClick={next} className="absolute right-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 md:flex" aria-label="Next product">›</button>
 
-      <div key={product.title} className={`relative flex h-[100dvh] w-full max-w-none flex-col overflow-hidden rounded-none border-0 bg-white shadow-none animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:mx-auto sm:h-auto sm:max-h-[90vh] sm:max-w-5xl sm:rounded-[2rem] sm:border sm:border-white/10 sm:shadow-2xl sm:shadow-black/40 md:h-auto ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
-        <button type="button" onClick={onClose} className="absolute right-4 top-[max(0.85rem,env(safe-area-inset-top,0px))] z-30 flex h-9 w-9 items-center justify-center rounded-full bg-slate-950/75 text-xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950 sm:right-3 sm:top-[max(0.75rem,env(safe-area-inset-top,0px))] sm:h-11 sm:w-11 sm:text-2xl" aria-label="Close product preview">×</button>
+      <div key={product.title} className={`relative flex max-h-[min(90dvh,720px)] w-full max-w-[380px] flex-col overflow-hidden rounded-[1.8rem] border border-white/20 bg-white shadow-2xl shadow-black/30 animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:max-w-[430px] md:mx-auto md:h-auto md:max-h-[90vh] md:max-w-5xl md:rounded-[2rem] md:border-white/10 md:shadow-black/40 ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
+        <button type="button" onClick={onClose} className="absolute right-3 top-3 z-30 flex h-9 w-9 items-center justify-center rounded-full bg-slate-950/75 text-xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950 md:right-3 md:top-3 md:h-11 md:w-11 md:text-2xl" aria-label="Close product preview">×</button>
+
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:grid md:max-h-[90vh] md:grid-cols-[0.95fr_1.05fr] md:overflow-y-auto">
-          <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-[#fff8f3] p-3.5 pt-[max(2.75rem,calc(env(safe-area-inset-top,0px)+2.25rem))] pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] md:hidden">
-            <div className="relative mx-auto aspect-square w-full max-w-[min(68vw,220px)] shrink-0 overflow-hidden rounded-[1.15rem] bg-[#f4f6f8] ring-1 ring-slate-200/80">
-              <img
-                src={product.image}
-                alt={`${product.title} preview`}
-                className="size-full object-cover object-center"
-              />
+          <div className="flex min-h-0 flex-1 flex-col bg-white md:hidden">
+            <div className="relative bg-gradient-to-br from-orange-50 via-white to-teal-50 px-4 pb-4 pt-10">
+              <div className="mx-auto aspect-[4/5] w-full max-w-[210px] overflow-hidden rounded-[1.3rem] bg-white/80 p-2 ring-1 ring-slate-100 shadow-inner">
+                <img
+                  src={product.image}
+                  alt={`${product.title} preview`}
+                  className="h-full w-full object-contain"
+                />
+              </div>
             </div>
 
-            <div className="mt-3 flex min-h-0 flex-1 flex-col overflow-hidden rounded-[1.25rem] bg-white ring-1 ring-slate-200/80 shadow-sm">
-              <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain px-3.5 pt-3.5 pb-2">
-                <div className="flex flex-wrap items-start justify-between gap-x-2 gap-y-1.5">
-                  <h2 className="min-w-0 flex-1 text-lg font-black leading-tight tracking-tight text-slate-950">{product.title}</h2>
-                  <div className="flex shrink-0 flex-wrap items-center justify-end gap-1">
-                    {product.oldPrice && <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200">{product.oldPrice}</span>}
-                    <span className="rounded-full bg-[#ff6f31]/15 px-2 py-0.5 text-[11px] font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">{product.price}</span>
-                  </div>
-                </div>
-
-                <p className="mt-2 text-xs leading-5 text-slate-600">{product.shortText}</p>
-
-                <div className="mt-3 rounded-[1rem] bg-[#fff8f3] p-3 ring-1 ring-orange-100">
-                  <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#16C1C1]">What&apos;s included</p>
-                  <ul className="grid gap-2">
-                    {product.details.map((detail) => (
-                      <li key={detail} className="flex gap-2 text-xs leading-[1.35rem] text-slate-600">
-                        <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[#16C1C1]" />
-                        <span>{detail}</span>
-                      </li>
-                    ))}
-                  </ul>
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4">
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <h2 className="min-w-0 flex-1 text-2xl font-black leading-tight tracking-tight text-slate-950">{product.title}</h2>
+                <div className="flex shrink-0 flex-wrap justify-end gap-1.5 pt-0.5">
+                  {product.oldPrice && <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-400 line-through ring-1 ring-slate-200">{product.oldPrice}</span>}
+                  <span className="rounded-full bg-[#ff6f31]/15 px-3 py-1 text-xs font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">{product.price}</span>
                 </div>
               </div>
 
-              <div className="shrink-0 border-t border-slate-100 px-3.5 py-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    onClose();
+              <p className="mt-3 text-sm leading-6 text-slate-600">{product.shortText}</p>
 
-                    setTimeout(() => {
-                      const contactSection = document.getElementById("contact");
-                      if (!contactSection) return;
-
-                      const headerOffset = 80;
-                      const sectionPosition = contactSection.getBoundingClientRect().top + window.scrollY;
-
-                      window.scrollTo({
-                        top: sectionPosition - headerOffset,
-                        behavior: "smooth",
-                      });
-                    }, 120);
-                  }}
-                  className="inline-flex w-full items-center justify-center rounded-full bg-[#ff6f31] px-5 py-3 text-xs font-black text-white shadow-lg shadow-orange-200 transition hover:bg-[#f05f20]"
-                >
-                  Start Your Miinii
-                  <ArrowIcon className="ml-1.5 h-4 w-4" />
-                </button>
+              <div className="mt-4 rounded-[1.25rem] bg-[#fff8f3] p-4 ring-1 ring-orange-100">
+                <p className="mb-3 text-[10px] font-black uppercase tracking-[0.18em] text-[#16C1C1]">What&apos;s included</p>
+                <ul className="grid gap-2.5">
+                  {product.details.map((detail) => (
+                    <li key={detail} className="flex gap-2.5 text-sm leading-5 text-slate-600">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#16C1C1]" />
+                      <span>{detail}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
+            </div>
+
+            <div className="shrink-0 border-t border-slate-100 bg-white px-5 pb-[max(1rem,env(safe-area-inset-bottom,0px))] pt-3">
+              <div className="mb-3 flex items-center justify-between">
+                <button type="button" onClick={previous} className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-2xl font-bold text-slate-700 transition hover:bg-slate-200" aria-label="Previous product">‹</button>
+                <div className="flex items-center justify-center gap-1.5">
+                  {products.map((item, dotIndex) => <button key={item.title} type="button" onClick={() => goToSlide(dotIndex)} className={`h-2 rounded-full transition ${dotIndex === index ? "w-6 bg-[#16C1C1]" : "w-2 bg-slate-300 hover:bg-slate-400"}`} aria-label={`Open ${item.title}`} />)}
+                </div>
+                <button type="button" onClick={next} className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-2xl font-bold text-slate-700 transition hover:bg-slate-200" aria-label="Next product">›</button>
+              </div>
+
+              <button
+                type="button"
+                onClick={startOrder}
+                className="inline-flex w-full items-center justify-center rounded-full bg-[#ff6f31] px-5 py-3.5 text-sm font-black text-white shadow-lg shadow-orange-200 transition hover:bg-[#f05f20]"
+              >
+                Start Your Miinii
+                <ArrowIcon className="ml-1.5 h-4 w-4" />
+              </button>
             </div>
           </div>
 
@@ -502,22 +513,7 @@ function ProductModal({ products, index, setIndex, onClose }) {
             </div>
             <button
               type="button"
-              onClick={() => {
-                onClose();
-
-                setTimeout(() => {
-                  const contactSection = document.getElementById("contact");
-                  if (!contactSection) return;
-
-                  const headerOffset = 80;
-                  const sectionPosition = contactSection.getBoundingClientRect().top + window.scrollY;
-
-                  window.scrollTo({
-                    top: sectionPosition - headerOffset,
-                    behavior: "smooth",
-                  });
-                }, 120);
-              }}
+              onClick={startOrder}
               className="mt-6 inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-base font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20]"
             >
               Start Your Miinii
@@ -527,7 +523,7 @@ function ProductModal({ products, index, setIndex, onClose }) {
         </div>
       </div>
 
-      <div className="absolute bottom-5 left-1/2 z-30 hidden -translate-x-1/2 items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-2 backdrop-blur-md sm:flex">
+      <div className="absolute bottom-5 left-1/2 z-30 hidden -translate-x-1/2 items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-2 backdrop-blur-md md:flex">
         {products.map((item, dotIndex) => <button key={item.title} type="button" onClick={() => goToSlide(dotIndex)} className={`h-2.5 rounded-full transition ${dotIndex === index ? "w-8 bg-[#16C1C1]" : "w-2.5 bg-white/40 hover:bg-white/70"}`} aria-label={`Open ${item.title}`} />)}
       </div>
     </div>
@@ -1342,27 +1338,59 @@ export default function App() {
 
         .scroll-reveal {
           opacity: 0;
-          transform: translate3d(0, 28px, 0);
+          transform: translate3d(0, 30px, 0) scale(0.985);
+          filter: blur(4px);
           transition:
-            opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-            transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+            opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+            filter 0.75s cubic-bezier(0.22, 1, 0.36, 1);
           transition-delay: var(--scroll-reveal-delay, 0ms);
-          will-change: opacity, transform;
+          will-change: opacity, transform, filter;
         }
 
         .scroll-reveal--right {
-          transform: translate3d(34px, 0, 0);
+          transform: translate3d(38px, 0, 0) scale(0.985);
+        }
+
+        .scroll-reveal--left {
+          transform: translate3d(-38px, 0, 0) scale(0.985);
+        }
+
+        .scroll-reveal--scale {
+          transform: translate3d(0, 18px, 0) scale(0.94);
         }
 
         .scroll-reveal.is-revealed {
           opacity: 1;
-          transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0) scale(1);
+          filter: blur(0);
+        }
+
+        @media (min-width: 1024px) {
+          .scroll-reveal {
+            transform: translate3d(0, 46px, 0) scale(0.975);
+            filter: blur(7px);
+            transition-duration: 0.95s;
+          }
+
+          .scroll-reveal--right {
+            transform: translate3d(58px, 0, 0) scale(0.975);
+          }
+
+          .scroll-reveal--left {
+            transform: translate3d(-58px, 0, 0) scale(0.975);
+          }
+
+          .scroll-reveal--scale {
+            transform: translate3d(0, 24px, 0) scale(0.92);
+          }
         }
 
         @media (prefers-reduced-motion: reduce) {
           .scroll-reveal {
             opacity: 1;
             transform: none;
+            filter: none;
             transition: none;
           }
         }
@@ -1382,11 +1410,11 @@ export default function App() {
         <div className="absolute -left-24 top-28 h-72 w-72 rounded-full bg-[#16C1C1]/20 blur-3xl animate-[pulseSoft_5s_ease-in-out_infinite]" />
         <div className="absolute -right-20 top-20 h-80 w-80 rounded-full bg-[#ff6f31]/20 blur-3xl animate-[pulseSoft_6s_ease-in-out_infinite]" />
         <div className="mx-auto grid max-w-7xl items-center gap-0 px-4 pb-8 pt-1 sm:gap-5 sm:px-6 sm:pb-6 sm:pt-1 md:pb-8 lg:grid-cols-2 lg:gap-8 lg:px-8">
-          <ScrollReveal className="relative mx-auto -mt-3 w-[88%] max-w-[390px] sm:-mt-4 sm:w-full sm:max-w-lg lg:mx-0 lg:max-w-none"><div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]"><div className="aspect-[4/5] min-h-[330px] sm:min-h-0"><img src="/hero-image.png" alt="Miinii custom 3D mini figure" className="h-full w-full scale-105 object-contain sm:scale-100" /></div></div></ScrollReveal>
+          <ScrollReveal direction="left" className="relative mx-auto -mt-3 w-[88%] max-w-[390px] sm:-mt-4 sm:w-full sm:max-w-lg lg:mx-0 lg:max-w-none"><div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]"><div className="aspect-[4/5] min-h-[330px] sm:min-h-0"><img src="/hero-image.png" alt="Miinii custom 3D mini figure" className="h-full w-full scale-105 object-contain sm:scale-100" /></div></div></ScrollReveal>
           <div className="-mt-8 text-center sm:mt-0 lg:text-left">
-            <ScrollReveal delay={80}><h1 className="text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">Turn your photos into <span className="text-[#ff6f31]">custom 3D mini figures</span>.</h1></ScrollReveal>
-            <ScrollReveal delay={140}><p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-600 lg:mx-0">Miinii creates handcrafted 3D mini figures based on real people and pets. Each piece is carefully sculpted, resin printed, and hand-painted into a one-of-a-kind keepsake.</p></ScrollReveal>
-            <ScrollReveal delay={200}><div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start"><button type="button" onClick={() => scrollToSection("contact")} className="group inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-8 py-[18px] text-lg font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:px-7 sm:py-4 sm:text-base">Start Your Miinii<ArrowIcon className="ml-2 h-5 w-5 transition group-hover:translate-x-1" /></button><button type="button" onClick={() => scrollToSection("process")} className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-8 py-[18px] text-lg font-black text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-[#16C1C1] sm:px-7 sm:py-4 sm:text-base">View Process</button></div></ScrollReveal>
+            <ScrollReveal direction="right" delay={80}><h1 className="text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">Turn your photos into <span className="text-[#ff6f31]">custom 3D mini figures</span>.</h1></ScrollReveal>
+            <ScrollReveal direction="right" delay={140}><p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-600 lg:mx-0">Miinii creates handcrafted 3D mini figures based on real people and pets. Each piece is carefully sculpted, resin printed, and hand-painted into a one-of-a-kind keepsake.</p></ScrollReveal>
+            <ScrollReveal direction="right" delay={200}><div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start"><button type="button" onClick={() => scrollToSection("contact")} className="group inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-8 py-[18px] text-lg font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:px-7 sm:py-4 sm:text-base">Start Your Miinii<ArrowIcon className="ml-2 h-5 w-5 transition group-hover:translate-x-1" /></button><button type="button" onClick={() => scrollToSection("process")} className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-8 py-[18px] text-lg font-black text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-[#16C1C1] sm:px-7 sm:py-4 sm:text-base">View Process</button></div></ScrollReveal>
           </div>
         </div>
       </section>
@@ -1428,7 +1456,7 @@ export default function App() {
                     key={product.title}
                     data-product-index={index}
                     delay={index * 100}
-                    scrollRoot={productsScrollEl}
+                    direction="scale"
                     className="h-full w-[var(--product-slide-w)] max-w-none shrink-0 snap-start px-5 py-10"
                   >
                     <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
@@ -1463,7 +1491,7 @@ export default function App() {
                       key={item.title}
                       data-gallery-index={index}
                       delay={index * 100}
-                      scrollRoot={galleryScrollEl}
+                      direction="scale"
                       className="h-full w-[85vw] max-w-[400px] shrink-0 snap-center snap-always px-2 lg:w-[var(--gallery-slide-w)] lg:max-w-none lg:snap-start lg:px-3"
                     >
                       <GalleryCard item={item} onClick={() => setActiveGalleryIndex(index)} />
@@ -1576,7 +1604,7 @@ export default function App() {
 
           <div className="hidden gap-4 lg:grid lg:grid-cols-3 lg:grid-rows-2">
             {testimonials.map((testimonial, index) => (
-              <ScrollReveal key={testimonial.name} delay={index * 90} className="h-full min-w-0">
+              <ScrollReveal key={testimonial.name} delay={index * 90} direction="scale" className="h-full min-w-0">
                 <TestimonialCard testimonial={testimonial} />
               </ScrollReveal>
             ))}
@@ -1629,7 +1657,7 @@ export default function App() {
 
           <div className="hidden gap-4 lg:grid lg:grid-cols-4 lg:grid-rows-2">
             {faqs.map((faq, index) => (
-              <ScrollReveal key={faq.q} delay={index * 70} className="h-full min-w-0">
+              <ScrollReveal key={faq.q} delay={index * 70} direction="scale" className="h-full min-w-0">
                 <FaqCard faq={faq} />
               </ScrollReveal>
             ))}
