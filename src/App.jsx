@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 const processSteps = [
   { title: "3D Sculpting", text: "Your Miinii is digitally sculpted based on your reference photos.", image: "/process-sculpting.png" },
@@ -183,74 +183,99 @@ function SocialIcon({ type, className = "h-5 w-5" }) {
   return <svg {...common}><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" /></svg>;
 }
 
+function resolveScrollRoot(scrollRoot) {
+  if (!scrollRoot) return null;
+  if (scrollRoot instanceof Element) return scrollRoot;
+  if (typeof scrollRoot === "object" && "current" in scrollRoot) return scrollRoot.current;
+  return null;
+}
+
 function ScrollReveal({ children, className = "", delay = 0, direction = "up", scrollRoot = null, ...props }) {
   const ref = useRef(null);
+  const revealedRef = useRef(false);
   const [isVisible, setIsVisible] = useState(false);
+  const rootElement = resolveScrollRoot(scrollRoot);
 
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      revealedRef.current = true;
       setIsVisible(true);
       return;
     }
 
-    let revealed = false;
-    const show = () => {
-      if (revealed) return;
-      revealed = true;
-      setIsVisible(true);
+    const root = resolveScrollRoot(scrollRoot);
+
+    const reveal = () => {
+      if (revealedRef.current) return;
+      revealedRef.current = true;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setIsVisible(true));
+      });
     };
 
-    const isInView = () => {
-      const rect = element.getBoundingClientRect();
-      if (rect.width < 1 || rect.height < 1) return false;
+    const fallbackCheck = () => {
+      if (revealedRef.current) return;
 
-      const root = scrollRoot?.current;
+      const rect = element.getBoundingClientRect();
+      if (rect.width < 2 || rect.height < 2) return;
+
       if (root) {
         const rootRect = root.getBoundingClientRect();
         const overlapX = Math.min(rect.right, rootRect.right) - Math.max(rect.left, rootRect.left);
         const overlapY = Math.min(rect.bottom, rootRect.bottom) - Math.max(rect.top, rootRect.top);
-        return overlapX > 8 && overlapY > 8;
+        const minOverlap = Math.min(rect.width, rect.height) * 0.1;
+        if (overlapX > minOverlap && overlapY > minOverlap) reveal();
+        return;
       }
 
       const viewHeight = window.innerHeight || document.documentElement.clientHeight;
-      return rect.top < viewHeight * 0.92 && rect.bottom > viewHeight * 0.06;
+      const viewWidth = window.innerWidth || document.documentElement.clientWidth;
+      const visibleY = rect.top < viewHeight * 0.9 && rect.bottom > viewHeight * 0.08;
+      const visibleX = rect.left < viewWidth * 0.98 && rect.right > viewWidth * 0.02;
+      if (visibleY && visibleX) reveal();
     };
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) show();
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.05) {
+            reveal();
+            break;
+          }
+        }
       },
       {
-        root: scrollRoot?.current ?? null,
-        rootMargin: scrollRoot ? "0px" : "0px 0px -48px 0px",
-        threshold: [0, 0.05, 0.12],
+        root,
+        rootMargin: root ? "0px 8px" : "0px 0px -10% 0px",
+        threshold: [0, 0.05, 0.12, 0.2],
       }
     );
 
     observer.observe(element);
 
-    const runChecks = () => {
-      if (isInView()) show();
-    };
+    const onScrollOrResize = () => fallbackCheck();
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
+    if (root) root.addEventListener("scroll", onScrollOrResize, { passive: true });
 
-    runChecks();
-    const rafId = requestAnimationFrame(runChecks);
-    const resizeObserver = new ResizeObserver(runChecks);
+    const resizeObserver = new ResizeObserver(onScrollOrResize);
     resizeObserver.observe(element);
-    if (scrollRoot?.current) resizeObserver.observe(scrollRoot.current);
+    if (root) resizeObserver.observe(root);
 
-    window.addEventListener("resize", runChecks);
+    const delayedCheck = window.setTimeout(onScrollOrResize, 120);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      window.clearTimeout(delayedCheck);
       observer.disconnect();
       resizeObserver.disconnect();
-      window.removeEventListener("resize", runChecks);
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
+      if (root) root.removeEventListener("scroll", onScrollOrResize);
     };
-  }, [scrollRoot]);
+  }, [scrollRoot, rootElement]);
 
   const offsetClass =
     direction === "right"
@@ -730,6 +755,35 @@ function ProcessCard({ step, index }) {
   );
 }
 
+function TestimonialCard({ testimonial }) {
+  return (
+    <article className="group relative flex min-h-[235px] h-full flex-col overflow-hidden rounded-[1.35rem] border border-white/25 bg-white/95 p-4 shadow-xl shadow-teal-950/10 backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-white/50 hover:bg-white hover:shadow-2xl hover:shadow-teal-950/20 sm:min-h-[245px] sm:p-5 lg:min-h-[260px]">
+      <div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" />
+      <div className="relative mb-3 flex gap-0.5 text-[#ff6f31] sm:mb-4">
+        {[...Array(5)].map((_, i) => (
+          <StarIcon key={i} className="h-3.5 w-3.5" />
+        ))}
+      </div>
+      <p className="relative line-clamp-6 text-sm font-medium leading-6 text-slate-600">“{testimonial.text}”</p>
+      <div className="relative mt-auto border-t border-slate-100 pt-4">
+        <h3 className="text-xs font-black text-slate-950 sm:text-sm">{testimonial.name}</h3>
+        <p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 sm:text-xs sm:tracking-[0.14em]">{testimonial.role}</p>
+      </div>
+    </article>
+  );
+}
+
+function FaqCard({ faq }) {
+  return (
+    <article className="group relative flex min-h-[185px] h-full flex-col overflow-hidden rounded-[1.35rem] bg-white p-4 shadow-md shadow-orange-100/50 ring-1 ring-orange-100/70 transition duration-500 hover:-translate-y-1 hover:shadow-xl hover:ring-[#16C1C1]/30 sm:min-h-[205px] sm:p-5 lg:min-h-[220px]">
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#0F766E] via-[#16C1C1] to-[#0E7490]" />
+      <div className="absolute -right-12 -top-12 h-28 w-28 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" />
+      <h3 className="relative pr-2 text-sm font-black leading-5 text-slate-950 sm:text-lg sm:leading-6">{faq.q}</h3>
+      <p className="relative mt-3 text-sm leading-5 text-slate-600 sm:leading-6">{faq.a}</p>
+    </article>
+  );
+}
+
 function GalleryCard({ item, onClick }) {
   return (
     <button
@@ -759,6 +813,16 @@ export default function App() {
   
   const galleryScrollRef = useRef(null);
   const productsScrollRef = useRef(null);
+  const [productsScrollEl, setProductsScrollEl] = useState(null);
+  const [galleryScrollEl, setGalleryScrollEl] = useState(null);
+  const bindProductsScrollRef = useCallback((node) => {
+    productsScrollRef.current = node;
+    setProductsScrollEl(node);
+  }, []);
+  const bindGalleryScrollRef = useCallback((node) => {
+    galleryScrollRef.current = node;
+    setGalleryScrollEl(node);
+  }, []);
   const testimonialsScrollRef = useRef(null);
   const faqsScrollRef = useRef(null);
 
@@ -1338,10 +1402,10 @@ export default function App() {
             </SectionReveal>
 
             <div className="relative hidden overflow-visible lg:block">
-            <div ref={productsScrollRef} className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:4rem] [scrollbar-width:none] [-ms-overflow-style:none] px-8 py-4 [&::-webkit-scrollbar]:hidden">
+            <div ref={bindProductsScrollRef} className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:4rem] [scrollbar-width:none] [-ms-overflow-style:none] px-8 py-4 [&::-webkit-scrollbar]:hidden">
               <div className="flex w-max items-stretch gap-4 lg:px-4">
                 {products.map((product, index) => (
-                  <ScrollReveal key={product.title} delay={index * 100} scrollRoot={productsScrollRef} className="h-full w-[var(--product-slide-w)] max-w-none shrink-0 snap-start px-5 py-10">
+                  <ScrollReveal key={product.title} delay={index * 100} scrollRoot={productsScrollEl} className="h-full w-[var(--product-slide-w)] max-w-none shrink-0 snap-start px-5 py-10">
                     <div data-product-index={index}>
                       <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
                     </div>
@@ -1369,10 +1433,10 @@ export default function App() {
                 </button>
               )}
 
-              <div ref={galleryScrollRef} className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:2.5rem] [scrollbar-width:none] [-ms-overflow-style:none] px-6 sm:px-8 lg:px-4 [&::-webkit-scrollbar]:hidden">
+              <div ref={bindGalleryScrollRef} className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:2.5rem] [scrollbar-width:none] [-ms-overflow-style:none] px-6 sm:px-8 lg:px-4 [&::-webkit-scrollbar]:hidden">
                 <div className="flex w-max gap-3 px-[calc(50%-min(42.5vw,200px))] sm:gap-4 lg:gap-4 lg:px-2">
                   {collageItems.map((item, index) => (
-                    <ScrollReveal key={item.title} delay={index * 100} scrollRoot={galleryScrollRef} className="h-full w-[85vw] max-w-[400px] shrink-0 snap-center snap-always px-2 lg:w-[var(--gallery-slide-w)] lg:max-w-none lg:snap-start lg:px-3">
+                    <ScrollReveal key={item.title} delay={index * 100} scrollRoot={galleryScrollEl} className="h-full w-[85vw] max-w-[400px] shrink-0 snap-center snap-always px-2 lg:w-[var(--gallery-slide-w)] lg:max-w-none lg:snap-start lg:px-3">
                       <div data-gallery-index={index}>
                         <GalleryCard item={item} onClick={() => setActiveGalleryIndex(index)} />
                       </div>
@@ -1463,42 +1527,31 @@ export default function App() {
 
           <div
             ref={testimonialsScrollRef}
-            className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-4 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
+            className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:hidden [&::-webkit-scrollbar]:hidden"
           >
             {testimonialPages.map((page, pageIndex) => (
               <div
                 key={pageIndex}
                 data-testimonial-page={pageIndex}
-                className="grid min-w-full snap-center scroll-mx-4 grid-cols-1 grid-rows-2 gap-3 sm:scroll-mx-6 sm:gap-4 lg:contents"
+                className="grid min-w-full snap-center scroll-mx-4 grid-cols-1 grid-rows-2 gap-3 sm:scroll-mx-6 sm:gap-4"
               >
                 {page.map((testimonial, cardIndex) => {
                   const revealIndex = pageIndex * 2 + cardIndex;
                   return (
-                  <ScrollReveal key={testimonial.name} delay={revealIndex * 90} className="h-full min-w-0">
-                    <article className="group relative flex min-h-[235px] h-full flex-col overflow-hidden rounded-[1.35rem] border border-white/25 bg-white/95 p-4 shadow-xl shadow-teal-950/10 backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-white/50 hover:bg-white hover:shadow-2xl hover:shadow-teal-950/20 sm:min-h-[245px] sm:p-5 lg:min-h-[260px]">
-                      <div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" />
-
-                      <div className="relative mb-3 flex gap-0.5 text-[#ff6f31] sm:mb-4">
-                        {[...Array(5)].map((_, i) => (
-                          <StarIcon key={i} className="h-3.5 w-3.5" />
-                        ))}
-                      </div>
-
-                      <p className="relative line-clamp-6 text-sm font-medium leading-6 text-slate-600">
-                        “{testimonial.text}”
-                      </p>
-
-                      <div className="relative mt-auto border-t border-slate-100 pt-4">
-                        <h3 className="text-xs font-black text-slate-950 sm:text-sm">{testimonial.name}</h3>
-                        <p className="mt-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400 sm:text-xs sm:tracking-[0.14em]">
-                          {testimonial.role}
-                        </p>
-                      </div>
-                    </article>
-                  </ScrollReveal>
+                    <ScrollReveal key={testimonial.name} delay={revealIndex * 90} className="h-full min-w-0">
+                      <TestimonialCard testimonial={testimonial} />
+                    </ScrollReveal>
                   );
                 })}
               </div>
+            ))}
+          </div>
+
+          <div className="hidden gap-4 lg:grid lg:grid-cols-3 lg:grid-rows-2">
+            {testimonials.map((testimonial, index) => (
+              <ScrollReveal key={testimonial.name} delay={index * 90} className="h-full min-w-0">
+                <TestimonialCard testimonial={testimonial} />
+              </ScrollReveal>
             ))}
           </div>
 
@@ -1527,29 +1580,31 @@ export default function App() {
 
           <div
             ref={faqsScrollRef}
-            className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-4 lg:grid-rows-2 lg:gap-4 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
+            className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:hidden [&::-webkit-scrollbar]:hidden"
           >
             {faqPages.map((page, pageIndex) => (
               <div
                 key={pageIndex}
                 data-faq-page={pageIndex}
-                className="grid min-w-full snap-center scroll-mx-4 grid-cols-2 grid-rows-2 gap-3 sm:scroll-mx-6 sm:gap-4 lg:contents"
+                className="grid min-w-full snap-center scroll-mx-4 grid-cols-2 grid-rows-2 gap-3 sm:scroll-mx-6 sm:gap-4"
               >
                 {page.map((faq, cardIndex) => {
                   const revealIndex = pageIndex * 4 + cardIndex;
                   return (
-                  <ScrollReveal key={faq.q} delay={revealIndex * 70} className="h-full min-w-0">
-                    <article className="group relative flex min-h-[185px] h-full flex-col overflow-hidden rounded-[1.35rem] bg-white p-4 shadow-md shadow-orange-100/50 ring-1 ring-orange-100/70 transition duration-500 hover:-translate-y-1 hover:shadow-xl hover:ring-[#16C1C1]/30 sm:min-h-[205px] sm:p-5 lg:min-h-[220px]">
-                      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#0F766E] via-[#16C1C1] to-[#0E7490]" />
-                      <div className="absolute -right-12 -top-12 h-28 w-28 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" />
-
-                      <h3 className="relative pr-2 text-sm font-black leading-5 text-slate-950 sm:text-lg sm:leading-6">{faq.q}</h3>
-                      <p className="relative mt-3 text-sm leading-5 text-slate-600 sm:leading-6">{faq.a}</p>
-                    </article>
-                  </ScrollReveal>
+                    <ScrollReveal key={faq.q} delay={revealIndex * 70} className="h-full min-w-0">
+                      <FaqCard faq={faq} />
+                    </ScrollReveal>
                   );
                 })}
               </div>
+            ))}
+          </div>
+
+          <div className="hidden gap-4 lg:grid lg:grid-cols-4 lg:grid-rows-2">
+            {faqs.map((faq, index) => (
+              <ScrollReveal key={faq.q} delay={index * 70} className="h-full min-w-0">
+                <FaqCard faq={faq} />
+              </ScrollReveal>
             ))}
           </div>
 
