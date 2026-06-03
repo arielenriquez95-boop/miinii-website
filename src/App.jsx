@@ -412,12 +412,12 @@ function ProductModal({ products, index, setIndex, onClose }) {
       <div key={product.title} className={`relative flex h-[100dvh] w-full max-w-none flex-col overflow-hidden rounded-none border-0 bg-white shadow-none animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:mx-auto sm:h-auto sm:max-h-[90vh] sm:max-w-5xl sm:rounded-[2rem] sm:border sm:border-white/10 sm:shadow-2xl sm:shadow-black/40 md:h-auto ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
         <button type="button" onClick={onClose} className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top,0px))] z-30 flex h-10 w-10 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950 sm:h-11 sm:w-11" aria-label="Close product preview">×</button>
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:grid md:max-h-[90vh] md:grid-cols-[0.95fr_1.05fr] md:overflow-y-auto">
-          <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1.7fr)_minmax(0,1fr)] overflow-hidden md:hidden">
-            <div className="relative min-h-0 w-full overflow-hidden bg-[#f4f6f8]">
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:hidden">
+            <div className="relative aspect-square w-full shrink-0 overflow-hidden bg-[#f4f6f8]">
               <img
                 src={product.image}
                 alt={`${product.title} preview`}
-                className="absolute inset-0 h-full w-full object-contain object-center"
+                className="h-full w-full object-cover object-center"
               />
               <div
                 className="pointer-events-none absolute inset-x-0 bottom-0 h-[min(48%,11rem)] bg-gradient-to-t from-white from-[18%] via-white/88 via-[48%] to-transparent"
@@ -428,7 +428,7 @@ function ProductModal({ products, index, setIndex, onClose }) {
               </div>
             </div>
 
-            <div className="min-h-0 overflow-y-auto overscroll-contain bg-white px-4 py-3.5 pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-white px-4 py-3.5 pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
               <div className="space-y-3">
                 <div>
                   <p className="text-sm leading-snug text-slate-600">{product.shortText}</p>
