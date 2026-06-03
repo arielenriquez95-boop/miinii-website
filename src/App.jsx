@@ -94,6 +94,7 @@ const isVideoFile = (src = "") => /\.(mp4|webm|ogg)$/i.test(src);
 function MediaPreview({ src, alt, className = "", videoClassName = "", lazy = false }) {
   const containerRef = useRef(null);
   const [shouldRender, setShouldRender] = useState(!lazy);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     if (!lazy || shouldRender) return;
@@ -115,39 +116,42 @@ function MediaPreview({ src, alt, className = "", videoClassName = "", lazy = fa
     return () => observer.disconnect();
   }, [lazy, shouldRender]);
 
+  useEffect(() => {
+    if (shouldRender) setIsReady(false);
+  }, [shouldRender, src]);
+
   if (isVideoFile(src)) {
-    if (lazy) {
-      return (
-        <div ref={containerRef} className="h-full w-full">
-          {shouldRender ? (
-            <video
-              src={src}
-              className={`${className} ${videoClassName}`.trim()}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="none"
-              aria-label={alt}
-            />
-          ) : (
-            <div className={`${className} bg-[#0f1424]`} aria-label={alt} />
-          )}
-        </div>
-      );
-    }
+    const layoutClasses = new Set(["h-full", "w-full", "size-full", "object-cover", "object-contain"]);
+    const fitClass = className.includes("object-contain") ? "object-contain" : "object-cover";
+    const effectClass = className
+      .split(/\s+/)
+      .filter((token) => token && !layoutClasses.has(token))
+      .join(" ");
+
+    const showVideo = !lazy || shouldRender;
 
     return (
-      <video
-        src={src}
-        className={`${className} ${videoClassName}`.trim()}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
+      <div
+        ref={containerRef}
+        className="relative size-full min-h-0 overflow-hidden bg-[#0f1424]"
         aria-label={alt}
-      />
+        role="img"
+      >
+        {showVideo && (
+          <video
+            src={src}
+            className={`absolute inset-0 size-full ${fitClass} transition-opacity duration-300 ${isReady ? "opacity-100" : "opacity-0"} ${effectClass} ${videoClassName}`.trim()}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload={lazy ? "metadata" : "auto"}
+            onLoadedData={() => setIsReady(true)}
+            onCanPlay={() => setIsReady(true)}
+            aria-label={alt}
+          />
+        )}
+      </div>
     );
   }
 
@@ -443,13 +447,13 @@ function GalleryCard({ item, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="group relative aspect-[4/5] overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/5 p-0 text-left shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition duration-500 [@media(hover:hover)]:hover:z-20 [@media(hover:hover)]:hover:scale-105 [@media(hover:hover)]:hover:bg-white/10 [@media(hover:hover)]:hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 focus:ring-offset-[#070B18] sm:rounded-[1.75rem]"
+      className="group relative block aspect-[4/5] w-full overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/5 p-0 text-left shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition duration-500 [@media(hover:hover)]:hover:z-20 [@media(hover:hover)]:hover:scale-105 [@media(hover:hover)]:hover:bg-white/10 [@media(hover:hover)]:hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 focus:ring-offset-[#070B18] sm:rounded-[1.75rem]"
       aria-label={`Open ${item.title} gallery item`}
     >
       <MediaPreview
         src={item.image}
         alt={`${item.title} gallery item`}
-        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+        className="size-full object-cover transition duration-500 group-hover:scale-105"
         lazy
       />
       <div className="pointer-events-none absolute inset-0 bg-slate-950/0 transition duration-500 group-hover:bg-slate-950/15" />
