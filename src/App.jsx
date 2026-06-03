@@ -415,7 +415,7 @@ export default function App() {
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [activeProductScrollIndex, setActiveProductScrollIndex] = useState(0);
   const [activeTestimonialPage, setActiveTestimonialPage] = useState(0);
-  
+
   const productsScrollRef = useRef(null);
   const testimonialsScrollRef = useRef(null);
 
