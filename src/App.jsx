@@ -261,6 +261,17 @@ function ProductModal({ products, index, setIndex, onClose }) {
     setIndex((current) => (current === products.length - 1 ? 0 : current + 1));
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "ArrowLeft") previous();
+      if (event.key === "ArrowRight") next();
+      if (event.key === "Escape") onClose();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [index]);
+
   const goToSlide = (dotIndex) => {
     setSlideDirection(dotIndex > index ? "next" : "previous");
     setIndex(dotIndex);
