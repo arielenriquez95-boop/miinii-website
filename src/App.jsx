@@ -431,14 +431,12 @@ function ProductModal({ products, index, setIndex, onClose }) {
 
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:grid md:max-h-[90vh] md:grid-cols-[0.95fr_1.05fr] md:overflow-y-auto">
           <div className="flex min-h-0 flex-1 flex-col bg-white md:hidden">
-            <div className="relative bg-gradient-to-br from-orange-50 via-white to-teal-50 px-4 pb-4 pt-10">
-              <div className="mx-auto aspect-[4/5] w-full max-w-[210px] overflow-hidden rounded-[1.3rem] bg-white/80 p-2 ring-1 ring-slate-100 shadow-inner">
-                <img
-                  src={product.image}
-                  alt={`${product.title} preview`}
-                  className="h-full w-full object-contain"
-                />
-              </div>
+            <div className="relative aspect-[4/5] w-full shrink-0 overflow-hidden bg-gradient-to-br from-orange-50 via-white to-teal-50">
+              <img
+                src={product.image}
+                alt={`${product.title} preview`}
+                className="h-full w-full object-cover object-center"
+              />
             </div>
 
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4">
@@ -466,14 +464,6 @@ function ProductModal({ products, index, setIndex, onClose }) {
             </div>
 
             <div className="shrink-0 border-t border-slate-100 bg-white px-5 pb-[max(1rem,env(safe-area-inset-bottom,0px))] pt-3">
-              <div className="mb-3 flex items-center justify-between">
-                <button type="button" onClick={previous} className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-2xl font-bold text-slate-700 transition hover:bg-slate-200" aria-label="Previous product">‹</button>
-                <div className="flex items-center justify-center gap-1.5">
-                  {products.map((item, dotIndex) => <button key={item.title} type="button" onClick={() => goToSlide(dotIndex)} className={`h-2 rounded-full transition ${dotIndex === index ? "w-6 bg-[#16C1C1]" : "w-2 bg-slate-300 hover:bg-slate-400"}`} aria-label={`Open ${item.title}`} />)}
-                </div>
-                <button type="button" onClick={next} className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-2xl font-bold text-slate-700 transition hover:bg-slate-200" aria-label="Next product">›</button>
-              </div>
-
               <button
                 type="button"
                 onClick={startOrder}
@@ -721,7 +711,7 @@ function ProductCard({ product, onClick }) {
         aria-label={`Open ${product.title} product details`}
       >
         <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-orange-50/70 via-teal-50/40 to-white transition duration-500 group-hover/card:from-[#16C1C1] group-hover/card:via-[#16C1C1] group-hover/card:to-[#16C1C1]" />
-        <div className="relative mb-2.5 aspect-[4/5] overflow-hidden rounded-[1rem] bg-[#f8fafc] sm:mb-4 sm:rounded-[1.25rem]"><img src={product.image} alt={`${product.title} product sample`} className="h-full w-full object-contain transition duration-500 group-hover/card:scale-[1.03]" /></div>
+        <div className="relative mb-2.5 aspect-[4/5] overflow-hidden rounded-[1rem] bg-[#f8fafc] sm:mb-4 sm:rounded-[1.25rem]"><img src={product.image} alt={`${product.title} product sample`} className="h-full w-full object-cover object-center transition duration-500 group-hover/card:scale-[1.04]" /></div>
         <h3 className="relative text-base font-black tracking-tight text-slate-950 transition duration-500 group-hover/card:text-white sm:text-xl">{product.title}</h3>
         <div className="relative mt-2 flex flex-nowrap items-center gap-1.5 sm:mt-2.5 sm:gap-2">
           {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200 transition duration-500 group-hover/card:bg-white/20 group-hover/card:text-white/70 group-hover/card:ring-white/20 sm:px-3 sm:py-1.5 sm:text-sm">{product.oldPrice}</span>}
