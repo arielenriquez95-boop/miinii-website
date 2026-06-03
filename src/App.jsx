@@ -192,32 +192,29 @@ function resolveScrollRoot(scrollRoot) {
 
 function ScrollReveal({ children, className = "", delay = 0, direction = "up", scrollRoot = null, ...props }) {
   const ref = useRef(null);
-  const revealedRef = useRef(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const rootElement = resolveScrollRoot(scrollRoot);
+  const [isRevealed, setIsRevealed] = useState(false);
+  const scrollRootElement = resolveScrollRoot(scrollRoot);
 
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      revealedRef.current = true;
-      setIsVisible(true);
+      setIsRevealed(true);
       return;
     }
 
+    let revealed = false;
     const root = resolveScrollRoot(scrollRoot);
 
     const reveal = () => {
-      if (revealedRef.current) return;
-      revealedRef.current = true;
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => setIsVisible(true));
-      });
+      if (revealed) return;
+      revealed = true;
+      requestAnimationFrame(() => setIsRevealed(true));
     };
 
     const fallbackCheck = () => {
-      if (revealedRef.current) return;
+      if (revealed) return;
 
       const rect = element.getBoundingClientRect();
       if (rect.width < 2 || rect.height < 2) return;
@@ -226,31 +223,25 @@ function ScrollReveal({ children, className = "", delay = 0, direction = "up", s
         const rootRect = root.getBoundingClientRect();
         const overlapX = Math.min(rect.right, rootRect.right) - Math.max(rect.left, rootRect.left);
         const overlapY = Math.min(rect.bottom, rootRect.bottom) - Math.max(rect.top, rootRect.top);
-        const minOverlap = Math.min(rect.width, rect.height) * 0.1;
-        if (overlapX > minOverlap && overlapY > minOverlap) reveal();
+        if (overlapX > 12 && overlapY > 12) reveal();
         return;
       }
 
       const viewHeight = window.innerHeight || document.documentElement.clientHeight;
       const viewWidth = window.innerWidth || document.documentElement.clientWidth;
-      const visibleY = rect.top < viewHeight * 0.9 && rect.bottom > viewHeight * 0.08;
-      const visibleX = rect.left < viewWidth * 0.98 && rect.right > viewWidth * 0.02;
+      const visibleY = rect.top < viewHeight * 0.92 && rect.bottom > viewHeight * 0.04;
+      const visibleX = rect.left < viewWidth * 0.99 && rect.right > viewWidth * 0.01;
       if (visibleY && visibleX) reveal();
     };
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.05) {
-            reveal();
-            break;
-          }
-        }
+      ([entry]) => {
+        if (entry?.isIntersecting) reveal();
       },
       {
         root,
-        rootMargin: root ? "0px 8px" : "0px 0px -10% 0px",
-        threshold: [0, 0.05, 0.12, 0.2],
+        rootMargin: root ? "0px 16px" : "0px 0px -6% 0px",
+        threshold: 0,
       }
     );
 
@@ -265,33 +256,28 @@ function ScrollReveal({ children, className = "", delay = 0, direction = "up", s
     resizeObserver.observe(element);
     if (root) resizeObserver.observe(root);
 
-    const delayedCheck = window.setTimeout(onScrollOrResize, 120);
+    const delayedCheck = window.setTimeout(onScrollOrResize, 80);
+    const delayedCheck2 = window.setTimeout(onScrollOrResize, 350);
 
     return () => {
       window.clearTimeout(delayedCheck);
+      window.clearTimeout(delayedCheck2);
       observer.disconnect();
       resizeObserver.disconnect();
       window.removeEventListener("scroll", onScrollOrResize);
       window.removeEventListener("resize", onScrollOrResize);
       if (root) root.removeEventListener("scroll", onScrollOrResize);
     };
-  }, [scrollRoot, rootElement]);
+  }, [scrollRoot, scrollRootElement]);
 
-  const offsetClass =
-    direction === "right"
-      ? isVisible
-        ? "translate-x-0"
-        : "translate-x-6 lg:translate-x-8"
-      : isVisible
-        ? "translate-y-0"
-        : "translate-y-5 lg:translate-y-8";
+  const directionClass = direction === "right" ? "scroll-reveal--right" : "";
 
   return (
     <div
       ref={ref}
       {...props}
-      style={{ transitionDelay: isVisible ? `${delay}ms` : "0ms" }}
-      className={`${className} transform-gpu transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none lg:duration-1000 ${offsetClass} ${isVisible ? "opacity-100" : "opacity-0"}`}
+      style={{ "--scroll-reveal-delay": `${delay}ms` }}
+      className={`scroll-reveal ${directionClass} ${isRevealed ? "is-revealed" : ""} ${className}`.trim()}
     >
       {children}
     </div>
