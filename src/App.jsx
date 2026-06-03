@@ -86,10 +86,52 @@ const collageItems = [
   ["Gallery 6", "/Gallery6.mp4"],
 ].map(([title, image]) => ({ title, image }));
 
+const GALLERY_DESKTOP_VISIBLE = 3;
+const PRODUCT_DESKTOP_VISIBLE = 3;
+
 const isVideoFile = (src = "") => /\.(mp4|webm|ogg)$/i.test(src);
 
-function MediaPreview({ src, alt, className = "", videoClassName = "" }) {
+function MediaPreview({ src, alt, className = "", videoClassName = "", lazy = false }) {
+  const containerRef = useRef(null);
+  const [inView, setInView] = useState(!lazy);
+
+  useEffect(() => {
+    if (!lazy) return;
+
+    const element = containerRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { rootMargin: "120px", threshold: 0.15 }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [lazy]);
+
   if (isVideoFile(src)) {
+    if (lazy) {
+      return (
+        <div ref={containerRef} className="h-full w-full">
+          {inView ? (
+            <video
+              src={src}
+              className={`${className} ${videoClassName}`.trim()}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="none"
+              aria-label={alt}
+            />
+          ) : (
+            <div className={`${className} bg-[#0f1424]`} aria-label={alt} />
+          )}
+        </div>
+      );
+    }
+
     return (
       <video
         src={src}
@@ -104,7 +146,7 @@ function MediaPreview({ src, alt, className = "", videoClassName = "" }) {
     );
   }
 
-  return <img src={src} alt={alt} className={className} loading="lazy" />;
+  return <img src={src} alt={alt} className={className} loading={lazy ? "lazy" : "lazy"} />;
 }
 
 function StarIcon({ className = "h-4 w-4" }) {
@@ -394,6 +436,7 @@ function GalleryCard({ item, onClick }) {
         src={item.image}
         alt={`${item.title} gallery item`}
         className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+        lazy
       />
       <div className="pointer-events-none absolute inset-0 bg-slate-950/0 transition duration-500 group-hover:bg-slate-950/15" />
     </button>
@@ -402,11 +445,13 @@ function GalleryCard({ item, onClick }) {
 
 export default function App() {
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(null);
+  const [activeGalleryScrollIndex, setActiveGalleryScrollIndex] = useState(0);
   const [activeProductIndex, setActiveProductIndex] = useState(null);
   const [activeProductScrollIndex, setActiveProductScrollIndex] = useState(0);
   const [activeTestimonialPage, setActiveTestimonialPage] = useState(0);
   const [activeFaqPage, setActiveFaqPage] = useState(0);
   
+  const galleryScrollRef = useRef(null);
   const productsScrollRef = useRef(null);
   const testimonialsScrollRef = useRef(null);
   const faqsScrollRef = useRef(null);
@@ -424,12 +469,38 @@ export default function App() {
     });
   };
 
+  const isProductDesktopView = () => window.matchMedia("(min-width: 1024px)").matches;
+
+  const getMaxProductScrollIndex = () => {
+    if (isProductDesktopView()) {
+      return Math.max(0, products.length - PRODUCT_DESKTOP_VISIBLE);
+    }
+    return products.length - 1;
+  };
+
   const getNearestProductIndex = () => {
     const carousel = productsScrollRef.current;
     if (!carousel) return 0;
 
     const cards = Array.from(carousel.querySelectorAll("[data-product-index]"));
     if (!cards.length) return 0;
+
+    if (isProductDesktopView()) {
+      let nearestIndex = 0;
+      let nearestDistance = Infinity;
+
+      cards.forEach((card) => {
+        const index = Number(card.getAttribute("data-product-index"));
+        const distance = Math.abs(card.offsetLeft - carousel.scrollLeft);
+
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearestIndex = index;
+        }
+      });
+
+      return nearestIndex;
+    }
 
     const carouselRect = carousel.getBoundingClientRect();
     const carouselCenter = carouselRect.left + carouselRect.width / 2;
@@ -452,12 +523,17 @@ export default function App() {
     return nearestIndex;
   };
 
-  const centerProductCard = (index, behavior = "smooth") => {
+  const scrollToProductIndex = (index, behavior = "smooth") => {
     const carousel = productsScrollRef.current;
     if (!carousel) return;
 
     const card = carousel.querySelector(`[data-product-index="${index}"]`);
     if (!card) return;
+
+    if (isProductDesktopView()) {
+      carousel.scrollTo({ left: card.offsetLeft, behavior });
+      return;
+    }
 
     const carouselRect = carousel.getBoundingClientRect();
     const cardRect = card.getBoundingClientRect();
@@ -466,10 +542,7 @@ export default function App() {
     const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
     const targetLeft = Math.max(0, Math.min(maxScrollLeft, carousel.scrollLeft + (cardCenter - carouselCenter)));
 
-    carousel.scrollTo({
-      left: targetLeft,
-      behavior,
-    });
+    carousel.scrollTo({ left: targetLeft, behavior });
   };
 
   const snapProductCarousel = () => {
@@ -477,16 +550,25 @@ export default function App() {
     const carousel = productsScrollRef.current;
     if (!carousel) return;
 
-    const card = carousel.querySelector(`[data-product-index="${nearestIndex}"]`);
-    if (!card) return;
+    if (!isProductDesktopView()) {
+      const card = carousel.querySelector(`[data-product-index="${nearestIndex}"]`);
+      if (card) {
+        const carouselRect = carousel.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        const carouselCenter = carouselRect.left + carouselRect.width / 2;
+        const cardCenter = cardRect.left + cardRect.width / 2;
 
-    const carouselRect = carousel.getBoundingClientRect();
-    const cardRect = card.getBoundingClientRect();
-    const carouselCenter = carouselRect.left + carouselRect.width / 2;
-    const cardCenter = cardRect.left + cardRect.width / 2;
-
-    if (Math.abs(cardCenter - carouselCenter) > 2) {
-      centerProductCard(nearestIndex);
+        if (Math.abs(cardCenter - carouselCenter) > 2) {
+          scrollToProductIndex(nearestIndex);
+          return;
+        }
+      }
+    } else {
+      const card = carousel.querySelector(`[data-product-index="${nearestIndex}"]`);
+      if (card && Math.abs(card.offsetLeft - carousel.scrollLeft) > 2) {
+        scrollToProductIndex(nearestIndex, "smooth");
+        return;
+      }
     }
 
     setActiveProductScrollIndex(nearestIndex);
@@ -497,12 +579,132 @@ export default function App() {
   };
 
   const scrollProducts = (direction) => {
-    const lastIndex = products.length - 1;
+    const maxIndex = getMaxProductScrollIndex();
     const nextIndex = direction === "next" ? activeProductScrollIndex + 1 : activeProductScrollIndex - 1;
-    const safeIndex = Math.max(0, Math.min(lastIndex, nextIndex));
+    const safeIndex = Math.max(0, Math.min(maxIndex, nextIndex));
 
     setActiveProductScrollIndex(safeIndex);
-    centerProductCard(safeIndex);
+    scrollToProductIndex(safeIndex);
+  };
+
+  const isGalleryDesktopView = () => window.matchMedia("(min-width: 1024px)").matches;
+
+  const getMaxGalleryScrollIndex = () => {
+    if (isGalleryDesktopView()) {
+      return Math.max(0, collageItems.length - GALLERY_DESKTOP_VISIBLE);
+    }
+    return collageItems.length - 1;
+  };
+
+  const getNearestGalleryIndex = () => {
+    const carousel = galleryScrollRef.current;
+    if (!carousel) return 0;
+
+    const cards = Array.from(carousel.querySelectorAll("[data-gallery-index]"));
+    if (!cards.length) return 0;
+
+    if (isGalleryDesktopView()) {
+      let nearestIndex = 0;
+      let nearestDistance = Infinity;
+
+      cards.forEach((card) => {
+        const index = Number(card.getAttribute("data-gallery-index"));
+        const distance = Math.abs(card.offsetLeft - carousel.scrollLeft);
+
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearestIndex = index;
+        }
+      });
+
+      return nearestIndex;
+    }
+
+    const carouselRect = carousel.getBoundingClientRect();
+    const carouselCenter = carouselRect.left + carouselRect.width / 2;
+
+    let nearestIndex = 0;
+    let nearestDistance = Infinity;
+
+    cards.forEach((card) => {
+      const index = Number(card.getAttribute("data-gallery-index"));
+      const cardRect = card.getBoundingClientRect();
+      const cardCenter = cardRect.left + cardRect.width / 2;
+      const distance = Math.abs(cardCenter - carouselCenter);
+
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        nearestIndex = index;
+      }
+    });
+
+    return nearestIndex;
+  };
+
+  const scrollToGalleryIndex = (index, behavior = "smooth") => {
+    const carousel = galleryScrollRef.current;
+    if (!carousel) return;
+
+    const card = carousel.querySelector(`[data-gallery-index="${index}"]`);
+    if (!card) return;
+
+    if (isGalleryDesktopView()) {
+      carousel.scrollTo({ left: card.offsetLeft, behavior });
+      return;
+    }
+
+    const carouselRect = carousel.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const carouselCenter = carouselRect.left + carouselRect.width / 2;
+    const cardCenter = cardRect.left + cardRect.width / 2;
+    const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+    const targetLeft = Math.max(0, Math.min(maxScrollLeft, carousel.scrollLeft + (cardCenter - carouselCenter)));
+
+    carousel.scrollTo({ left: targetLeft, behavior });
+  };
+
+  const snapGalleryCarousel = () => {
+    const nearestIndex = getNearestGalleryIndex();
+    const carousel = galleryScrollRef.current;
+    if (!carousel) return;
+
+    if (!isGalleryDesktopView()) {
+      const card = carousel.querySelector(`[data-gallery-index="${nearestIndex}"]`);
+      if (card) {
+        const carouselRect = carousel.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        const carouselCenter = carouselRect.left + carouselRect.width / 2;
+        const cardCenter = cardRect.left + cardRect.width / 2;
+
+        if (Math.abs(cardCenter - carouselCenter) > 2) {
+          scrollToGalleryIndex(nearestIndex);
+          return;
+        }
+      }
+    } else {
+      const card = carousel.querySelector(`[data-gallery-index="${nearestIndex}"]`);
+      if (card && Math.abs(card.offsetLeft - carousel.scrollLeft) > 2) {
+        scrollToGalleryIndex(nearestIndex, "smooth");
+        return;
+      }
+    }
+
+    setActiveGalleryScrollIndex(nearestIndex);
+  };
+
+  const scrollGallery = (direction) => {
+    const maxIndex = getMaxGalleryScrollIndex();
+    const nextIndex = direction === "next" ? activeGalleryScrollIndex + 1 : activeGalleryScrollIndex - 1;
+    const safeIndex = Math.max(0, Math.min(maxIndex, nextIndex));
+
+    setActiveGalleryScrollIndex(safeIndex);
+    scrollToGalleryIndex(safeIndex);
+  };
+
+  const scrollGalleryToIndex = (index) => {
+    const safeIndex = Math.max(0, Math.min(collageItems.length - 1, index));
+    setActiveGalleryScrollIndex(safeIndex);
+    scrollToGalleryIndex(safeIndex);
   };
 
   useEffect(() => {
@@ -511,6 +713,19 @@ export default function App() {
 
     let scrollEndTimer = null;
     let isTouching = false;
+
+    const updateProductLayout = () => {
+      if (window.matchMedia("(min-width: 1024px)").matches) {
+        const gap = 16;
+        carousel.style.setProperty("--product-slide-w", `${(carousel.clientWidth - gap * 2) / PRODUCT_DESKTOP_VISIBLE}px`);
+      } else {
+        carousel.style.removeProperty("--product-slide-w");
+      }
+
+      const index = getNearestProductIndex();
+      scrollToProductIndex(index, "auto");
+      setActiveProductScrollIndex(index);
+    };
 
     const scheduleSnap = (delay = 80) => {
       clearTimeout(scrollEndTimer);
@@ -531,15 +746,9 @@ export default function App() {
       scheduleSnap(50);
     };
 
-    const onResize = () => {
-      centerProductCard(getNearestProductIndex(), "auto");
-      updateProductScrollButtons();
-    };
+    const onResize = () => updateProductLayout();
 
-    requestAnimationFrame(() => {
-      centerProductCard(0, "auto");
-      requestAnimationFrame(updateProductScrollButtons);
-    });
+    requestAnimationFrame(updateProductLayout);
 
     carousel.addEventListener("scroll", onScroll, { passive: true });
     carousel.addEventListener("scrollend", snapProductCarousel, { passive: true });
@@ -551,6 +760,65 @@ export default function App() {
       clearTimeout(scrollEndTimer);
       carousel.removeEventListener("scroll", onScroll);
       carousel.removeEventListener("scrollend", snapProductCarousel);
+      carousel.removeEventListener("touchstart", onTouchStart);
+      carousel.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("resize", onResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const carousel = galleryScrollRef.current;
+    if (!carousel) return;
+
+    let scrollEndTimer = null;
+    let isTouching = false;
+
+    const updateGalleryLayout = () => {
+      if (window.matchMedia("(min-width: 1024px)").matches) {
+        const gap = 16;
+        carousel.style.setProperty("--gallery-slide-w", `${(carousel.clientWidth - gap * 2) / GALLERY_DESKTOP_VISIBLE}px`);
+      } else {
+        carousel.style.removeProperty("--gallery-slide-w");
+      }
+
+      const index = getNearestGalleryIndex();
+      scrollToGalleryIndex(index, "auto");
+      setActiveGalleryScrollIndex(index);
+    };
+
+    const scheduleSnap = (delay = 80) => {
+      clearTimeout(scrollEndTimer);
+      scrollEndTimer = setTimeout(snapGalleryCarousel, delay);
+    };
+
+    const onScroll = () => {
+      if (!isTouching) scheduleSnap();
+    };
+
+    const onTouchStart = () => {
+      isTouching = true;
+      clearTimeout(scrollEndTimer);
+    };
+
+    const onTouchEnd = () => {
+      isTouching = false;
+      scheduleSnap(50);
+    };
+
+    const onResize = () => updateGalleryLayout();
+
+    requestAnimationFrame(updateGalleryLayout);
+
+    carousel.addEventListener("scroll", onScroll, { passive: true });
+    carousel.addEventListener("scrollend", snapGalleryCarousel, { passive: true });
+    carousel.addEventListener("touchstart", onTouchStart, { passive: true });
+    carousel.addEventListener("touchend", onTouchEnd, { passive: true });
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      clearTimeout(scrollEndTimer);
+      carousel.removeEventListener("scroll", onScroll);
+      carousel.removeEventListener("scrollend", snapGalleryCarousel);
       carousel.removeEventListener("touchstart", onTouchStart);
       carousel.removeEventListener("touchend", onTouchEnd);
       window.removeEventListener("resize", onResize);
@@ -729,15 +997,15 @@ export default function App() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="What we make" title="Mini figures for every story" text="Choose the Miinii style that fits your gift, collection, or special memory." />
           <div className="relative">
-            {activeProductScrollIndex > 0 && <button type="button" onClick={() => scrollProducts("previous")} className="absolute left-2 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#f05f20] md:flex sm:left-1 sm:h-12 sm:w-12" aria-label="Scroll products left"><span className="flex h-full w-full items-center justify-center pb-0.5 text-2xl font-black leading-none sm:pb-1 sm:text-3xl">‹</span></button>}
-            {activeProductScrollIndex < products.length - 1 && <button type="button" onClick={() => scrollProducts("next")} className="absolute right-2 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:translate-x-0.5 hover:bg-[#f05f20] md:flex sm:right-1 sm:h-12 sm:w-12" aria-label="Scroll products right"><span className="flex h-full w-full items-center justify-center pb-0.5 text-2xl font-black leading-none sm:pb-1 sm:text-3xl">›</span></button>}
+            {activeProductScrollIndex > 0 && <button type="button" onClick={() => scrollProducts("previous")} className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-bold text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#f05f20] lg:flex" aria-label="Scroll products left"><span className="flex h-full w-full items-center justify-center pb-0.5 leading-none">‹</span></button>}
+            {activeProductScrollIndex < getMaxProductScrollIndex() && <button type="button" onClick={() => scrollProducts("next")} className="absolute right-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-bold text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:translate-x-0.5 hover:bg-[#f05f20] lg:flex" aria-label="Scroll products right"><span className="flex h-full w-full items-center justify-center pb-0.5 leading-none">›</span></button>}
 
-            <div ref={productsScrollRef} className="-mx-4 snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:py-6 lg:-mx-8 [&::-webkit-scrollbar]:hidden">
-              <div className="flex w-max gap-4 px-[calc(50%-min(36vw,127.5px))] sm:gap-5 sm:px-[calc(50%-130px)] lg:px-[calc(50%-142.5px)]">
+            <div ref={productsScrollRef} className="-mx-4 snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:py-6 lg:mx-0 [&::-webkit-scrollbar]:hidden">
+              <div className="flex w-max gap-4 px-[calc(50%-min(36vw,127.5px))] sm:gap-5 sm:px-[calc(50%-130px)] lg:gap-4 lg:px-0">
                 {products.map((product, index) => (
-                  <ScrollReveal key={product.title} direction="right" className="w-[72vw] max-w-[255px] shrink-0 snap-center snap-always p-1 sm:w-[260px] sm:max-w-[260px] lg:w-[285px] lg:max-w-[285px]" data-product-index={index}>
+                  <div key={product.title} data-product-index={index} className="w-[72vw] max-w-[255px] shrink-0 snap-center snap-always p-1 sm:w-[260px] sm:max-w-[260px] lg:w-[var(--product-slide-w)] lg:max-w-none lg:snap-start">
                     <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
-                  </ScrollReveal>
+                  </div>
                 ))}
               </div>
             </div>
@@ -748,7 +1016,42 @@ export default function App() {
       <section id="gallery" className="bg-[#070B18] py-16 text-white sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="Gallery" title="Every Miinii tells a story" text="Explore custom mini figures, pet keepsakes, packaging details, and finished pieces crafted from meaningful photos and stories." dark />
-          <Reveal><div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">{collageItems.map((item, index) => <GalleryCard key={item.title} item={item} onClick={() => setActiveGalleryIndex(index)} />)}</div></Reveal>
+          <Reveal>
+            <div className="relative">
+              {activeGalleryScrollIndex > 0 && (
+                <button type="button" onClick={() => scrollGallery("previous")} className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#16C1C1] text-2xl font-bold text-white shadow-xl shadow-teal-900/40 ring-1 ring-white/20 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#12a8a8] lg:flex" aria-label="Scroll gallery left">
+                  <span className="flex h-full w-full items-center justify-center pb-0.5 leading-none">‹</span>
+                </button>
+              )}
+              {activeGalleryScrollIndex < getMaxGalleryScrollIndex() && (
+                <button type="button" onClick={() => scrollGallery("next")} className="absolute right-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#16C1C1] text-2xl font-bold text-white shadow-xl shadow-teal-900/40 ring-1 ring-white/20 backdrop-blur transition hover:translate-x-0.5 hover:bg-[#12a8a8] lg:flex" aria-label="Scroll gallery right">
+                  <span className="flex h-full w-full items-center justify-center pb-0.5 leading-none">›</span>
+                </button>
+              )}
+
+              <div ref={galleryScrollRef} className="-mx-4 snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [scrollbar-width:none] [-ms-overflow-style:none] lg:mx-0 [&::-webkit-scrollbar]:hidden">
+                <div className="flex w-max gap-3 px-[calc(50%-min(42.5vw,200px))] lg:gap-4 lg:px-0">
+                  {collageItems.map((item, index) => (
+                    <div key={item.title} data-gallery-index={index} className="w-[85vw] max-w-[400px] shrink-0 snap-center snap-always lg:w-[var(--gallery-slide-w)] lg:max-w-none lg:snap-start">
+                      <GalleryCard item={item} onClick={() => setActiveGalleryIndex(index)} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-4 flex justify-center gap-1.5 lg:hidden" aria-label="Gallery slides">
+                {collageItems.map((_, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => scrollGalleryToIndex(index)}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${activeGalleryScrollIndex === index ? "w-6 bg-[#16C1C1]" : "w-1.5 bg-white/35"}`}
+                    aria-label={`Go to gallery item ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -764,7 +1067,7 @@ export default function App() {
                   <div className="absolute inset-0 hidden bg-gradient-to-br from-slate-100 to-white md:block" />
                   <div className="absolute inset-0 hidden bg-[radial-gradient(circle_at_top_left,rgba(22,193,193,0.18),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(255,111,49,0.16),transparent_35%)] md:block" />
 
-                  <div className="relative h-[4.75rem] w-[4.75rem] shrink-0 overflow-hidden rounded-2xl border border-white/70 bg-white shadow-md ring-1 ring-slate-100 md:mx-auto md:aspect-[4/4.5] md:h-full md:w-full md:max-h-none md:rounded-[1.5rem] md:shadow-inner">
+                  <div className="relative h-[6rem] w-[6rem] shrink-0 overflow-hidden rounded-2xl border border-white/70 bg-white shadow-md ring-1 ring-slate-100 md:mx-auto md:aspect-[4/4.5] md:h-full md:w-full md:max-h-none md:rounded-[1.5rem] md:shadow-inner">
                     <img
                       src="/about-portrait.png"
                       alt="Miinii artist portrait"
@@ -774,7 +1077,11 @@ export default function App() {
 
                   <div className="min-w-0 md:hidden">
                     <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#16C1C1]">About us</p>
-                    <h2 className="mt-1 text-lg font-black leading-snug tracking-tight text-slate-950">Meet the artist behind Miinii.</h2>
+                    <h2 className="mt-1 text-lg font-black leading-snug tracking-tight text-slate-950">
+                      Meet the artist
+                      <br />
+                      behind Miinii.
+                    </h2>
                   </div>
                 </div>
 
