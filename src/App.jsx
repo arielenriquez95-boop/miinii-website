@@ -93,60 +93,69 @@ const isVideoFile = (src = "") => /\.(mp4|webm|ogg)$/i.test(src);
 
 function MediaPreview({ src, alt, className = "", videoClassName = "", lazy = false }) {
   const containerRef = useRef(null);
-  const [inView, setInView] = useState(!lazy);
+  const [shouldRender, setShouldRender] = useState(!lazy);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    if (!lazy) return;
+    if (!lazy || shouldRender) return;
 
     const element = containerRef.current;
     if (!element) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { rootMargin: "120px", threshold: 0.15 }
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldRender(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "160px", threshold: 0.01 }
     );
 
     observer.observe(element);
     return () => observer.disconnect();
-  }, [lazy]);
+  }, [lazy, shouldRender]);
+
+  useEffect(() => {
+    if (shouldRender) setIsReady(false);
+  }, [shouldRender, src]);
 
   if (isVideoFile(src)) {
-    if (lazy) {
-      return (
-        <div ref={containerRef} className="h-full w-full">
-          {inView ? (
-            <video
-              src={src}
-              className={`${className} ${videoClassName}`.trim()}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="none"
-              aria-label={alt}
-            />
-          ) : (
-            <div className={`${className} bg-[#0f1424]`} aria-label={alt} />
-          )}
-        </div>
-      );
-    }
+    const layoutClasses = new Set(["h-full", "w-full", "size-full", "object-cover", "object-contain"]);
+    const fitClass = className.includes("object-contain") ? "object-contain" : "object-cover";
+    const effectClass = className
+      .split(/\s+/)
+      .filter((token) => token && !layoutClasses.has(token))
+      .join(" ");
+
+    const showVideo = !lazy || shouldRender;
 
     return (
-      <video
-        src={src}
-        className={`${className} ${videoClassName}`.trim()}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
+      <div
+        ref={containerRef}
+        className="relative size-full min-h-0 overflow-hidden bg-[#0f1424]"
         aria-label={alt}
-      />
+        role="img"
+      >
+        {showVideo && (
+          <video
+            src={src}
+            className={`absolute inset-0 size-full ${fitClass} transition-opacity duration-300 ${isReady ? "opacity-100" : "opacity-0"} ${effectClass} ${videoClassName}`.trim()}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload={lazy ? "metadata" : "auto"}
+            onLoadedData={() => setIsReady(true)}
+            onCanPlay={() => setIsReady(true)}
+            aria-label={alt}
+          />
+        )}
+      </div>
     );
   }
 
-  return <img src={src} alt={alt} className={className} loading={lazy ? "lazy" : "lazy"} />;
+  return <img src={src} alt={alt} className={className} loading={lazy ? "lazy" : "eager"} />;
 }
 
 function StarIcon({ className = "h-4 w-4" }) {
@@ -174,11 +183,7 @@ function SocialIcon({ type, className = "h-5 w-5" }) {
   return <svg {...common}><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" /></svg>;
 }
 
-function Reveal({ children, className = "", ...props }) {
-  return <div {...props} className={`animate-[fadeUp_.7s_ease-out_both] ${className}`}>{children}</div>;
-}
-
-function ScrollReveal({ children, className = "", delay = 0, direction = "up", ...props }) {
+function ScrollReveal({ children, className = "", delay = 0, direction = "up", scrollRoot = null, ...props }) {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -186,43 +191,103 @@ function ScrollReveal({ children, className = "", delay = 0, direction = "up", .
     const element = ref.current;
     if (!element) return;
 
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setIsVisible(true);
+      return;
+    }
+
+    let revealed = false;
+    const show = () => {
+      if (revealed) return;
+      revealed = true;
+      setIsVisible(true);
+    };
+
+    const isInView = () => {
+      const rect = element.getBoundingClientRect();
+      if (rect.width < 1 || rect.height < 1) return false;
+
+      const root = scrollRoot?.current;
+      if (root) {
+        const rootRect = root.getBoundingClientRect();
+        const overlapX = Math.min(rect.right, rootRect.right) - Math.max(rect.left, rootRect.left);
+        const overlapY = Math.min(rect.bottom, rootRect.bottom) - Math.max(rect.top, rootRect.top);
+        return overlapX > 8 && overlapY > 8;
+      }
+
+      const viewHeight = window.innerHeight || document.documentElement.clientHeight;
+      return rect.top < viewHeight * 0.92 && rect.bottom > viewHeight * 0.06;
+    };
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(element);
-        }
+        if (entry.isIntersecting) show();
       },
-      { threshold: 0.18 }
+      {
+        root: scrollRoot?.current ?? null,
+        rootMargin: scrollRoot ? "0px" : "0px 0px -48px 0px",
+        threshold: [0, 0.05, 0.12],
+      }
     );
 
     observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
 
-  const hiddenPosition = direction === "right" ? "translate-x-12 opacity-0" : "translate-y-8 opacity-0";
+    const runChecks = () => {
+      if (isInView()) show();
+    };
+
+    runChecks();
+    const rafId = requestAnimationFrame(runChecks);
+    const resizeObserver = new ResizeObserver(runChecks);
+    resizeObserver.observe(element);
+    if (scrollRoot?.current) resizeObserver.observe(scrollRoot.current);
+
+    window.addEventListener("resize", runChecks);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      observer.disconnect();
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", runChecks);
+    };
+  }, [scrollRoot]);
+
+  const offsetClass =
+    direction === "right"
+      ? isVisible
+        ? "translate-x-0"
+        : "translate-x-6 lg:translate-x-8"
+      : isVisible
+        ? "translate-y-0"
+        : "translate-y-5 lg:translate-y-8";
 
   return (
     <div
       ref={ref}
       {...props}
-      style={{ transitionDelay: `${delay}ms` }}
-      className={`${className} transform-gpu transition-all duration-1000 ease-[cubic-bezier(.22,1,.36,1)] ${
-        isVisible ? "translate-x-0 translate-y-0 opacity-100" : hiddenPosition
-      }`}
+      style={{ transitionDelay: isVisible ? `${delay}ms` : "0ms" }}
+      className={`${className} transform-gpu transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none lg:duration-1000 ${offsetClass} ${isVisible ? "opacity-100" : "opacity-0"}`}
     >
       {children}
     </div>
   );
 }
 
+function SectionReveal({ children, className = "", delay = 0, scrollRoot = null }) {
+  return (
+    <ScrollReveal delay={delay} className={className} scrollRoot={scrollRoot}>
+      {children}
+    </ScrollReveal>
+  );
+}
+
 function SectionHeader({ eyebrow, title, text, dark = false }) {
   return (
-    <Reveal className="mx-auto mb-10 max-w-2xl text-center">
+    <ScrollReveal className="mx-auto mb-10 max-w-2xl text-center">
       <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">{eyebrow}</p>
       <h2 className={`text-4xl font-black tracking-tight md:text-5xl ${dark ? "text-white" : "text-slate-950"}`}>{title}</h2>
       <p className={`mt-4 text-lg leading-8 ${dark ? "text-slate-300" : "text-slate-600"}`}>{text}</p>
-    </Reveal>
+    </ScrollReveal>
   );
 }
 
@@ -329,33 +394,89 @@ function ProductModal({ products, index, setIndex, onClose }) {
 
   if (!product) return null;
   return (
-    <div className="fixed inset-0 z-[100] bg-slate-950/90 p-3 backdrop-blur-xl sm:flex sm:items-center sm:justify-center sm:p-6">
+    <div className="fixed inset-0 z-[100] flex flex-col bg-white sm:bg-slate-950/90 sm:items-center sm:justify-center sm:p-6 sm:backdrop-blur-xl">
       <button type="button" onClick={previous} className="absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Previous product">‹</button>
       <button type="button" onClick={next} className="absolute right-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Next product">›</button>
 
-      <div key={product.title} className={`relative mx-auto flex h-[calc(100%-3.75rem)] w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem] ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
-        <button type="button" onClick={onClose} className="absolute right-3 top-3 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950" aria-label="Close product preview">×</button>
-        <div className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-[0.95fr_1.05fr]">
-          <div className="relative flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-teal-50 p-4 md:sticky md:top-0 sm:p-6">
+      <div key={product.title} className={`relative flex h-[100dvh] w-full max-w-none flex-col overflow-hidden rounded-none border-0 bg-white shadow-none animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:mx-auto sm:h-auto sm:max-h-[90vh] sm:max-w-5xl sm:rounded-[2rem] sm:border sm:border-white/10 sm:shadow-2xl sm:shadow-black/40 md:h-auto ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
+        <button type="button" onClick={onClose} className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top,0px))] z-30 flex h-10 w-10 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950 sm:h-11 sm:w-11" aria-label="Close product preview">×</button>
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:grid md:max-h-[90vh] md:grid-cols-[0.95fr_1.05fr] md:overflow-y-auto">
+          <div className="grid min-h-0 flex-1 grid-rows-[minmax(0,1.65fr)_minmax(0,1fr)] overflow-hidden md:hidden">
+            <div className="relative flex min-h-0 items-center justify-center bg-gradient-to-br from-orange-50 via-white to-teal-50 px-3 pb-2 pt-[calc(max(0.75rem,env(safe-area-inset-top,0px))+2.5rem)]">
+              <img
+                src={product.image}
+                alt={`${product.title} preview`}
+                className="h-full w-full max-h-[min(72dvh,560px)] max-w-[min(96vw,420px)] object-contain drop-shadow-[0_18px_40px_rgba(15,23,42,0.12)]"
+              />
+            </div>
+
+            <div className="min-h-0 overflow-y-auto overscroll-contain border-t border-orange-100/80 bg-white px-4 py-3.5 pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
+              <div className="space-y-3">
+                <div>
+                  <h2 className="text-xl font-black leading-tight tracking-tight text-slate-950">{product.title}</h2>
+                  <p className="mt-1 text-sm leading-snug text-slate-600">{product.shortText}</p>
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
+                    {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-400 line-through ring-1 ring-slate-200">{product.oldPrice}</span>}
+                    <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-3 py-1.5 text-sm font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">{product.price}</span>
+                  </div>
+                </div>
+                <div className="rounded-[1.15rem] bg-[#fff8f3] p-3 ring-1 ring-orange-100">
+                  <ul className="grid gap-2">
+                    {product.details.map((detail) => (
+                      <li key={detail} className="flex gap-2.5 text-sm leading-5 text-slate-600">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#16C1C1]" />
+                        <span>{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+
+                    setTimeout(() => {
+                      const contactSection = document.getElementById("contact");
+                      if (!contactSection) return;
+
+                      const headerOffset = 80;
+                      const sectionPosition = contactSection.getBoundingClientRect().top + window.scrollY;
+
+                      window.scrollTo({
+                        top: sectionPosition - headerOffset,
+                        behavior: "smooth",
+                      });
+                    }, 120);
+                  }}
+                  className="inline-flex w-full items-center justify-center rounded-full bg-[#ff6f31] px-6 py-3.5 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:bg-[#f05f20]"
+                >
+                  Start Your Miinii
+                  <ArrowIcon className="ml-2 h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative hidden items-center justify-center bg-gradient-to-br from-orange-50 via-white to-teal-50 p-6 md:flex md:sticky md:top-0">
             <div className="aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-[1.25rem] bg-white ring-1 ring-slate-100 shadow-inner">
               <img
                 src={product.image}
                 alt={`${product.title} preview`}
-                className="block h-full w-full rounded-[inherit] object-contain"
+                className="block h-full w-full object-contain"
               />
             </div>
           </div>
-          <div className="flex flex-col justify-center p-5 sm:p-8 lg:p-10">
-            <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">{product.title}</h2>
-            <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-lg sm:leading-8">{product.shortText}</p>
-            <div className="mt-4 flex flex-nowrap items-center gap-2 sm:mt-5 sm:flex-wrap">
-              {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-400 line-through ring-1 ring-slate-200 sm:px-4 sm:py-2 sm:text-sm">{product.oldPrice}</span>}
-              <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-4 py-2 text-sm font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 sm:px-5 sm:py-2.5 sm:text-base">{product.price}</span>
+          <div className="hidden min-h-0 flex-col overflow-y-auto p-8 md:flex lg:p-10">
+            <h2 className="text-3xl font-black tracking-tight text-slate-950 lg:text-5xl">{product.title}</h2>
+            <p className="mt-3 text-lg leading-8 text-slate-600">{product.shortText}</p>
+            <div className="mt-5 flex flex-wrap items-center gap-2">
+              {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-4 py-2 text-sm font-bold text-slate-400 line-through ring-1 ring-slate-200">{product.oldPrice}</span>}
+              <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-5 py-2.5 text-base font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">{product.price}</span>
             </div>
-            <div className="mt-4 rounded-[1.35rem] bg-[#fff8f3] p-4 ring-1 ring-orange-100 sm:mt-5 sm:rounded-[1.5rem] sm:p-5">
-              <ul className="grid gap-2.5 sm:gap-3">
+            <div className="mt-5 rounded-[1.5rem] bg-[#fff8f3] p-5 ring-1 ring-orange-100">
+              <ul className="grid gap-3">
                 {product.details.map((detail) => (
-                  <li key={detail} className="flex gap-3 text-sm leading-6 text-slate-600 sm:text-base">
+                  <li key={detail} className="flex gap-3 text-base leading-6 text-slate-600">
                     <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#16C1C1]" />
                     <span>{detail}</span>
                   </li>
@@ -366,21 +487,21 @@ function ProductModal({ products, index, setIndex, onClose }) {
               type="button"
               onClick={() => {
                 onClose();
-            
+
                 setTimeout(() => {
                   const contactSection = document.getElementById("contact");
                   if (!contactSection) return;
-            
+
                   const headerOffset = 80;
                   const sectionPosition = contactSection.getBoundingClientRect().top + window.scrollY;
-            
+
                   window.scrollTo({
                     top: sectionPosition - headerOffset,
                     behavior: "smooth",
                   });
                 }, 120);
               }}
-              className="mt-5 inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:mt-6 sm:text-base"
+              className="mt-6 inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-base font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20]"
             >
               Start Your Miinii
               <ArrowIcon className="ml-2 h-5 w-5" />
@@ -389,34 +510,219 @@ function ProductModal({ products, index, setIndex, onClose }) {
         </div>
       </div>
 
-      <div className="absolute bottom-5 left-1/2 z-30 flex -translate-x-1/2 items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-2 backdrop-blur-md">
+      <div className="absolute bottom-5 left-1/2 z-30 hidden -translate-x-1/2 items-center justify-center gap-2 rounded-full bg-white/10 px-3 py-2 backdrop-blur-md sm:flex">
         {products.map((item, dotIndex) => <button key={item.title} type="button" onClick={() => goToSlide(dotIndex)} className={`h-2.5 rounded-full transition ${dotIndex === index ? "w-8 bg-[#16C1C1]" : "w-2.5 bg-white/40 hover:bg-white/70"}`} aria-label={`Open ${item.title}`} />)}
       </div>
+    </div>
+  );
+}
 
-      <button type="button" onClick={previous} className="absolute bottom-5 left-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-[#16C1C1]/20 text-2xl font-bold text-[#16C1C1] shadow-lg backdrop-blur transition hover:bg-[#16C1C1]/30 sm:hidden" aria-label="Previous product">‹</button>
-      <button type="button" onClick={next} className="absolute bottom-5 right-5 z-20 flex h-11 w-11 items-center justify-center rounded-full bg-[#16C1C1]/20 text-2xl font-bold text-[#16C1C1] shadow-lg backdrop-blur transition hover:bg-[#16C1C1]/30 sm:hidden" aria-label="Next product">›</button>
+const PRODUCT_DECK_SWIPE_THRESHOLD = 56;
+
+function getProductDeckCardStyle(offset, dragX, isDragging) {
+  const transition = isDragging
+    ? "none"
+    : "transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1)";
+
+  if (offset < -1) {
+    return {
+      transform: "translate3d(-115%, 0, 0) scale(0.88)",
+      opacity: 0,
+      zIndex: 0,
+      pointerEvents: "none",
+      transition,
+    };
+  }
+
+  if (offset === -1) {
+    const enter = Math.min(1, Math.max(0, dragX) / 130);
+    if (!isDragging && enter === 0) {
+      return {
+        transform: "translate3d(-115%, 0, 0) scale(0.88)",
+        opacity: 0,
+        zIndex: 0,
+        pointerEvents: "none",
+        transition,
+      };
+    }
+
+    return {
+      transform: `translate3d(${-96 + enter * 96}%, 0, 0) scale(${0.9 + enter * 0.1})`,
+      opacity: enter,
+      zIndex: 35,
+      pointerEvents: "none",
+      transition,
+    };
+  }
+
+  if (offset === 0) {
+    return {
+      transform: `translate3d(${dragX}px, 0, 0) scale(1)`,
+      opacity: 1,
+      zIndex: 40,
+      pointerEvents: "auto",
+      transition,
+    };
+  }
+
+  if (offset === 1) {
+    const pullForward = isDragging ? Math.min(1, Math.max(0, -dragX) / 130) : 0;
+    const x = 24 * (1 - pullForward);
+    const y = 16 * (1 - pullForward);
+    const scale = 0.93 + 0.07 * pullForward;
+
+    return {
+      transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`,
+      opacity: 0.9 + 0.1 * pullForward,
+      zIndex: 30 - Math.round(pullForward * 5),
+      pointerEvents: "none",
+      transition,
+    };
+  }
+
+  if (offset === 2) {
+    const pullForward = isDragging ? Math.min(1, Math.max(0, -dragX) / 130) * 0.45 : 0;
+    const x = 38 * (1 - pullForward);
+    const y = 24 * (1 - pullForward);
+    const scale = 0.87 + 0.05 * pullForward;
+
+    return {
+      transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`,
+      opacity: 0.72,
+      zIndex: 20,
+      pointerEvents: "none",
+      transition,
+    };
+  }
+
+  return {
+    transform: "translate3d(44px, 30px, 0) scale(0.82)",
+    opacity: 0,
+    zIndex: 0,
+    pointerEvents: "none",
+    transition,
+  };
+}
+
+function ProductDeckCarousel({ products, activeIndex, onIndexChange, onOpenProduct }) {
+  const [dragX, setDragX] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+  const dragAxis = useRef(null);
+
+  const goToIndex = (index) => {
+    const safeIndex = Math.max(0, Math.min(products.length - 1, index));
+    onIndexChange(safeIndex);
+    setDragX(0);
+    setIsDragging(false);
+    dragAxis.current = null;
+  };
+
+  const onTouchStart = (event) => {
+    touchStartX.current = event.touches[0].clientX;
+    touchStartY.current = event.touches[0].clientY;
+    dragAxis.current = null;
+    setIsDragging(true);
+  };
+
+  const onTouchMove = (event) => {
+    if (!isDragging) return;
+
+    const deltaX = event.touches[0].clientX - touchStartX.current;
+    const deltaY = event.touches[0].clientY - touchStartY.current;
+
+    if (dragAxis.current === null) {
+      if (Math.abs(deltaX) < 8 && Math.abs(deltaY) < 8) return;
+      dragAxis.current = Math.abs(deltaX) > Math.abs(deltaY) ? "x" : "y";
+    }
+
+    if (dragAxis.current !== "x") return;
+
+    const atStart = activeIndex === 0;
+    const atEnd = activeIndex === products.length - 1;
+    const resistedDelta = atStart && deltaX > 0 ? deltaX * 0.35 : atEnd && deltaX < 0 ? deltaX * 0.35 : deltaX;
+
+    setDragX(resistedDelta);
+  };
+
+  const onTouchEnd = () => {
+    if (dragAxis.current === "x") {
+      if (dragX <= -PRODUCT_DECK_SWIPE_THRESHOLD && activeIndex < products.length - 1) {
+        goToIndex(activeIndex + 1);
+        return;
+      }
+
+      if (dragX >= PRODUCT_DECK_SWIPE_THRESHOLD && activeIndex > 0) {
+        goToIndex(activeIndex - 1);
+        return;
+      }
+    }
+
+    setDragX(0);
+    setIsDragging(false);
+    dragAxis.current = null;
+  };
+
+  return (
+    <div className="lg:hidden">
+      <div
+        className="relative mx-auto w-[84vw] max-w-[290px] touch-pan-y select-none py-8"
+        style={{ height: "calc(84vw * 1.35 + 4rem)", maxHeight: "430px" }}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+        onTouchCancel={onTouchEnd}
+        aria-roledescription="carousel"
+        aria-label="Product cards"
+      >
+        {products.map((product, index) => {
+          const offset = index - activeIndex;
+          if (offset > 2 || offset < -1) return null;
+
+          const style = getProductDeckCardStyle(offset, dragX, isDragging);
+
+          return (
+            <div
+              key={product.title}
+              data-product-index={index}
+              className="absolute inset-x-0 top-8 mx-auto w-full max-w-[290px] px-2 will-change-transform"
+              style={style}
+            >
+              <ProductCard product={product} onClick={() => onOpenProduct(index)} />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
 
 function ProductCard({ product, onClick }) {
   return (
-    <button type="button" onClick={onClick} className="group relative h-full w-full overflow-hidden rounded-[1.35rem] border border-slate-100 bg-white p-2.5 text-left shadow-[0_12px_36px_rgba(15,23,42,0.07)] transition duration-500 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-[#16C1C1] hover:bg-[#16C1C1] hover:shadow-[0_18px_48px_rgba(22,193,193,0.18)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 sm:rounded-[1.65rem] sm:p-4" aria-label={`Open ${product.title} product details`}>
-      <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-gradient-to-br from-orange-50/70 via-teal-50/40 to-white transition duration-500 group-hover:from-[#16C1C1] group-hover:via-[#16C1C1] group-hover:to-[#16C1C1]" />
-      <div className="relative mb-2.5 aspect-[4/5] overflow-hidden rounded-[1rem] bg-[#f8fafc] sm:mb-4 sm:rounded-[1.25rem]"><img src={product.image} alt={`${product.title} product sample`} className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.03]" /></div>
-      <h3 className="relative text-base font-black tracking-tight text-slate-950 transition duration-500 group-hover:text-white sm:text-xl">{product.title}</h3>
-      <div className="relative mt-2 flex flex-nowrap items-center gap-1.5 sm:mt-2.5 sm:gap-2">
-        {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200 transition duration-500 group-hover:bg-white/20 group-hover:text-white/70 group-hover:ring-white/20 sm:px-3 sm:py-1.5 sm:text-sm">{product.oldPrice}</span>}
-        <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-2.5 py-1 text-[10px] font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 transition duration-500 group-hover:bg-white group-hover:text-[#ff6f31] group-hover:ring-white sm:px-4 sm:py-2 sm:text-sm">{product.price}</span>
-      </div>
-    </button>
+    <div className="group/card relative h-full w-full rounded-[1.35rem] shadow-[0_2px_8px_rgba(15,23,42,0.03),0_8px_24px_rgba(15,23,42,0.05),0_20px_48px_rgba(15,23,42,0.07)] transition duration-500 hover:-translate-y-1.5 hover:scale-[1.01] hover:shadow-[0_4px_12px_rgba(22,193,193,0.08),0_12px_32px_rgba(22,193,193,0.12),0_28px_64px_rgba(22,193,193,0.16)] sm:rounded-[1.65rem] max-lg:hover:translate-y-0 max-lg:hover:scale-100 max-lg:hover:shadow-[0_2px_8px_rgba(15,23,42,0.03),0_8px_24px_rgba(15,23,42,0.05),0_20px_48px_rgba(15,23,42,0.07)]">
+      <button
+        type="button"
+        onClick={onClick}
+        className="relative flex h-full w-full flex-col overflow-hidden rounded-[inherit] border border-slate-100 bg-white p-2.5 text-left transition duration-500 group-hover/card:border-[#16C1C1] group-hover/card:bg-[#16C1C1] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 sm:p-4"
+        aria-label={`Open ${product.title} product details`}
+      >
+        <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-orange-50/70 via-teal-50/40 to-white transition duration-500 group-hover/card:from-[#16C1C1] group-hover/card:via-[#16C1C1] group-hover/card:to-[#16C1C1]" />
+        <div className="relative mb-2.5 aspect-[4/5] overflow-hidden rounded-[1rem] bg-[#f8fafc] sm:mb-4 sm:rounded-[1.25rem]"><img src={product.image} alt={`${product.title} product sample`} className="h-full w-full object-contain transition duration-500 group-hover/card:scale-[1.03]" /></div>
+        <h3 className="relative text-base font-black tracking-tight text-slate-950 transition duration-500 group-hover/card:text-white sm:text-xl">{product.title}</h3>
+        <div className="relative mt-2 flex flex-nowrap items-center gap-1.5 sm:mt-2.5 sm:gap-2">
+          {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200 transition duration-500 group-hover/card:bg-white/20 group-hover/card:text-white/70 group-hover/card:ring-white/20 sm:px-3 sm:py-1.5 sm:text-sm">{product.oldPrice}</span>}
+          <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-2.5 py-1 text-[10px] font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 transition duration-500 group-hover/card:bg-white group-hover/card:text-[#ff6f31] group-hover/card:ring-white sm:px-4 sm:py-2 sm:text-sm">{product.price}</span>
+        </div>
+      </button>
+    </div>
   );
 }
 
 function ProcessCard({ step, index }) {
   return (
-    <article className="group relative h-full w-full overflow-hidden rounded-[1.5rem] border border-slate-100 bg-[#fff8f3] p-3 text-left shadow-sm transition hover:-translate-y-2 hover:shadow-xl hover:shadow-orange-100/70 sm:rounded-[2rem] sm:p-5">
-      <div className="mb-3 aspect-[4/3] overflow-hidden rounded-[1.1rem] bg-transparent sm:mb-5 sm:rounded-[1.5rem]"><img src={step.image} alt={`${step.title} process image`} className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.04]" /></div>
+    <article className="group relative h-full w-full overflow-hidden rounded-[1.5rem] border border-slate-100 bg-[#fff8f3] p-3 text-left shadow-sm transition-[transform,box-shadow] duration-500 ease-out [@media(hover:hover)]:hover:-translate-y-2 [@media(hover:hover)]:hover:shadow-xl [@media(hover:hover)]:hover:shadow-orange-100/70 sm:rounded-[2rem] sm:p-5">
+      <div className="mb-3 aspect-[4/3] overflow-hidden rounded-[1.1rem] bg-transparent sm:mb-5 sm:rounded-[1.5rem]"><img src={step.image} alt={`${step.title} process image`} className="h-full w-full object-contain transition-transform duration-500 ease-out [@media(hover:hover)]:group-hover:scale-[1.04]" /></div>
       <div className="mb-3 inline-flex rounded-full bg-[#ff6f31] px-3 py-1 text-[10px] font-black uppercase tracking-wider text-white shadow-sm shadow-orange-200 sm:text-xs">Step {index + 1}</div>
       <h3 className="text-base font-black text-slate-950 sm:text-xl">{step.title}</h3>
       <p className="mt-2 text-xs leading-5 text-slate-600 sm:mt-3 sm:text-sm sm:leading-6">{step.text}</p>
@@ -429,13 +735,13 @@ function GalleryCard({ item, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="group relative aspect-[4/5] overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/5 p-0 text-left shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition duration-500 hover:z-20 hover:scale-105 hover:bg-white/10 hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 focus:ring-offset-[#070B18] sm:rounded-[1.75rem]"
+      className="group relative block aspect-[4/5] w-full overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/5 p-0 text-left shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition duration-500 [@media(hover:hover)]:hover:z-20 [@media(hover:hover)]:hover:scale-105 [@media(hover:hover)]:hover:bg-white/10 [@media(hover:hover)]:hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 focus:ring-offset-[#070B18] sm:rounded-[1.75rem]"
       aria-label={`Open ${item.title} gallery item`}
     >
       <MediaPreview
         src={item.image}
         alt={`${item.title} gallery item`}
-        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+        className="size-full object-cover transition duration-500 group-hover:scale-105"
         lazy
       />
       <div className="pointer-events-none absolute inset-0 bg-slate-950/0 transition duration-500 group-hover:bg-slate-950/15" />
@@ -574,10 +880,6 @@ export default function App() {
     setActiveProductScrollIndex(nearestIndex);
   };
 
-  const updateProductScrollButtons = () => {
-    setActiveProductScrollIndex(getNearestProductIndex());
-  };
-
   const scrollProducts = (direction) => {
     const maxIndex = getMaxProductScrollIndex();
     const nextIndex = direction === "next" ? activeProductScrollIndex + 1 : activeProductScrollIndex - 1;
@@ -713,14 +1015,15 @@ export default function App() {
 
     let scrollEndTimer = null;
     let isTouching = false;
+    let isActive = false;
+
+    const isDesktopProducts = () => window.matchMedia("(min-width: 1024px)").matches;
 
     const updateProductLayout = () => {
-      if (window.matchMedia("(min-width: 1024px)").matches) {
-        const gap = 16;
-        carousel.style.setProperty("--product-slide-w", `${(carousel.clientWidth - gap * 2) / PRODUCT_DESKTOP_VISIBLE}px`);
-      } else {
-        carousel.style.removeProperty("--product-slide-w");
-      }
+      if (!isDesktopProducts()) return;
+
+      const gap = 16;
+      carousel.style.setProperty("--product-slide-w", `${(carousel.clientWidth - gap * 2) / PRODUCT_DESKTOP_VISIBLE}px`);
 
       const index = getNearestProductIndex();
       scrollToProductIndex(index, "auto");
@@ -746,22 +1049,41 @@ export default function App() {
       scheduleSnap(50);
     };
 
-    const onResize = () => updateProductLayout();
+    const bindDesktopCarousel = () => {
+      if (!isDesktopProducts() || isActive) return;
+      isActive = true;
+      requestAnimationFrame(updateProductLayout);
+      carousel.addEventListener("scroll", onScroll, { passive: true });
+      carousel.addEventListener("scrollend", snapProductCarousel, { passive: true });
+      carousel.addEventListener("touchstart", onTouchStart, { passive: true });
+      carousel.addEventListener("touchend", onTouchEnd, { passive: true });
+    };
 
-    requestAnimationFrame(updateProductLayout);
-
-    carousel.addEventListener("scroll", onScroll, { passive: true });
-    carousel.addEventListener("scrollend", snapProductCarousel, { passive: true });
-    carousel.addEventListener("touchstart", onTouchStart, { passive: true });
-    carousel.addEventListener("touchend", onTouchEnd, { passive: true });
-    window.addEventListener("resize", onResize);
-
-    return () => {
+    const unbindDesktopCarousel = () => {
+      if (!isActive) return;
+      isActive = false;
       clearTimeout(scrollEndTimer);
       carousel.removeEventListener("scroll", onScroll);
       carousel.removeEventListener("scrollend", snapProductCarousel);
       carousel.removeEventListener("touchstart", onTouchStart);
       carousel.removeEventListener("touchend", onTouchEnd);
+      carousel.style.removeProperty("--product-slide-w");
+    };
+
+    const onResize = () => {
+      if (isDesktopProducts()) {
+        bindDesktopCarousel();
+        updateProductLayout();
+      } else {
+        unbindDesktopCarousel();
+      }
+    };
+
+    onResize();
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      unbindDesktopCarousel();
       window.removeEventListener("resize", onResize);
     };
   }, []);
@@ -955,7 +1277,7 @@ export default function App() {
   }, []);
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#fff8f3] text-slate-900 [scroll-behavior:smooth]">
+    <main className="min-h-screen overflow-x-hidden bg-[#fff8f3] text-slate-900 [scroll-behavior:smooth]">
       <style>{`
         @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes floatSoft { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
@@ -977,11 +1299,11 @@ export default function App() {
         <div className="absolute -left-24 top-28 h-72 w-72 rounded-full bg-[#16C1C1]/20 blur-3xl animate-[pulseSoft_5s_ease-in-out_infinite]" />
         <div className="absolute -right-20 top-20 h-80 w-80 rounded-full bg-[#ff6f31]/20 blur-3xl animate-[pulseSoft_6s_ease-in-out_infinite]" />
         <div className="mx-auto grid max-w-7xl items-center gap-0 px-4 pb-8 pt-1 sm:gap-5 sm:px-6 sm:pb-6 sm:pt-1 md:pb-8 lg:grid-cols-2 lg:gap-8 lg:px-8">
-          <Reveal className="relative mx-auto -mt-3 w-[88%] max-w-[390px] sm:-mt-4 sm:w-full sm:max-w-lg lg:mx-0 lg:max-w-none [animation-delay:.08s]"><div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]"><div className="aspect-[4/5] min-h-[330px] sm:min-h-0"><img src="/hero-image.png" alt="Miinii custom 3D mini figure" className="h-full w-full scale-105 object-contain sm:scale-100" /></div></div></Reveal>
+          <ScrollReveal className="relative mx-auto -mt-3 w-[88%] max-w-[390px] sm:-mt-4 sm:w-full sm:max-w-lg lg:mx-0 lg:max-w-none"><div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]"><div className="aspect-[4/5] min-h-[330px] sm:min-h-0"><img src="/hero-image.png" alt="Miinii custom 3D mini figure" className="h-full w-full scale-105 object-contain sm:scale-100" /></div></div></ScrollReveal>
           <div className="-mt-8 text-center sm:mt-0 lg:text-left">
-            <Reveal><h1 className="text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">Turn your photos into <span className="text-[#ff6f31]">custom 3D mini figures</span>.</h1></Reveal>
-            <Reveal><p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-600 lg:mx-0">Miinii creates handcrafted 3D mini figures based on real people and pets. Each piece is carefully sculpted, resin printed, and hand-painted into a one-of-a-kind keepsake.</p></Reveal>
-            <Reveal><div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start"><button type="button" onClick={() => scrollToSection("contact")} className="group inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-8 py-[18px] text-lg font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:px-7 sm:py-4 sm:text-base">Start Your Miinii<ArrowIcon className="ml-2 h-5 w-5 transition group-hover:translate-x-1" /></button><button type="button" onClick={() => scrollToSection("process")} className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-8 py-[18px] text-lg font-black text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-[#16C1C1] sm:px-7 sm:py-4 sm:text-base">View Process</button></div></Reveal>
+            <ScrollReveal delay={80}><h1 className="text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">Turn your photos into <span className="text-[#ff6f31]">custom 3D mini figures</span>.</h1></ScrollReveal>
+            <ScrollReveal delay={140}><p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-600 lg:mx-0">Miinii creates handcrafted 3D mini figures based on real people and pets. Each piece is carefully sculpted, resin printed, and hand-painted into a one-of-a-kind keepsake.</p></ScrollReveal>
+            <ScrollReveal delay={200}><div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start"><button type="button" onClick={() => scrollToSection("contact")} className="group inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-8 py-[18px] text-lg font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:px-7 sm:py-4 sm:text-base">Start Your Miinii<ArrowIcon className="ml-2 h-5 w-5 transition group-hover:translate-x-1" /></button><button type="button" onClick={() => scrollToSection("process")} className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-8 py-[18px] text-lg font-black text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-[#16C1C1] sm:px-7 sm:py-4 sm:text-base">View Process</button></div></ScrollReveal>
           </div>
         </div>
       </section>
@@ -989,25 +1311,44 @@ export default function App() {
       <section id="process" className="bg-white py-10 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="How it works" title="From photo to mini figure" text="A simple production flow that turns your favorite people and pets into handcrafted 3D keepsakes." />
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{processSteps.map((step, index) => <ScrollReveal key={step.title} delay={index * 120}><ProcessCard step={step} index={index} /></ScrollReveal>)}</div>
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+            {processSteps.map((step, index) => (
+              <ScrollReveal key={step.title} delay={index * 90} className="h-full">
+                <ProcessCard step={step} index={index} />
+              </ScrollReveal>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section id="products" className="bg-white pb-16 pt-6 text-slate-950 sm:pb-24 sm:pt-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section id="products" className="overflow-visible bg-white pb-16 pt-6 text-slate-950 sm:pb-24 sm:pt-10">
+        <div className="mx-auto max-w-7xl overflow-visible px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="What we make" title="Mini figures for every story" text="Choose the Miinii style that fits your gift, collection, or special memory." />
-          <div className="relative">
+          <div className="relative overflow-visible">
             {activeProductScrollIndex > 0 && <button type="button" onClick={() => scrollProducts("previous")} className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-bold text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#f05f20] lg:flex" aria-label="Scroll products left"><span className="flex h-full w-full items-center justify-center pb-0.5 leading-none">‹</span></button>}
             {activeProductScrollIndex < getMaxProductScrollIndex() && <button type="button" onClick={() => scrollProducts("next")} className="absolute right-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-bold text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:translate-x-0.5 hover:bg-[#f05f20] lg:flex" aria-label="Scroll products right"><span className="flex h-full w-full items-center justify-center pb-0.5 leading-none">›</span></button>}
 
-            <div ref={productsScrollRef} className="-mx-4 snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:py-6 lg:mx-0 [&::-webkit-scrollbar]:hidden">
-              <div className="flex w-max gap-4 px-[calc(50%-min(36vw,127.5px))] sm:gap-5 sm:px-[calc(50%-130px)] lg:gap-4 lg:px-0">
+            <SectionReveal delay={80} className="lg:hidden">
+              <ProductDeckCarousel
+                products={products}
+                activeIndex={activeProductScrollIndex}
+                onIndexChange={setActiveProductScrollIndex}
+                onOpenProduct={setActiveProductIndex}
+              />
+            </SectionReveal>
+
+            <div className="relative hidden overflow-visible lg:block">
+            <div ref={productsScrollRef} className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:4rem] [scrollbar-width:none] [-ms-overflow-style:none] px-8 py-4 [&::-webkit-scrollbar]:hidden">
+              <div className="flex w-max items-stretch gap-4 lg:px-4">
                 {products.map((product, index) => (
-                  <div key={product.title} data-product-index={index} className="w-[72vw] max-w-[255px] shrink-0 snap-center snap-always p-1 sm:w-[260px] sm:max-w-[260px] lg:w-[var(--product-slide-w)] lg:max-w-none lg:snap-start">
-                    <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
-                  </div>
+                  <ScrollReveal key={product.title} delay={index * 100} scrollRoot={productsScrollRef} className="h-full w-[var(--product-slide-w)] max-w-none shrink-0 snap-start px-5 py-10">
+                    <div data-product-index={index}>
+                      <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
+                    </div>
+                  </ScrollReveal>
                 ))}
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -1016,7 +1357,6 @@ export default function App() {
       <section id="gallery" className="bg-[#070B18] py-16 text-white sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="Gallery" title="Every Miinii tells a story" text="Explore custom mini figures, pet keepsakes, packaging details, and finished pieces crafted from meaningful photos and stories." dark />
-          <Reveal>
             <div className="relative">
               {activeGalleryScrollIndex > 0 && (
                 <button type="button" onClick={() => scrollGallery("previous")} className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#16C1C1] text-2xl font-bold text-white shadow-xl shadow-teal-900/40 ring-1 ring-white/20 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#12a8a8] lg:flex" aria-label="Scroll gallery left">
@@ -1029,12 +1369,14 @@ export default function App() {
                 </button>
               )}
 
-              <div ref={galleryScrollRef} className="-mx-4 snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [scrollbar-width:none] [-ms-overflow-style:none] lg:mx-0 [&::-webkit-scrollbar]:hidden">
-                <div className="flex w-max gap-3 px-[calc(50%-min(42.5vw,200px))] lg:gap-4 lg:px-0">
+              <div ref={galleryScrollRef} className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:2.5rem] [scrollbar-width:none] [-ms-overflow-style:none] px-6 sm:px-8 lg:px-4 [&::-webkit-scrollbar]:hidden">
+                <div className="flex w-max gap-3 px-[calc(50%-min(42.5vw,200px))] sm:gap-4 lg:gap-4 lg:px-2">
                   {collageItems.map((item, index) => (
-                    <div key={item.title} data-gallery-index={index} className="w-[85vw] max-w-[400px] shrink-0 snap-center snap-always lg:w-[var(--gallery-slide-w)] lg:max-w-none lg:snap-start">
-                      <GalleryCard item={item} onClick={() => setActiveGalleryIndex(index)} />
-                    </div>
+                    <ScrollReveal key={item.title} delay={index * 100} scrollRoot={galleryScrollRef} className="h-full w-[85vw] max-w-[400px] shrink-0 snap-center snap-always px-2 lg:w-[var(--gallery-slide-w)] lg:max-w-none lg:snap-start lg:px-3">
+                      <div data-gallery-index={index}>
+                        <GalleryCard item={item} onClick={() => setActiveGalleryIndex(index)} />
+                      </div>
+                    </ScrollReveal>
                   ))}
                 </div>
               </div>
@@ -1051,37 +1393,36 @@ export default function App() {
                 ))}
               </div>
             </div>
-          </Reveal>
         </div>
       </section>
 
-     <section id="about" className="relative overflow-hidden bg-white py-8 sm:py-24">
-        <div className="absolute left-0 top-10 h-64 w-64 rounded-full bg-[#16C1C1]/10 blur-3xl" />
-        <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#ff6f31]/10 blur-3xl" />
+     <section id="about" className="relative overflow-x-hidden bg-white py-8 sm:py-24">
+        <div className="pointer-events-none absolute left-0 top-10 h-64 w-64 rounded-full bg-[#16C1C1]/10 blur-3xl" aria-hidden="true" />
+        <div className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#ff6f31]/10 blur-3xl" aria-hidden="true" />
 
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <Reveal>
-            <div className="overflow-hidden rounded-2xl border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)] sm:rounded-[2rem]">
+          <SectionReveal>
+            <div className="overflow-hidden rounded-2xl border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)] sm:rounded-[2rem] [transform:translateZ(0)]">
               <div className="flex flex-col md:grid md:grid-cols-[0.85fr_1.15fr]">
-                <div className="relative flex items-center gap-3.5 p-4 pb-0 md:block md:min-h-[420px] md:p-4">
+                <div className="relative flex flex-row items-center gap-4 p-4 pb-0 md:block md:min-h-[420px] md:p-4">
                   <div className="absolute inset-0 hidden bg-gradient-to-br from-slate-100 to-white md:block" />
                   <div className="absolute inset-0 hidden bg-[radial-gradient(circle_at_top_left,rgba(22,193,193,0.18),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(255,111,49,0.16),transparent_35%)] md:block" />
 
-                  <div className="relative h-[6rem] w-[6rem] shrink-0 overflow-hidden rounded-2xl border border-white/70 bg-white shadow-md ring-1 ring-slate-100 md:mx-auto md:aspect-[4/4.5] md:h-full md:w-full md:max-h-none md:rounded-[1.5rem] md:shadow-inner">
+                  <div className="min-w-0 flex-1 text-left md:hidden">
+                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#16C1C1]">About us</p>
+                    <h2 className="mt-1.5 text-left text-xl font-black leading-[1.15] tracking-tight text-slate-950">
+                      Meet the artist
+                      <br />
+                      behind Miinii.
+                    </h2>
+                  </div>
+
+                  <div className="relative h-[7.75rem] w-[7.75rem] shrink-0 overflow-hidden rounded-full border border-white/70 bg-white shadow-md ring-1 ring-slate-100 md:mx-auto md:aspect-[4/4.5] md:h-full md:w-full md:max-h-none md:rounded-[1.5rem] md:shadow-inner">
                     <img
                       src="/about-portrait.png"
                       alt="Miinii artist portrait"
                       className="h-full w-full object-cover"
                     />
-                  </div>
-
-                  <div className="min-w-0 md:hidden">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#16C1C1]">About us</p>
-                    <h2 className="mt-1 text-lg font-black leading-snug tracking-tight text-slate-950">
-                      Meet the artist
-                      <br />
-                      behind Miinii.
-                    </h2>
                   </div>
                 </div>
 
@@ -1105,7 +1446,7 @@ export default function App() {
                 </div>
               </div>
             </div>
-          </Reveal>
+          </SectionReveal>
         </div>
       </section>
 
@@ -1114,11 +1455,11 @@ export default function App() {
         <div className="absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-[#ff6f31]/20 blur-3xl" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto mb-8 max-w-2xl text-center">
+          <ScrollReveal className="mx-auto mb-8 max-w-2xl text-center">
             <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-white/80">Testimonials</p>
             <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Kind words from Miinii clients</h2>
             <p className="mt-3 text-base leading-7 text-white/80">Heartfelt notes from customers who turned meaningful moments into custom keepsakes.</p>
-          </Reveal>
+          </ScrollReveal>
 
           <div
             ref={testimonialsScrollRef}
@@ -1130,8 +1471,10 @@ export default function App() {
                 data-testimonial-page={pageIndex}
                 className="grid min-w-full snap-center scroll-mx-4 grid-cols-1 grid-rows-2 gap-3 sm:scroll-mx-6 sm:gap-4 lg:contents"
               >
-                {page.map((testimonial) => (
-                  <Reveal key={testimonial.name}>
+                {page.map((testimonial, cardIndex) => {
+                  const revealIndex = pageIndex * 2 + cardIndex;
+                  return (
+                  <ScrollReveal key={testimonial.name} delay={revealIndex * 90} className="h-full min-w-0">
                     <article className="group relative flex min-h-[235px] h-full flex-col overflow-hidden rounded-[1.35rem] border border-white/25 bg-white/95 p-4 shadow-xl shadow-teal-950/10 backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-white/50 hover:bg-white hover:shadow-2xl hover:shadow-teal-950/20 sm:min-h-[245px] sm:p-5 lg:min-h-[260px]">
                       <div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" />
 
@@ -1152,8 +1495,9 @@ export default function App() {
                         </p>
                       </div>
                     </article>
-                  </Reveal>
-                ))}
+                  </ScrollReveal>
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -1191,8 +1535,10 @@ export default function App() {
                 data-faq-page={pageIndex}
                 className="grid min-w-full snap-center scroll-mx-4 grid-cols-2 grid-rows-2 gap-3 sm:scroll-mx-6 sm:gap-4 lg:contents"
               >
-                {page.map((faq) => (
-                  <Reveal key={faq.q}>
+                {page.map((faq, cardIndex) => {
+                  const revealIndex = pageIndex * 4 + cardIndex;
+                  return (
+                  <ScrollReveal key={faq.q} delay={revealIndex * 70} className="h-full min-w-0">
                     <article className="group relative flex min-h-[185px] h-full flex-col overflow-hidden rounded-[1.35rem] bg-white p-4 shadow-md shadow-orange-100/50 ring-1 ring-orange-100/70 transition duration-500 hover:-translate-y-1 hover:shadow-xl hover:ring-[#16C1C1]/30 sm:min-h-[205px] sm:p-5 lg:min-h-[220px]">
                       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#0F766E] via-[#16C1C1] to-[#0E7490]" />
                       <div className="absolute -right-12 -top-12 h-28 w-28 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" />
@@ -1200,8 +1546,9 @@ export default function App() {
                       <h3 className="relative pr-2 text-sm font-black leading-5 text-slate-950 sm:text-lg sm:leading-6">{faq.q}</h3>
                       <p className="relative mt-3 text-sm leading-5 text-slate-600 sm:leading-6">{faq.a}</p>
                     </article>
-                  </Reveal>
-                ))}
+                  </ScrollReveal>
+                  );
+                })}
               </div>
             ))}
           </div>
@@ -1223,16 +1570,16 @@ export default function App() {
       </section>
 
       <section id="contact" className="px-4 pb-8 sm:px-6 lg:px-8">
-        <Reveal>
+        <SectionReveal>
           <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#ff6f31] via-[#f97316] to-[#c2410c] px-5 py-10 text-center shadow-2xl shadow-orange-300/70 sm:rounded-[2.5rem] sm:px-10 sm:py-12 lg:px-16 lg:py-16">
             <div className="mx-auto flex max-w-4xl flex-col items-center">
               <h2 className="max-w-3xl text-3xl font-black leading-tight tracking-tight text-white sm:text-5xl">Ready to create your own Miinii?</h2>
               <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-white/90 sm:mt-5 sm:text-lg sm:leading-8">Send your reference photos and let’s turn your favorite person, pet, or memory into a custom 3D mini figure.</p>
               <div className="mt-8 grid w-full max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                <a href="https://instagram.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl border border-white/30 bg-white/10 px-5 py-4 text-base font-black text-white backdrop-blur transition hover:-translate-y-1 hover:bg-white/20 sm:rounded-full"><SocialIcon type="message" className="mr-2 h-5 w-5 shrink-0" />Message Us</a>
-                <a href="https://www.facebook.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="facebook" className="mr-2 h-5 w-5 shrink-0" />Facebook</a>
-                <a href="https://www.tiktok.com/@miiniistudios" target="_blank" rel="noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="tiktok" className="mr-2 h-5 w-5 shrink-0" />TikTok</a>
-                <a href="https://instagram.com/MiiniiStudios" target="_blank" rel="noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="instagram" className="mr-2 h-5 w-5 shrink-0" />Instagram</a>
+                <a href="https://ig.me/m/MiiniiStudios" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl border border-white/30 bg-white/10 px-5 py-4 text-base font-black text-white backdrop-blur transition hover:-translate-y-1 hover:bg-white/20 sm:rounded-full"><SocialIcon type="message" className="mr-2 h-5 w-5 shrink-0" />Message Us</a>
+                <a href="https://www.facebook.com/MiiniiStudios" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="facebook" className="mr-2 h-5 w-5 shrink-0" />Facebook</a>
+                <a href="https://www.tiktok.com/@miiniistudios" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="tiktok" className="mr-2 h-5 w-5 shrink-0" />TikTok</a>
+                <a href="https://instagram.com/MiiniiStudios" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[56px] w-full items-center justify-center rounded-2xl bg-white px-5 py-4 text-base font-black text-slate-950 shadow-xl transition hover:-translate-y-1 sm:rounded-full"><SocialIcon type="instagram" className="mr-2 h-5 w-5 shrink-0" />Instagram</a>
               </div>
               <div className="mt-7 flex flex-col items-center gap-2 text-center text-sm leading-6 text-white/90 sm:mt-8 sm:text-base sm:leading-7">
                 <p className="flex items-center justify-center gap-2">
@@ -1245,7 +1592,7 @@ export default function App() {
               </div>
             </div>
           </div>
-        </Reveal>
+        </SectionReveal>
       </section>
 
       <footer className="px-4 py-4 text-center text-sm font-medium text-slate-500 sm:px-6 lg:px-8"><p>© 2026 Miinii. MiiniiStudios. 3D custom mini figures. All rights reserved.</p></footer>
