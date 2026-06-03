@@ -183,7 +183,7 @@ function SocialIcon({ type, className = "h-5 w-5" }) {
   return <svg {...common}><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" /></svg>;
 }
 
-function ScrollReveal({ children, className = "", delay = 0, direction = "up", ...props }) {
+function ScrollReveal({ children, className = "", delay = 0, direction = "up", scrollRoot = null, ...props }) {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -191,25 +191,66 @@ function ScrollReveal({ children, className = "", delay = 0, direction = "up", .
     const element = ref.current;
     if (!element) return;
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setIsVisible(true);
       return;
     }
 
+    let revealed = false;
+    const show = () => {
+      if (revealed) return;
+      revealed = true;
+      setIsVisible(true);
+    };
+
+    const isInView = () => {
+      const rect = element.getBoundingClientRect();
+      if (rect.width < 1 || rect.height < 1) return false;
+
+      const root = scrollRoot?.current;
+      if (root) {
+        const rootRect = root.getBoundingClientRect();
+        const overlapX = Math.min(rect.right, rootRect.right) - Math.max(rect.left, rootRect.left);
+        const overlapY = Math.min(rect.bottom, rootRect.bottom) - Math.max(rect.top, rootRect.top);
+        return overlapX > 8 && overlapY > 8;
+      }
+
+      const viewHeight = window.innerHeight || document.documentElement.clientHeight;
+      return rect.top < viewHeight * 0.92 && rect.bottom > viewHeight * 0.06;
+    };
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(element);
-        }
+        if (entry.isIntersecting) show();
       },
-      { rootMargin: "0px 0px -5% 0px", threshold: 0.08 }
+      {
+        root: scrollRoot?.current ?? null,
+        rootMargin: scrollRoot ? "0px" : "0px 0px -48px 0px",
+        threshold: [0, 0.05, 0.12],
+      }
     );
 
     observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
+
+    const runChecks = () => {
+      if (isInView()) show();
+    };
+
+    runChecks();
+    const rafId = requestAnimationFrame(runChecks);
+    const resizeObserver = new ResizeObserver(runChecks);
+    resizeObserver.observe(element);
+    if (scrollRoot?.current) resizeObserver.observe(scrollRoot.current);
+
+    window.addEventListener("resize", runChecks);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      observer.disconnect();
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", runChecks);
+    };
+  }, [scrollRoot]);
 
   const offsetClass =
     direction === "right"
@@ -224,17 +265,17 @@ function ScrollReveal({ children, className = "", delay = 0, direction = "up", .
     <div
       ref={ref}
       {...props}
-      style={{ transitionDelay: `${delay}ms` }}
-      className={`${className} transform-gpu transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none lg:duration-[850ms] ${offsetClass} ${isVisible ? "opacity-100" : "opacity-0"}`}
+      style={{ transitionDelay: isVisible ? `${delay}ms` : "0ms" }}
+      className={`${className} transform-gpu transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none lg:duration-1000 ${offsetClass} ${isVisible ? "opacity-100" : "opacity-0"}`}
     >
       {children}
     </div>
   );
 }
 
-function SectionReveal({ children, className = "", delay = 0 }) {
+function SectionReveal({ children, className = "", delay = 0, scrollRoot = null }) {
   return (
-    <ScrollReveal delay={delay} className={className}>
+    <ScrollReveal delay={delay} className={className} scrollRoot={scrollRoot}>
       {children}
     </ScrollReveal>
   );
@@ -1256,7 +1297,7 @@ export default function App() {
             <div ref={productsScrollRef} className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:4rem] [scrollbar-width:none] [-ms-overflow-style:none] px-8 py-4 [&::-webkit-scrollbar]:hidden">
               <div className="flex w-max items-stretch gap-4 lg:px-4">
                 {products.map((product, index) => (
-                  <ScrollReveal key={product.title} delay={index * 100} className="h-full w-[var(--product-slide-w)] max-w-none shrink-0 snap-start px-5 py-10">
+                  <ScrollReveal key={product.title} delay={index * 100} scrollRoot={productsScrollRef} className="h-full w-[var(--product-slide-w)] max-w-none shrink-0 snap-start px-5 py-10">
                     <div data-product-index={index}>
                       <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
                     </div>
@@ -1287,7 +1328,7 @@ export default function App() {
               <div ref={galleryScrollRef} className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:2.5rem] [scrollbar-width:none] [-ms-overflow-style:none] px-6 sm:px-8 lg:px-4 [&::-webkit-scrollbar]:hidden">
                 <div className="flex w-max gap-3 px-[calc(50%-min(42.5vw,200px))] sm:gap-4 lg:gap-4 lg:px-2">
                   {collageItems.map((item, index) => (
-                    <ScrollReveal key={item.title} delay={index * 100} className="h-full w-[85vw] max-w-[400px] shrink-0 snap-center snap-always px-2 lg:w-[var(--gallery-slide-w)] lg:max-w-none lg:snap-start lg:px-3">
+                    <ScrollReveal key={item.title} delay={index * 100} scrollRoot={galleryScrollRef} className="h-full w-[85vw] max-w-[400px] shrink-0 snap-center snap-always px-2 lg:w-[var(--gallery-slide-w)] lg:max-w-none lg:snap-start lg:px-3">
                       <div data-gallery-index={index}>
                         <GalleryCard item={item} onClick={() => setActiveGalleryIndex(index)} />
                       </div>
