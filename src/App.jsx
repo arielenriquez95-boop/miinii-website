@@ -1304,8 +1304,8 @@ export default function App() {
                   <div className="absolute inset-0 hidden bg-[radial-gradient(circle_at_top_left,rgba(22,193,193,0.18),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(255,111,49,0.16),transparent_35%)] md:block" />
 
                   <div className="min-w-0 flex-1 text-left md:hidden">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#16C1C1]">About us</p>
-                    <h2 className="mt-1 text-left text-lg font-black leading-snug tracking-tight text-slate-950">
+                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#16C1C1]">About us</p>
+                    <h2 className="mt-1.5 text-left text-xl font-black leading-[1.15] tracking-tight text-slate-950">
                       Meet the artist
                       <br />
                       behind Miinii.
