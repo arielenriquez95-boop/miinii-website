@@ -401,39 +401,85 @@ function ProductModal({ products, index, setIndex, onClose }) {
       <div key={product.title} className={`relative flex h-[100dvh] w-full max-w-none flex-col overflow-hidden rounded-none border-0 bg-white shadow-none animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:mx-auto sm:h-auto sm:max-h-[90vh] sm:max-w-5xl sm:rounded-[2rem] sm:border sm:border-white/10 sm:shadow-2xl sm:shadow-black/40 md:h-auto ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
         <button type="button" onClick={onClose} className="absolute right-3 top-[max(0.75rem,env(safe-area-inset-top,0px))] z-30 flex h-10 w-10 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950 sm:h-11 sm:w-11" aria-label="Close product preview">×</button>
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:grid md:max-h-[90vh] md:grid-cols-[0.95fr_1.05fr] md:overflow-y-auto">
-          <div className="relative flex shrink-0 items-center gap-3 border-b border-orange-100/80 bg-gradient-to-br from-orange-50 via-white to-teal-50 p-3 pr-14 pt-[max(0.75rem,env(safe-area-inset-top,0px))] md:block md:border-0 md:p-6 md:pr-6 md:pt-6">
-            <div className="w-[6.75rem] shrink-0 overflow-hidden rounded-xl bg-white ring-1 ring-slate-100 shadow-inner sm:w-[7.5rem] md:mx-auto md:w-full md:max-w-[420px] md:rounded-[1.25rem]">
-              <div className="aspect-[4/5]">
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:hidden">
+            <div className="relative flex min-h-0 flex-[1.2] items-center justify-center bg-gradient-to-br from-orange-50 via-white to-teal-50 px-5 pb-4 pt-[calc(max(0.75rem,env(safe-area-inset-top,0px))+2.75rem)]">
+              <div className="flex h-full w-full max-w-[min(88vw,340px)] items-center justify-center">
                 <img
                   src={product.image}
                   alt={`${product.title} preview`}
-                  className="block h-full w-full object-contain"
+                  className="max-h-full max-w-full object-contain drop-shadow-[0_18px_40px_rgba(15,23,42,0.12)]"
                 />
               </div>
             </div>
-            <div className="min-w-0 flex-1 md:hidden">
-              <h2 className="text-lg font-black leading-tight tracking-tight text-slate-950">{product.title}</h2>
-              <p className="mt-1 text-xs leading-5 text-slate-600">{product.shortText}</p>
-              <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200">{product.oldPrice}</span>}
-                <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-2.5 py-1 text-[11px] font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">{product.price}</span>
+
+            <div className="flex min-h-0 flex-1 flex-col justify-between gap-3 border-t border-orange-100/80 bg-white px-4 py-4 pb-[max(1.25rem,env(safe-area-inset-bottom,0px))]">
+              <div className="min-h-0 flex-1 space-y-3 overflow-y-auto">
+                <div>
+                  <h2 className="text-xl font-black leading-tight tracking-tight text-slate-950">{product.title}</h2>
+                  <p className="mt-1.5 text-sm leading-6 text-slate-600">{product.shortText}</p>
+                  <div className="mt-2.5 flex flex-wrap items-center gap-2">
+                    {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-400 line-through ring-1 ring-slate-200">{product.oldPrice}</span>}
+                    <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-3 py-1.5 text-sm font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">{product.price}</span>
+                  </div>
+                </div>
+                <div className="rounded-[1.15rem] bg-[#fff8f3] p-3.5 ring-1 ring-orange-100">
+                  <ul className="grid gap-2.5">
+                    {product.details.map((detail) => (
+                      <li key={detail} className="flex gap-2.5 text-sm leading-5 text-slate-600">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#16C1C1]" />
+                        <span>{detail}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+
+                  setTimeout(() => {
+                    const contactSection = document.getElementById("contact");
+                    if (!contactSection) return;
+
+                    const headerOffset = 80;
+                    const sectionPosition = contactSection.getBoundingClientRect().top + window.scrollY;
+
+                    window.scrollTo({
+                      top: sectionPosition - headerOffset,
+                      behavior: "smooth",
+                    });
+                  }, 120);
+                }}
+                className="inline-flex w-full shrink-0 items-center justify-center rounded-full bg-[#ff6f31] px-6 py-4 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:bg-[#f05f20]"
+              >
+                Start Your Miinii
+                <ArrowIcon className="ml-2 h-5 w-5" />
+              </button>
             </div>
           </div>
-          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto p-3 pb-[max(1rem,env(safe-area-inset-bottom,0px))] sm:p-8 lg:p-10">
-            <div className="hidden md:block">
-              <h2 className="text-3xl font-black tracking-tight text-slate-950 lg:text-5xl">{product.title}</h2>
-              <p className="mt-3 text-lg leading-8 text-slate-600">{product.shortText}</p>
-              <div className="mt-5 flex flex-wrap items-center gap-2">
-                {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-4 py-2 text-sm font-bold text-slate-400 line-through ring-1 ring-slate-200">{product.oldPrice}</span>}
-                <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-5 py-2.5 text-base font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">{product.price}</span>
-              </div>
+
+          <div className="relative hidden items-center justify-center bg-gradient-to-br from-orange-50 via-white to-teal-50 p-6 md:flex md:sticky md:top-0">
+            <div className="aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-[1.25rem] bg-white ring-1 ring-slate-100 shadow-inner">
+              <img
+                src={product.image}
+                alt={`${product.title} preview`}
+                className="block h-full w-full object-contain"
+              />
             </div>
-            <div className="rounded-[1.15rem] bg-[#fff8f3] p-3 ring-1 ring-orange-100 md:mt-5 md:rounded-[1.5rem] md:p-5">
-              <ul className="grid gap-2 md:gap-3">
+          </div>
+          <div className="hidden min-h-0 flex-col overflow-y-auto p-8 md:flex lg:p-10">
+            <h2 className="text-3xl font-black tracking-tight text-slate-950 lg:text-5xl">{product.title}</h2>
+            <p className="mt-3 text-lg leading-8 text-slate-600">{product.shortText}</p>
+            <div className="mt-5 flex flex-wrap items-center gap-2">
+              {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-4 py-2 text-sm font-bold text-slate-400 line-through ring-1 ring-slate-200">{product.oldPrice}</span>}
+              <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-5 py-2.5 text-base font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20">{product.price}</span>
+            </div>
+            <div className="mt-5 rounded-[1.5rem] bg-[#fff8f3] p-5 ring-1 ring-orange-100">
+              <ul className="grid gap-3">
                 {product.details.map((detail) => (
-                  <li key={detail} className="flex gap-2.5 text-xs leading-5 text-slate-600 md:gap-3 md:text-base md:leading-6">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#16C1C1] md:mt-2 md:h-2 md:w-2" />
+                  <li key={detail} className="flex gap-3 text-base leading-6 text-slate-600">
+                    <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#16C1C1]" />
                     <span>{detail}</span>
                   </li>
                 ))}
@@ -457,7 +503,7 @@ function ProductModal({ products, index, setIndex, onClose }) {
                   });
                 }, 120);
               }}
-              className="mt-3 shrink-0 inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-6 py-3.5 text-sm font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] md:mt-6 md:px-7 md:py-4"
+              className="mt-6 inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-7 py-4 text-base font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20]"
             >
               Start Your Miinii
               <ArrowIcon className="ml-2 h-5 w-5" />
