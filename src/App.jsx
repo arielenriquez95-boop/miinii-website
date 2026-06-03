@@ -401,15 +401,22 @@ function ProductModal({ products, index, setIndex, onClose }) {
 
 function ProductCard({ product, onClick }) {
   return (
-    <button type="button" onClick={onClick} className="group relative h-full w-full overflow-hidden rounded-[1.35rem] border border-slate-100 bg-white p-2.5 text-left shadow-[0_12px_36px_rgba(15,23,42,0.07)] transition duration-500 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-[#16C1C1] hover:bg-[#16C1C1] hover:shadow-[0_18px_48px_rgba(22,193,193,0.18)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 sm:rounded-[1.65rem] sm:p-4" aria-label={`Open ${product.title} product details`}>
-      <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-gradient-to-br from-orange-50/70 via-teal-50/40 to-white transition duration-500 group-hover:from-[#16C1C1] group-hover:via-[#16C1C1] group-hover:to-[#16C1C1]" />
-      <div className="relative mb-2.5 aspect-[4/5] overflow-hidden rounded-[1rem] bg-[#f8fafc] sm:mb-4 sm:rounded-[1.25rem]"><img src={product.image} alt={`${product.title} product sample`} className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.03]" /></div>
-      <h3 className="relative text-base font-black tracking-tight text-slate-950 transition duration-500 group-hover:text-white sm:text-xl">{product.title}</h3>
-      <div className="relative mt-2 flex flex-nowrap items-center gap-1.5 sm:mt-2.5 sm:gap-2">
-        {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200 transition duration-500 group-hover:bg-white/20 group-hover:text-white/70 group-hover:ring-white/20 sm:px-3 sm:py-1.5 sm:text-sm">{product.oldPrice}</span>}
-        <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-2.5 py-1 text-[10px] font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 transition duration-500 group-hover:bg-white group-hover:text-[#ff6f31] group-hover:ring-white sm:px-4 sm:py-2 sm:text-sm">{product.price}</span>
-      </div>
-    </button>
+    <div className="group/card relative h-full w-full rounded-[1.35rem] shadow-[0_2px_8px_rgba(15,23,42,0.03),0_8px_24px_rgba(15,23,42,0.05),0_20px_48px_rgba(15,23,42,0.07)] transition duration-500 hover:-translate-y-1.5 hover:scale-[1.01] hover:shadow-[0_4px_12px_rgba(22,193,193,0.08),0_12px_32px_rgba(22,193,193,0.12),0_28px_64px_rgba(22,193,193,0.16)] sm:rounded-[1.65rem]">
+      <button
+        type="button"
+        onClick={onClick}
+        className="relative flex h-full w-full flex-col overflow-hidden rounded-[inherit] border border-slate-100 bg-white p-2.5 text-left transition duration-500 group-hover/card:border-[#16C1C1] group-hover/card:bg-[#16C1C1] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 sm:p-4"
+        aria-label={`Open ${product.title} product details`}
+      >
+        <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-orange-50/70 via-teal-50/40 to-white transition duration-500 group-hover/card:from-[#16C1C1] group-hover/card:via-[#16C1C1] group-hover/card:to-[#16C1C1]" />
+        <div className="relative mb-2.5 aspect-[4/5] overflow-hidden rounded-[1rem] bg-[#f8fafc] sm:mb-4 sm:rounded-[1.25rem]"><img src={product.image} alt={`${product.title} product sample`} className="h-full w-full object-contain transition duration-500 group-hover/card:scale-[1.03]" /></div>
+        <h3 className="relative text-base font-black tracking-tight text-slate-950 transition duration-500 group-hover/card:text-white sm:text-xl">{product.title}</h3>
+        <div className="relative mt-2 flex flex-nowrap items-center gap-1.5 sm:mt-2.5 sm:gap-2">
+          {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200 transition duration-500 group-hover/card:bg-white/20 group-hover/card:text-white/70 group-hover/card:ring-white/20 sm:px-3 sm:py-1.5 sm:text-sm">{product.oldPrice}</span>}
+          <span className="shrink-0 rounded-full bg-[#ff6f31]/15 px-2.5 py-1 text-[10px] font-black text-[#ff6f31] ring-1 ring-[#ff6f31]/20 transition duration-500 group-hover/card:bg-white group-hover/card:text-[#ff6f31] group-hover/card:ring-white sm:px-4 sm:py-2 sm:text-sm">{product.price}</span>
+        </div>
+      </button>
+    </div>
   );
 }
 
@@ -951,7 +958,7 @@ export default function App() {
   }, []);
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#fff8f3] text-slate-900 [scroll-behavior:smooth]">
+    <main className="min-h-screen overflow-x-hidden bg-[#fff8f3] text-slate-900 [scroll-behavior:smooth]">
       <style>{`
         @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes floatSoft { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
@@ -989,17 +996,17 @@ export default function App() {
         </div>
       </section>
 
-      <section id="products" className="bg-white pb-16 pt-6 text-slate-950 sm:pb-24 sm:pt-10">
+      <section id="products" className="overflow-visible bg-white pb-16 pt-6 text-slate-950 sm:pb-24 sm:pt-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="What we make" title="Mini figures for every story" text="Choose the Miinii style that fits your gift, collection, or special memory." />
-          <div className="relative">
+          <div className="relative overflow-visible">
             {activeProductScrollIndex > 0 && <button type="button" onClick={() => scrollProducts("previous")} className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-bold text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#f05f20] lg:flex" aria-label="Scroll products left"><span className="flex h-full w-full items-center justify-center pb-0.5 leading-none">‹</span></button>}
             {activeProductScrollIndex < getMaxProductScrollIndex() && <button type="button" onClick={() => scrollProducts("next")} className="absolute right-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-bold text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:translate-x-0.5 hover:bg-[#f05f20] lg:flex" aria-label="Scroll products right"><span className="flex h-full w-full items-center justify-center pb-0.5 leading-none">›</span></button>}
 
-            <div ref={productsScrollRef} className="-mx-4 snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:py-6 lg:mx-0 [&::-webkit-scrollbar]:hidden">
-              <div className="flex w-max gap-4 px-[calc(50%-min(36vw,127.5px))] sm:gap-5 sm:px-[calc(50%-130px)] lg:gap-4 lg:px-0">
+            <div ref={productsScrollRef} className="-mx-4 snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:py-3 lg:mx-0 lg:px-3 lg:py-4 [&::-webkit-scrollbar]:hidden">
+              <div className="flex w-max items-stretch gap-4 px-[calc(50%-min(36vw,127.5px))] sm:gap-5 sm:px-[calc(50%-130px)] lg:gap-4 lg:px-2">
                 {products.map((product, index) => (
-                  <div key={product.title} data-product-index={index} className="w-[72vw] max-w-[255px] shrink-0 snap-center snap-always p-1 sm:w-[260px] sm:max-w-[260px] lg:w-[var(--product-slide-w)] lg:max-w-none lg:snap-start">
+                  <div key={product.title} data-product-index={index} className="w-[72vw] max-w-[255px] shrink-0 snap-center snap-always px-3 py-8 sm:w-[260px] sm:max-w-[260px] sm:px-4 sm:py-9 lg:w-[var(--product-slide-w)] lg:max-w-none lg:snap-start lg:px-3 lg:py-10">
                     <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
                   </div>
                 ))}
