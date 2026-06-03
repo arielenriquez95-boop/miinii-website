@@ -650,17 +650,18 @@ export default function App() {
         </div>
       </section>
 
-      <section id="about" className="relative overflow-hidden bg-white py-16 sm:py-24">
+     <section id="about" className="relative overflow-hidden bg-white py-12 sm:py-24">
         <div className="absolute left-0 top-10 h-64 w-64 rounded-full bg-[#16C1C1]/10 blur-3xl" />
         <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#ff6f31]/10 blur-3xl" />
       
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <Reveal>
-            <div className="overflow-hidden rounded-[2rem] border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)]">
+            <div className="overflow-hidden rounded-[1.6rem] border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)] sm:rounded-[2rem]">
               <div className="grid gap-0 md:grid-cols-[0.85fr_1.15fr]">
-                <div className="relative min-h-[320px] overflow-hidden bg-gradient-to-br from-slate-100 to-white p-4 sm:min-h-[380px]">
+                <div className="relative overflow-hidden bg-gradient-to-br from-slate-100 to-white p-3 sm:min-h-[380px] sm:p-4 md:min-h-[420px]">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(22,193,193,0.18),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(255,111,49,0.16),transparent_35%)]" />
-                  <div className="relative h-full overflow-hidden rounded-[1.5rem] border border-white/70 bg-white shadow-inner">
+      
+                  <div className="relative mx-auto aspect-[4/4.5] max-h-[260px] w-full overflow-hidden rounded-[1.25rem] border border-white/70 bg-white shadow-inner sm:aspect-auto sm:h-full sm:max-h-none sm:rounded-[1.5rem]">
                     <img
                       src="/about-portrait.png"
                       alt="Miinii artist portrait"
@@ -669,13 +670,20 @@ export default function App() {
                   </div>
                 </div>
       
-                <div className="flex flex-col justify-center p-6 pt-0 sm:p-10 lg:p-12 md:pt-10">
-                  <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">About us</p>
-                  <h2 className="text-4xl font-black tracking-tight text-slate-950 sm:text-5xl">Meet the artist behind Miinii.</h2>
-                  <p className="mt-5 text-lg leading-8 text-slate-600">
+                <div className="flex flex-col justify-center p-5 pt-4 sm:p-10 lg:p-12 md:pt-10">
+                  <p className="mb-2 text-xs font-bold uppercase tracking-[0.22em] text-[#16C1C1] sm:mb-3 sm:text-sm sm:tracking-[0.25em]">
+                    About us
+                  </p>
+      
+                  <h2 className="text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">
+                    Meet the artist behind Miinii.
+                  </h2>
+      
+                  <p className="mt-4 text-base leading-7 text-slate-600 sm:mt-5 sm:text-lg sm:leading-8">
                     Hi, I’m Ariel, the creator of Miinii. Miinii started from my love for 3D art, design, and meaningful custom gifts. What began as a creative idea became a mini studio that turns real people, pets, and special memories into handcrafted 3D miniatures.
                   </p>
-                  <p className="mt-4 text-base leading-7 text-slate-500">
+      
+                  <p className="mt-3 text-sm leading-6 text-slate-500 sm:mt-4 sm:text-base sm:leading-7">
                     Each Miinii is carefully made through digital sculpting, resin 3D printing, hand painting, finishing, and packaging. As Miinii continues to grow, we’re working toward building a bigger creative team so we can create more personalized mini figures for everyone while keeping the same care, quality, and handmade feel in every piece.
                   </p>
                 </div>
