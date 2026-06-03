@@ -183,14 +183,6 @@ function SocialIcon({ type, className = "h-5 w-5" }) {
   return <svg {...common}><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" /></svg>;
 }
 
-function Reveal({ children, className = "", animate = true, ...props }) {
-  if (!animate) {
-    return <div {...props} className={className}>{children}</div>;
-  }
-
-  return <div {...props} className={`animate-[fadeUp_.7s_ease-out_both] ${className}`}>{children}</div>;
-}
-
 function ScrollReveal({ children, className = "", delay = 0, direction = "up", ...props }) {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -212,7 +204,7 @@ function ScrollReveal({ children, className = "", delay = 0, direction = "up", .
           observer.unobserve(element);
         }
       },
-      { rootMargin: "0px 0px -6% 0px", threshold: 0.15 }
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.1 }
     );
 
     observer.observe(element);
@@ -223,30 +215,38 @@ function ScrollReveal({ children, className = "", delay = 0, direction = "up", .
     direction === "right"
       ? isVisible
         ? "translate-x-0"
-        : "translate-x-8"
+        : "translate-x-6"
       : isVisible
         ? "translate-y-0"
-        : "translate-y-6";
+        : "translate-y-5";
 
   return (
     <div
       ref={ref}
       {...props}
       style={{ transitionDelay: `${delay}ms` }}
-      className={`${className} transform-gpu transition-[transform,opacity] duration-[800ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${offsetClass} ${isVisible ? "opacity-100" : "opacity-0"}`}
+      className={`${className} transform-gpu transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none ${offsetClass} ${isVisible ? "opacity-100" : "opacity-0"}`}
     >
       {children}
     </div>
   );
 }
 
-function SectionHeader({ eyebrow, title, text, dark = false, animate = true }) {
+function SectionReveal({ children, className = "", delay = 0 }) {
   return (
-    <Reveal animate={animate} className="mx-auto mb-10 max-w-2xl text-center">
+    <ScrollReveal delay={delay} className={className}>
+      {children}
+    </ScrollReveal>
+  );
+}
+
+function SectionHeader({ eyebrow, title, text, dark = false }) {
+  return (
+    <ScrollReveal className="mx-auto mb-10 max-w-2xl text-center">
       <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">{eyebrow}</p>
       <h2 className={`text-4xl font-black tracking-tight md:text-5xl ${dark ? "text-white" : "text-slate-950"}`}>{title}</h2>
       <p className={`mt-4 text-lg leading-8 ${dark ? "text-slate-300" : "text-slate-600"}`}>{text}</p>
-    </Reveal>
+    </ScrollReveal>
   );
 }
 
@@ -1214,11 +1214,11 @@ export default function App() {
         <div className="absolute -left-24 top-28 h-72 w-72 rounded-full bg-[#16C1C1]/20 blur-3xl animate-[pulseSoft_5s_ease-in-out_infinite]" />
         <div className="absolute -right-20 top-20 h-80 w-80 rounded-full bg-[#ff6f31]/20 blur-3xl animate-[pulseSoft_6s_ease-in-out_infinite]" />
         <div className="mx-auto grid max-w-7xl items-center gap-0 px-4 pb-8 pt-1 sm:gap-5 sm:px-6 sm:pb-6 sm:pt-1 md:pb-8 lg:grid-cols-2 lg:gap-8 lg:px-8">
-          <Reveal className="relative mx-auto -mt-3 w-[88%] max-w-[390px] sm:-mt-4 sm:w-full sm:max-w-lg lg:mx-0 lg:max-w-none [animation-delay:.08s]"><div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]"><div className="aspect-[4/5] min-h-[330px] sm:min-h-0"><img src="/hero-image.png" alt="Miinii custom 3D mini figure" className="h-full w-full scale-105 object-contain sm:scale-100" /></div></div></Reveal>
+          <ScrollReveal className="relative mx-auto -mt-3 w-[88%] max-w-[390px] sm:-mt-4 sm:w-full sm:max-w-lg lg:mx-0 lg:max-w-none"><div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]"><div className="aspect-[4/5] min-h-[330px] sm:min-h-0"><img src="/hero-image.png" alt="Miinii custom 3D mini figure" className="h-full w-full scale-105 object-contain sm:scale-100" /></div></div></ScrollReveal>
           <div className="-mt-8 text-center sm:mt-0 lg:text-left">
-            <Reveal><h1 className="text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">Turn your photos into <span className="text-[#ff6f31]">custom 3D mini figures</span>.</h1></Reveal>
-            <Reveal><p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-600 lg:mx-0">Miinii creates handcrafted 3D mini figures based on real people and pets. Each piece is carefully sculpted, resin printed, and hand-painted into a one-of-a-kind keepsake.</p></Reveal>
-            <Reveal><div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start"><button type="button" onClick={() => scrollToSection("contact")} className="group inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-8 py-[18px] text-lg font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:px-7 sm:py-4 sm:text-base">Start Your Miinii<ArrowIcon className="ml-2 h-5 w-5 transition group-hover:translate-x-1" /></button><button type="button" onClick={() => scrollToSection("process")} className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-8 py-[18px] text-lg font-black text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-[#16C1C1] sm:px-7 sm:py-4 sm:text-base">View Process</button></div></Reveal>
+            <ScrollReveal delay={80}><h1 className="text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">Turn your photos into <span className="text-[#ff6f31]">custom 3D mini figures</span>.</h1></ScrollReveal>
+            <ScrollReveal delay={140}><p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-600 lg:mx-0">Miinii creates handcrafted 3D mini figures based on real people and pets. Each piece is carefully sculpted, resin printed, and hand-painted into a one-of-a-kind keepsake.</p></ScrollReveal>
+            <ScrollReveal delay={200}><div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start"><button type="button" onClick={() => scrollToSection("contact")} className="group inline-flex items-center justify-center rounded-full bg-[#ff6f31] px-8 py-[18px] text-lg font-black text-white shadow-xl shadow-orange-200 transition hover:-translate-y-1 hover:bg-[#f05f20] sm:px-7 sm:py-4 sm:text-base">Start Your Miinii<ArrowIcon className="ml-2 h-5 w-5 transition group-hover:translate-x-1" /></button><button type="button" onClick={() => scrollToSection("process")} className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-8 py-[18px] text-lg font-black text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-[#16C1C1] sm:px-7 sm:py-4 sm:text-base">View Process</button></div></ScrollReveal>
           </div>
         </div>
       </section>
@@ -1226,14 +1226,16 @@ export default function App() {
       <section id="process" className="bg-white py-10 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="How it works" title="From photo to mini figure" text="A simple production flow that turns your favorite people and pets into handcrafted 3D keepsakes." />
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{processSteps.map((step, index) => <ScrollReveal key={step.title} delay={index * 90} className="h-full"><ProcessCard step={step} index={index} /></ScrollReveal>)}</div>
+          <SectionReveal delay={80}>
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">{processSteps.map((step, index) => <ProcessCard key={step.title} step={step} index={index} />)}</div>
+          </SectionReveal>
         </div>
       </section>
 
       <section id="products" className="overflow-visible bg-white pb-16 pt-6 text-slate-950 sm:pb-24 sm:pt-10">
         <div className="mx-auto max-w-7xl overflow-visible px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="What we make" title="Mini figures for every story" text="Choose the Miinii style that fits your gift, collection, or special memory." />
-          <div className="relative overflow-visible">
+          <SectionReveal delay={80} className="relative overflow-visible">
             {activeProductScrollIndex > 0 && <button type="button" onClick={() => scrollProducts("previous")} className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-bold text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#f05f20] lg:flex" aria-label="Scroll products left"><span className="flex h-full w-full items-center justify-center pb-0.5 leading-none">‹</span></button>}
             {activeProductScrollIndex < getMaxProductScrollIndex() && <button type="button" onClick={() => scrollProducts("next")} className="absolute right-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-bold text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:translate-x-0.5 hover:bg-[#f05f20] lg:flex" aria-label="Scroll products right"><span className="flex h-full w-full items-center justify-center pb-0.5 leading-none">›</span></button>}
 
@@ -1255,14 +1257,14 @@ export default function App() {
               </div>
             </div>
             </div>
-          </div>
+          </SectionReveal>
         </div>
       </section>
 
       <section id="gallery" className="bg-[#070B18] py-16 text-white sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader eyebrow="Gallery" title="Every Miinii tells a story" text="Explore custom mini figures, pet keepsakes, packaging details, and finished pieces crafted from meaningful photos and stories." dark animate={false} />
-          <Reveal animate={false}>
+          <SectionHeader eyebrow="Gallery" title="Every Miinii tells a story" text="Explore custom mini figures, pet keepsakes, packaging details, and finished pieces crafted from meaningful photos and stories." dark />
+          <SectionReveal delay={80}>
             <div className="relative">
               {activeGalleryScrollIndex > 0 && (
                 <button type="button" onClick={() => scrollGallery("previous")} className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#16C1C1] text-2xl font-bold text-white shadow-xl shadow-teal-900/40 ring-1 ring-white/20 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#12a8a8] lg:flex" aria-label="Scroll gallery left">
@@ -1297,7 +1299,7 @@ export default function App() {
                 ))}
               </div>
             </div>
-          </Reveal>
+          </SectionReveal>
         </div>
       </section>
 
@@ -1306,7 +1308,7 @@ export default function App() {
         <div className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#ff6f31]/10 blur-3xl" aria-hidden="true" />
 
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <Reveal animate={false}>
+          <SectionReveal>
             <div className="overflow-hidden rounded-2xl border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)] sm:rounded-[2rem] [transform:translateZ(0)]">
               <div className="flex flex-col md:grid md:grid-cols-[0.85fr_1.15fr]">
                 <div className="relative flex flex-row items-center gap-4 p-4 pb-0 md:block md:min-h-[420px] md:p-4">
@@ -1351,7 +1353,7 @@ export default function App() {
                 </div>
               </div>
             </div>
-          </Reveal>
+          </SectionReveal>
         </div>
       </section>
 
@@ -1360,12 +1362,13 @@ export default function App() {
         <div className="absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-[#ff6f31]/20 blur-3xl" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto mb-8 max-w-2xl text-center">
+          <ScrollReveal className="mx-auto mb-8 max-w-2xl text-center">
             <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-white/80">Testimonials</p>
             <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Kind words from Miinii clients</h2>
             <p className="mt-3 text-base leading-7 text-white/80">Heartfelt notes from customers who turned meaningful moments into custom keepsakes.</p>
-          </Reveal>
+          </ScrollReveal>
 
+          <SectionReveal delay={80}>
           <div
             ref={testimonialsScrollRef}
             className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-4 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
@@ -1377,8 +1380,7 @@ export default function App() {
                 className="grid min-w-full snap-center scroll-mx-4 grid-cols-1 grid-rows-2 gap-3 sm:scroll-mx-6 sm:gap-4 lg:contents"
               >
                 {page.map((testimonial) => (
-                  <Reveal key={testimonial.name}>
-                    <article className="group relative flex min-h-[235px] h-full flex-col overflow-hidden rounded-[1.35rem] border border-white/25 bg-white/95 p-4 shadow-xl shadow-teal-950/10 backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-white/50 hover:bg-white hover:shadow-2xl hover:shadow-teal-950/20 sm:min-h-[245px] sm:p-5 lg:min-h-[260px]">
+                    <article key={testimonial.name} className="group relative flex min-h-[235px] h-full flex-col overflow-hidden rounded-[1.35rem] border border-white/25 bg-white/95 p-4 shadow-xl shadow-teal-950/10 backdrop-blur transition duration-500 hover:-translate-y-1 hover:border-white/50 hover:bg-white hover:shadow-2xl hover:shadow-teal-950/20 sm:min-h-[245px] sm:p-5 lg:min-h-[260px]">
                       <div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" />
 
                       <div className="relative mb-3 flex gap-0.5 text-[#ff6f31] sm:mb-4">
@@ -1398,7 +1400,6 @@ export default function App() {
                         </p>
                       </div>
                     </article>
-                  </Reveal>
                 ))}
               </div>
             ))}
@@ -1417,6 +1418,7 @@ export default function App() {
               />
             ))}
           </div>
+          </SectionReveal>
         </div>
       </section>
 
@@ -1427,6 +1429,7 @@ export default function App() {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader eyebrow="FAQ" title="Common questions" text="Simple answers to help you before ordering your custom Miinii." />
 
+          <SectionReveal delay={80}>
           <div
             ref={faqsScrollRef}
             className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-4 lg:grid-rows-2 lg:gap-4 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
@@ -1438,15 +1441,13 @@ export default function App() {
                 className="grid min-w-full snap-center scroll-mx-4 grid-cols-2 grid-rows-2 gap-3 sm:scroll-mx-6 sm:gap-4 lg:contents"
               >
                 {page.map((faq) => (
-                  <Reveal key={faq.q}>
-                    <article className="group relative flex min-h-[185px] h-full flex-col overflow-hidden rounded-[1.35rem] bg-white p-4 shadow-md shadow-orange-100/50 ring-1 ring-orange-100/70 transition duration-500 hover:-translate-y-1 hover:shadow-xl hover:ring-[#16C1C1]/30 sm:min-h-[205px] sm:p-5 lg:min-h-[220px]">
+                    <article key={faq.q} className="group relative flex min-h-[185px] h-full flex-col overflow-hidden rounded-[1.35rem] bg-white p-4 shadow-md shadow-orange-100/50 ring-1 ring-orange-100/70 transition duration-500 hover:-translate-y-1 hover:shadow-xl hover:ring-[#16C1C1]/30 sm:min-h-[205px] sm:p-5 lg:min-h-[220px]">
                       <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#0F766E] via-[#16C1C1] to-[#0E7490]" />
                       <div className="absolute -right-12 -top-12 h-28 w-28 rounded-full bg-[#16C1C1]/10 transition duration-500 group-hover:scale-125" />
 
                       <h3 className="relative pr-2 text-sm font-black leading-5 text-slate-950 sm:text-lg sm:leading-6">{faq.q}</h3>
                       <p className="relative mt-3 text-sm leading-5 text-slate-600 sm:leading-6">{faq.a}</p>
                     </article>
-                  </Reveal>
                 ))}
               </div>
             ))}
@@ -1465,11 +1466,12 @@ export default function App() {
               />
             ))}
           </div>
+          </SectionReveal>
         </div>
       </section>
 
       <section id="contact" className="px-4 pb-8 sm:px-6 lg:px-8">
-        <Reveal>
+        <SectionReveal>
           <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#ff6f31] via-[#f97316] to-[#c2410c] px-5 py-10 text-center shadow-2xl shadow-orange-300/70 sm:rounded-[2.5rem] sm:px-10 sm:py-12 lg:px-16 lg:py-16">
             <div className="mx-auto flex max-w-4xl flex-col items-center">
               <h2 className="max-w-3xl text-3xl font-black leading-tight tracking-tight text-white sm:text-5xl">Ready to create your own Miinii?</h2>
@@ -1491,7 +1493,7 @@ export default function App() {
               </div>
             </div>
           </div>
-        </Reveal>
+        </SectionReveal>
       </section>
 
       <footer className="px-4 py-4 text-center text-sm font-medium text-slate-500 sm:px-6 lg:px-8"><p>© 2026 Miinii. MiiniiStudios. 3D custom mini figures. All rights reserved.</p></footer>
