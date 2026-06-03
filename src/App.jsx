@@ -43,8 +43,8 @@ const products = [
   {
     title: "Miinii Mini",
     image: "/miinii-mini.png",
-    oldPrice: "₱1,990",
-    price: "₱990+",
+    oldPrice: "₱3,990",
+    price: "₱2,490+",
     shortText: "Cutest Mini version perfect for gift.",
     details: ["Available in 2\" • 3\" • 4\"", "Final price may vary depending on details", "Estimated production: 2–3 weeks"],
   },
