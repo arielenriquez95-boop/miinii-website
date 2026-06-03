@@ -1079,25 +1079,25 @@ export default function App() {
           <Reveal animate={false}>
             <div className="overflow-hidden rounded-2xl border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)] sm:rounded-[2rem] [transform:translateZ(0)]">
               <div className="flex flex-col md:grid md:grid-cols-[0.85fr_1.15fr]">
-                <div className="relative flex items-center gap-3.5 p-4 pb-0 md:block md:min-h-[420px] md:p-4">
+                <div className="relative flex flex-row items-center gap-4 p-4 pb-0 md:block md:min-h-[420px] md:p-4">
                   <div className="absolute inset-0 hidden bg-gradient-to-br from-slate-100 to-white md:block" />
                   <div className="absolute inset-0 hidden bg-[radial-gradient(circle_at_top_left,rgba(22,193,193,0.18),transparent_38%),radial-gradient(circle_at_bottom_right,rgba(255,111,49,0.16),transparent_35%)] md:block" />
 
-                  <div className="relative h-[6rem] w-[6rem] shrink-0 overflow-hidden rounded-2xl border border-white/70 bg-white shadow-md ring-1 ring-slate-100 md:mx-auto md:aspect-[4/4.5] md:h-full md:w-full md:max-h-none md:rounded-[1.5rem] md:shadow-inner">
+                  <div className="min-w-0 flex-1 text-left md:hidden">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#16C1C1]">About us</p>
+                    <h2 className="mt-1 text-left text-lg font-black leading-snug tracking-tight text-slate-950">
+                      Meet the artist
+                      <br />
+                      behind Miinii.
+                    </h2>
+                  </div>
+
+                  <div className="relative h-[7.75rem] w-[7.75rem] shrink-0 overflow-hidden rounded-2xl border border-white/70 bg-white shadow-md ring-1 ring-slate-100 md:mx-auto md:aspect-[4/4.5] md:h-full md:w-full md:max-h-none md:rounded-[1.5rem] md:shadow-inner">
                     <img
                       src="/about-portrait.png"
                       alt="Miinii artist portrait"
                       className="h-full w-full object-cover"
                     />
-                  </div>
-
-                  <div className="min-w-0 md:hidden">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#16C1C1]">About us</p>
-                    <h2 className="mt-1 text-lg font-black leading-snug tracking-tight text-slate-950">
-                      Meet the artist
-                      <br />
-                      behind Miinii.
-                    </h2>
                   </div>
                 </div>
 
