@@ -669,8 +669,12 @@ export default function App() {
                     />
                   </div>
       
-                  <div className="relative mx-auto -mt-8 max-w-[260px] rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-center shadow-xl shadow-slate-200/70 backdrop-blur sm:max-w-[300px]">
-                    <p className="text-xs font-black uppercase tracking-[0.18em] text-[#16C1C1]">Miinii</p>
+                  <div className="relative mx-auto -mt-8 flex max-w-[260px] flex-col items-center rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-center shadow-xl shadow-slate-200/70 backdrop-blur sm:max-w-[300px]">
+                    <img
+                      src="/miinii-logo.png"
+                      alt="Miinii logo"
+                      className="h-10 w-auto object-contain sm:h-12"
+                    />
                     <p className="mt-1 text-sm font-bold text-slate-700">3D custom mini figures</p>
                   </div>
                 </div>
