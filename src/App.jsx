@@ -315,35 +315,15 @@ function ProductModal({ products, index, setIndex, onClose }) {
   }, [index]);
 
   const goToSlide = (dotIndex) => {
-    if (dotIndex === index) return;
     setSlideDirection(dotIndex > index ? "next" : "previous");
     setIndex(dotIndex);
   };
 
-  const onTouchStart = (event) => {
-    const touch = event.touches[0];
-    if (!touch) return;
-    setTouchStart({ x: touch.clientX, y: touch.clientY });
-  };
-
   const onTouchEnd = (event) => {
-    if (!touchStart) return;
-
-    const touch = event.changedTouches[0];
-    if (!touch) {
-      setTouchStart(null);
-      return;
-    }
-
-    const distanceX = touchStart.x - touch.clientX;
-    const distanceY = touchStart.y - touch.clientY;
-    const isHorizontalSwipe = Math.abs(distanceX) > 45 && Math.abs(distanceX) > Math.abs(distanceY) * 1.25;
-
-    if (isHorizontalSwipe) {
-      if (distanceX > 0) next();
-      if (distanceX < 0) previous();
-    }
-
+    if (touchStart === null) return;
+    const distance = touchStart - event.changedTouches[0].clientX;
+    if (distance > 45) next();
+    if (distance < -45) previous();
     setTouchStart(null);
   };
 
@@ -353,7 +333,7 @@ function ProductModal({ products, index, setIndex, onClose }) {
       <button type="button" onClick={previous} className="absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Previous product">‹</button>
       <button type="button" onClick={next} className="absolute right-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Next product">›</button>
 
-      <div key={product.title} className={`relative mx-auto flex h-[calc(100%-3.75rem)] w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem] ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+      <div key={product.title} className={`relative mx-auto flex h-[calc(100%-3.75rem)] w-full max-w-5xl flex-col overflow-hidden rounded-[1.75rem] border border-white/10 bg-white shadow-2xl shadow-black/40 animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem] ${slideDirection === "next" ? "[--slide-start:10%]" : "[--slide-start:-10%]"}`} onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
         <button type="button" onClick={onClose} className="absolute right-3 top-3 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-slate-950/75 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-slate-950" aria-label="Close product preview">×</button>
         <div className="grid min-h-0 flex-1 overflow-y-auto md:grid-cols-[0.95fr_1.05fr]">
           <div className="relative flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-teal-50 p-4 md:sticky md:top-0 sm:p-6">
@@ -423,7 +403,7 @@ function ProductCard({ product, onClick }) {
   return (
     <button type="button" onClick={onClick} className="group relative h-full w-full overflow-hidden rounded-[1.35rem] border border-slate-100 bg-white p-2.5 text-left shadow-[0_12px_36px_rgba(15,23,42,0.07)] transition duration-500 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-[#16C1C1] hover:bg-[#16C1C1] hover:shadow-[0_18px_48px_rgba(22,193,193,0.18)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 sm:rounded-[1.65rem] sm:p-4" aria-label={`Open ${product.title} product details`}>
       <div className="pointer-events-none absolute inset-0 rounded-[2rem] bg-gradient-to-br from-orange-50/70 via-teal-50/40 to-white transition duration-500 group-hover:from-[#16C1C1] group-hover:via-[#16C1C1] group-hover:to-[#16C1C1]" />
-      <div className="relative mb-2.5 aspect-[4/5] overflow-hidden rounded-[1rem] bg-[#f8fafc] sm:mb-4 sm:rounded-[1.25rem]"><img src={product.image} alt={`${product.title} product sample`} className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.03]" loading="lazy" /></div>
+      <div className="relative mb-2.5 aspect-[4/5] overflow-hidden rounded-[1rem] bg-[#f8fafc] sm:mb-4 sm:rounded-[1.25rem]"><img src={product.image} alt={`${product.title} product sample`} className="h-full w-full object-contain transition duration-500 group-hover:scale-[1.03]" /></div>
       <h3 className="relative text-base font-black tracking-tight text-slate-950 transition duration-500 group-hover:text-white sm:text-xl">{product.title}</h3>
       <div className="relative mt-2 flex flex-nowrap items-center gap-1.5 sm:mt-2.5 sm:gap-2">
         {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200 transition duration-500 group-hover:bg-white/20 group-hover:text-white/70 group-hover:ring-white/20 sm:px-3 sm:py-1.5 sm:text-sm">{product.oldPrice}</span>}
@@ -543,43 +523,22 @@ export default function App() {
     centerProductCard(safeIndex);
   };
 
-  useEffect(() => {
-    const carousel = productsScrollRef.current;
-    if (!carousel) return;
-
-    let frameId = null;
-    const scheduleUpdate = () => {
-      if (frameId) cancelAnimationFrame(frameId);
-      frameId = requestAnimationFrame(updateProductScrollButtons);
-    };
-
-    scheduleUpdate();
-    carousel.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate);
-
-    return () => {
-      if (frameId) cancelAnimationFrame(frameId);
-      carousel.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("resize", scheduleUpdate);
-    };
-  }, []);
-
-  useEffect(() => {
-    const isModalOpen = activeGalleryIndex !== null || activeProductIndex !== null;
-
-    if (!isModalOpen) return;
-
-    const originalBodyOverflow = document.body.style.overflow;
-    const originalHtmlOverflow = document.documentElement.style.overflow;
-
-    document.body.style.overflow = "hidden";
-    document.documentElement.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = originalBodyOverflow;
-      document.documentElement.style.overflow = originalHtmlOverflow;
-    };
-  }, [activeGalleryIndex, activeProductIndex]);
+      useEffect(() => {
+        const isModalOpen = activeGalleryIndex !== null || activeProductIndex !== null;
+      
+        if (!isModalOpen) return;
+      
+        const originalBodyOverflow = document.body.style.overflow;
+        const originalHtmlOverflow = document.documentElement.style.overflow;
+      
+        document.body.style.overflow = "hidden";
+        document.documentElement.style.overflow = "hidden";
+      
+        return () => {
+          document.body.style.overflow = originalBodyOverflow;
+          document.documentElement.style.overflow = originalHtmlOverflow;
+        };
+      }, [activeGalleryIndex, activeProductIndex]);
 
   const testimonialPages = Array.from(
     { length: Math.ceil(testimonials.length / 2) },
