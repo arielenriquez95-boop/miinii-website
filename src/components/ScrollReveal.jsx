@@ -17,7 +17,10 @@ export function ScrollReveal({ children, className = "", delay = 0, direction = 
     const element = ref.current;
     if (!element) return;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.matchMedia(DESKTOP_BREAKPOINT).matches
+    ) {
       setIsRevealed(true);
       return;
     }

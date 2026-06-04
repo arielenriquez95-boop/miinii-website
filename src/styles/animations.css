@@ -102,33 +102,21 @@
 }
 
 @media (min-width: 1024px) {
-  .scroll-reveal {
-    opacity: 0;
-    transform: translate3d(0, 28px, 0);
-    filter: none;
-    transition:
-      opacity 0.55s ease-out,
-      transform 0.55s ease-out;
-    transition-delay: var(--scroll-reveal-delay, 0ms);
-    will-change: opacity, transform;
-  }
-
-  .scroll-reveal--right {
-    transform: translate3d(20px, 20px, 0);
-  }
-
-  .scroll-reveal--left {
-    transform: translate3d(-20px, 20px, 0);
-  }
-
-  .scroll-reveal--scale {
-    transform: translate3d(0, 28px, 0);
-  }
-
+  .scroll-reveal,
+  .scroll-reveal--right,
+  .scroll-reveal--left,
+  .scroll-reveal--scale,
   .scroll-reveal.is-revealed {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
+    transform: none;
     filter: none;
+    transition: none;
+    will-change: auto;
+  }
+
+  .scroll-reveal.is-revealed .desktop-shimmer::after {
+    content: none;
+    animation: none;
   }
 
   .desktop-float {
