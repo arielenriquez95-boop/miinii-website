@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { DESKTOP_BREAKPOINT } from "../constants/layout";
 
 function resolveScrollRoot(scrollRoot) {
   if (!scrollRoot) return null;
@@ -46,19 +47,21 @@ export function ScrollReveal({ children, className = "", delay = 0, direction = 
 
       const viewHeight = window.innerHeight || document.documentElement.clientHeight;
       const viewWidth = window.innerWidth || document.documentElement.clientWidth;
-      const visibleY = rect.top < viewHeight * 0.84 && rect.bottom > viewHeight * 0.08;
+      const isDesktop = window.matchMedia(DESKTOP_BREAKPOINT).matches;
+      const visibleY = rect.top < viewHeight * (isDesktop ? 0.92 : 0.84) && rect.bottom > viewHeight * (isDesktop ? 0.04 : 0.08);
       const visibleX = rect.left < viewWidth * 0.98 && rect.right > viewWidth * 0.02;
       if (visibleY && visibleX) reveal();
     };
 
+    const isDesktop = window.matchMedia(DESKTOP_BREAKPOINT).matches;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry?.isIntersecting) reveal();
       },
       {
         root,
-        rootMargin: root ? "0px 18px" : "0px 0px -14% 0px",
-        threshold: root ? 0.01 : 0.12,
+        rootMargin: root ? "0px 18px" : isDesktop ? "0px 0px -10% 0px" : "0px 0px -14% 0px",
+        threshold: root ? 0.01 : isDesktop ? 0.06 : 0.12,
       }
     );
 

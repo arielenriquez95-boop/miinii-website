@@ -103,21 +103,32 @@
 
 @media (min-width: 1024px) {
   .scroll-reveal {
-    transform: translate3d(0, 64px, 0) scale(0.96);
-    filter: blur(10px);
-    transition-duration: 1.05s;
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+    filter: none;
+    transition:
+      opacity 0.55s ease-out,
+      transform 0.55s ease-out;
+    transition-delay: var(--scroll-reveal-delay, 0ms);
+    will-change: opacity, transform;
   }
 
   .scroll-reveal--right {
-    transform: translate3d(76px, 0, 0) scale(0.96);
+    transform: translate3d(20px, 20px, 0);
   }
 
   .scroll-reveal--left {
-    transform: translate3d(-76px, 0, 0) scale(0.96);
+    transform: translate3d(-20px, 20px, 0);
   }
 
   .scroll-reveal--scale {
-    transform: translate3d(0, 34px, 0) scale(0.9);
+    transform: translate3d(0, 28px, 0);
+  }
+
+  .scroll-reveal.is-revealed {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: none;
   }
 
   .desktop-float {
