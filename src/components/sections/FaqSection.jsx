@@ -2,6 +2,7 @@ import { faqs } from "../../data/content";
 import { FaqCard } from "../cards/FaqCard";
 import { CarouselDots } from "../CarouselDots";
 import { ScrollReveal } from "../ScrollReveal";
+import { SectionScrollReveal } from "../SectionScrollReveal";
 import { SectionHeader } from "../SectionHeader";
 
 function chunkItems(items, size) {
@@ -15,7 +16,7 @@ export function FaqSection({ pagedScroll }) {
   const { carouselRef, activePage, scrollToPage } = pagedScroll;
 
   return (
-    <section id="faq" className="relative overflow-hidden py-16 sm:py-24">
+    <SectionScrollReveal id="faq" className="relative overflow-hidden py-16 sm:py-24">
       <div className="absolute left-0 top-20 h-64 w-64 rounded-full bg-[#16C1C1]/10 blur-3xl" />
       <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#ff6f31]/10 blur-3xl" />
 
@@ -62,6 +63,6 @@ export function FaqSection({ pagedScroll }) {
           inactiveClassName="w-1.5 bg-slate-300"
         />
       </div>
-    </section>
+    </SectionScrollReveal>
   );
 }

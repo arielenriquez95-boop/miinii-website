@@ -1,11 +1,12 @@
 import { processSteps } from "../../data/content";
 import { ProcessCard } from "../cards/ProcessCard";
 import { ScrollReveal } from "../ScrollReveal";
+import { SectionScrollReveal } from "../SectionScrollReveal";
 import { SectionHeader } from "../SectionHeader";
 
 export function ProcessSection() {
   return (
-    <section id="process" className="bg-white py-10 sm:py-16">
+    <SectionScrollReveal id="process" className="bg-white py-10 sm:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeader
           eyebrow="How it works"
@@ -20,6 +21,6 @@ export function ProcessSection() {
           ))}
         </div>
       </div>
-    </section>
+    </SectionScrollReveal>
   );
 }

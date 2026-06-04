@@ -1,10 +1,11 @@
 import { socialLinks } from "../../data/content";
 import { SectionReveal } from "../ScrollReveal";
+import { SectionScrollReveal } from "../SectionScrollReveal";
 import { SocialIcon } from "../icons/SocialIcon";
 
 export function ContactSection() {
   return (
-    <section id="contact" className="px-4 pb-8 sm:px-6 lg:px-8">
+    <SectionScrollReveal id="contact" className="px-4 pb-8 sm:px-6 lg:px-8">
       <SectionReveal>
         <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#ff6f31] via-[#f97316] to-[#c2410c] px-5 py-10 text-center shadow-2xl shadow-orange-300/70 sm:rounded-[2.5rem] sm:px-10 sm:py-12 lg:px-16 lg:py-16">
           <div className="mx-auto flex max-w-4xl flex-col items-center">
@@ -42,6 +43,6 @@ export function ContactSection() {
           </div>
         </div>
       </SectionReveal>
-    </section>
+    </SectionScrollReveal>
   );
 }

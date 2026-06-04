@@ -1,10 +1,11 @@
 import { ScrollReveal } from "../ScrollReveal";
+import { SectionScrollReveal } from "../SectionScrollReveal";
 import { ArrowIcon } from "../icons/ArrowIcon";
 import { scrollToSection } from "../../utils/scroll";
 
 export function HeroSection() {
   return (
-    <section id="home" className="relative pt-16 sm:pt-16 lg:pt-20">
+    <SectionScrollReveal id="home" className="relative pt-16 sm:pt-16 lg:pt-20">
       <div className="absolute -left-24 top-28 h-72 w-72 rounded-full bg-[#16C1C1]/20 blur-3xl animate-[pulseSoft_5s_ease-in-out_infinite]" />
       <div className="absolute -right-20 top-20 h-80 w-80 rounded-full bg-[#ff6f31]/20 blur-3xl animate-[pulseSoft_6s_ease-in-out_infinite]" />
       <div className="mx-auto grid max-w-7xl items-center gap-0 px-4 pb-8 pt-1 sm:gap-5 sm:px-6 sm:pb-6 sm:pt-1 md:pb-8 lg:grid-cols-2 lg:gap-8 lg:px-8">
@@ -47,6 +48,6 @@ export function HeroSection() {
           </ScrollReveal>
         </div>
       </div>
-    </section>
+    </SectionScrollReveal>
   );
 }

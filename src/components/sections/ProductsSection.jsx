@@ -3,13 +3,14 @@ import { ProductDeckCarousel } from "../carousel/ProductDeckCarousel";
 import { ProductCard } from "../cards/ProductCard";
 import { CarouselArrow } from "../CarouselArrow";
 import { ScrollReveal, SectionReveal } from "../ScrollReveal";
+import { SectionScrollReveal } from "../SectionScrollReveal";
 import { SectionHeader } from "../SectionHeader";
 
 export function ProductsSection({ carousel, onOpenProduct }) {
   const { carouselRef, activeIndex, setActiveIndex, getMaxIndex, scrollPrevious, scrollNext } = carousel;
 
   return (
-    <section id="products" className="overflow-visible bg-white pb-16 pt-6 text-slate-950 sm:pb-24 sm:pt-10">
+    <SectionScrollReveal id="products" className="overflow-visible bg-white pb-16 pt-6 text-slate-950 sm:pb-24 sm:pt-10">
       <div className="mx-auto max-w-7xl overflow-visible px-4 sm:px-6 lg:px-8">
         <SectionHeader eyebrow="What we make" title="Mini figures for every story" text="Choose the Miinii style that fits your gift, collection, or special memory." />
         <div className="relative overflow-visible">
@@ -57,6 +58,6 @@ export function ProductsSection({ carousel, onOpenProduct }) {
           </div>
         </div>
       </div>
-    </section>
+    </SectionScrollReveal>
   );
 }

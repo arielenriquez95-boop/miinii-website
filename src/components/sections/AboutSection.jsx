@@ -1,8 +1,9 @@
 import { SectionReveal } from "../ScrollReveal";
+import { SectionScrollReveal } from "../SectionScrollReveal";
 
 export function AboutSection() {
   return (
-    <section id="about" className="relative overflow-x-hidden bg-white py-8 sm:py-24">
+    <SectionScrollReveal id="about" className="relative overflow-x-hidden bg-white py-8 sm:py-24">
       <div className="pointer-events-none absolute left-0 top-10 h-64 w-64 rounded-full bg-[#16C1C1]/10 blur-3xl" aria-hidden="true" />
       <div className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#ff6f31]/10 blur-3xl" aria-hidden="true" />
 
@@ -50,6 +51,6 @@ export function AboutSection() {
           </div>
         </SectionReveal>
       </div>
-    </section>
+    </SectionScrollReveal>
   );
 }

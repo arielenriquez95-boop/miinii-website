@@ -3,13 +3,14 @@ import { GalleryCard } from "../cards/GalleryCard";
 import { CarouselArrow } from "../CarouselArrow";
 import { CarouselDots } from "../CarouselDots";
 import { ScrollReveal } from "../ScrollReveal";
+import { SectionScrollReveal } from "../SectionScrollReveal";
 import { SectionHeader } from "../SectionHeader";
 
 export function GallerySection({ carousel, onOpenGallery }) {
   const { carouselRef, activeIndex, getMaxIndex, scrollPrevious, scrollNext, scrollToSafeIndex } = carousel;
 
   return (
-    <section id="gallery" className="bg-[#070B18] py-16 text-white sm:py-24">
+    <SectionScrollReveal id="gallery" className="bg-[#070B18] py-16 text-white sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeader
           eyebrow="Gallery"
@@ -65,6 +66,6 @@ export function GallerySection({ carousel, onOpenGallery }) {
           />
         </div>
       </div>
-    </section>
+    </SectionScrollReveal>
   );
 }

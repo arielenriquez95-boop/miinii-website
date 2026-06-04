@@ -2,6 +2,7 @@ import { testimonials } from "../../data/content";
 import { TestimonialCard } from "../cards/TestimonialCard";
 import { CarouselDots } from "../CarouselDots";
 import { ScrollReveal } from "../ScrollReveal";
+import { SectionScrollReveal } from "../SectionScrollReveal";
 
 function chunkItems(items, size) {
   return Array.from({ length: Math.ceil(items.length / size) }, (_, pageIndex) =>
@@ -14,7 +15,7 @@ export function TestimonialsSection({ pagedScroll }) {
   const { carouselRef, activePage, scrollToPage } = pagedScroll;
 
   return (
-    <section id="testimonials" className="relative overflow-hidden bg-gradient-to-br from-[#0F766E] via-[#16C1C1] to-[#0E7490] py-10 text-white sm:py-14 lg:py-16">
+    <SectionScrollReveal id="testimonials" className="relative overflow-hidden bg-gradient-to-br from-[#0F766E] via-[#16C1C1] to-[#0E7490] py-10 text-white sm:py-14 lg:py-16">
       <div className="absolute -left-24 top-10 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
       <div className="absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-[#ff6f31]/20 blur-3xl" />
 
@@ -65,6 +66,6 @@ export function TestimonialsSection({ pagedScroll }) {
           inactiveClassName="w-1.5 bg-white/45"
         />
       </div>
-    </section>
+    </SectionScrollReveal>
   );
 }
