@@ -201,7 +201,7 @@ function resolveScrollRoot(scrollRoot) {
   return null;
 }
 
-function ScrollReveal({ children, className = "", delay = 0, direction = "up", scrollRoot = null, ...props }) {
+function ScrollReveal({ children, className = "", delay = 0, direction = "up", scrollRoot = null, style = {}, ...props }) {
   const ref = useRef(null);
   const [isRevealed, setIsRevealed] = useState(false);
   const scrollRootElement = resolveScrollRoot(scrollRoot);
@@ -287,7 +287,7 @@ function ScrollReveal({ children, className = "", delay = 0, direction = "up", s
     <div
       ref={ref}
       {...props}
-      style={{ "--scroll-reveal-delay": `${delay}ms` }}
+      style={{ ...style, "--scroll-reveal-delay": `${delay}ms` }}
       className={`scroll-reveal ${directionClass} ${isRevealed ? "is-revealed" : ""} ${className}`.trim()}
     >
       {children}
@@ -717,11 +717,11 @@ function ProductCard({ product, onClick }) {
       <button
         type="button"
         onClick={onClick}
-        className="relative flex h-full w-full flex-col overflow-hidden rounded-[inherit] border border-slate-100 bg-white p-2.5 text-left transition duration-500 group-hover/card:border-[#16C1C1] group-hover/card:bg-[#16C1C1] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 sm:p-4"
+        className="desktop-shimmer relative flex h-full w-full flex-col overflow-hidden rounded-[inherit] border border-slate-100 bg-white p-2.5 text-left transition duration-500 group-hover/card:border-[#16C1C1] group-hover/card:bg-[#16C1C1] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 sm:p-4"
         aria-label={`Open ${product.title} product details`}
       >
         <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-orange-50/70 via-teal-50/40 to-white transition duration-500 group-hover/card:from-[#16C1C1] group-hover/card:via-[#16C1C1] group-hover/card:to-[#16C1C1]" />
-        <div className="relative mb-2.5 aspect-[4/5] overflow-hidden rounded-[1rem] bg-[#f8fafc] sm:mb-4 sm:rounded-[1.25rem]"><img src={product.image} alt={`${product.title} product sample`} className="h-full w-full object-cover object-center transition duration-500 group-hover/card:scale-[1.04]" /></div>
+        <div className="desktop-float-alt relative mb-2.5 aspect-[4/5] overflow-hidden rounded-[1rem] bg-[#f8fafc] sm:mb-4 sm:rounded-[1.25rem]"><img src={product.image} alt={`${product.title} product sample`} className="h-full w-full object-cover object-center transition duration-500 group-hover/card:scale-[1.04]" /></div>
         <h3 className="relative text-base font-black tracking-tight text-slate-950 transition duration-500 group-hover/card:text-white sm:text-xl">{product.title}</h3>
         <div className="relative mt-2 flex flex-nowrap items-center gap-1.5 sm:mt-2.5 sm:gap-2">
           {product.oldPrice && <span className="shrink-0 rounded-full bg-slate-100 px-2 py-1 text-[10px] font-bold text-slate-400 line-through ring-1 ring-slate-200 transition duration-500 group-hover/card:bg-white/20 group-hover/card:text-white/70 group-hover/card:ring-white/20 sm:px-3 sm:py-1.5 sm:text-sm">{product.oldPrice}</span>}
@@ -734,8 +734,8 @@ function ProductCard({ product, onClick }) {
 
 function ProcessCard({ step, index }) {
   return (
-    <article className="group relative h-full w-full overflow-hidden rounded-[1.5rem] border border-slate-100 bg-[#fff8f3] p-3 text-left shadow-sm transition-[transform,box-shadow] duration-500 ease-out [@media(hover:hover)]:hover:-translate-y-2 [@media(hover:hover)]:hover:shadow-xl [@media(hover:hover)]:hover:shadow-orange-100/70 sm:rounded-[2rem] sm:p-5">
-      <div className="mb-3 aspect-[4/3] overflow-hidden rounded-[1.1rem] bg-transparent sm:mb-5 sm:rounded-[1.5rem]"><img src={step.image} alt={`${step.title} process image`} className="h-full w-full object-contain transition-transform duration-500 ease-out [@media(hover:hover)]:group-hover:scale-[1.04]" /></div>
+    <article className="group desktop-shimmer relative h-full w-full overflow-hidden rounded-[1.5rem] border border-slate-100 bg-[#fff8f3] p-3 text-left shadow-sm transition-[transform,box-shadow] duration-500 ease-out [@media(hover:hover)]:hover:-translate-y-2 [@media(hover:hover)]:hover:shadow-xl [@media(hover:hover)]:hover:shadow-orange-100/70 sm:rounded-[2rem] sm:p-5">
+      <div className="desktop-float mb-3 aspect-[4/3] overflow-hidden rounded-[1.1rem] bg-transparent sm:mb-5 sm:rounded-[1.5rem]"><img src={step.image} alt={`${step.title} process image`} className="h-full w-full object-contain transition-transform duration-500 ease-out [@media(hover:hover)]:group-hover:scale-[1.04]" /></div>
       <div className="mb-3 inline-flex rounded-full bg-[#ff6f31] px-3 py-1 text-[10px] font-black uppercase tracking-wider text-white shadow-sm shadow-orange-200 sm:text-xs">Step {index + 1}</div>
       <h3 className="text-base font-black text-slate-950 sm:text-xl">{step.title}</h3>
       <p className="mt-2 text-xs leading-5 text-slate-600 sm:mt-3 sm:text-sm sm:leading-6">{step.text}</p>
@@ -777,7 +777,7 @@ function GalleryCard({ item, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="group relative block aspect-[4/5] w-full overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/5 p-0 text-left shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition duration-500 [@media(hover:hover)]:hover:z-20 [@media(hover:hover)]:hover:scale-105 [@media(hover:hover)]:hover:bg-white/10 [@media(hover:hover)]:hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 focus:ring-offset-[#070B18] sm:rounded-[1.75rem]"
+      className="group desktop-shimmer relative block aspect-[4/5] w-full overflow-hidden rounded-[1.35rem] border border-white/10 bg-white/5 p-0 text-left shadow-[0_18px_50px_rgba(0,0,0,0.22)] transition duration-500 [@media(hover:hover)]:hover:z-20 [@media(hover:hover)]:hover:scale-105 [@media(hover:hover)]:hover:bg-white/10 [@media(hover:hover)]:hover:shadow-[0_24px_70px_rgba(0,0,0,0.35)] focus:outline-none focus:ring-2 focus:ring-[#16C1C1] focus:ring-offset-2 focus:ring-offset-[#070B18] sm:rounded-[1.75rem]"
       aria-label={`Open ${item.title} gallery item`}
     >
       <MediaPreview
@@ -1423,17 +1423,20 @@ export default function App() {
       <style>{`
         @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes floatSoft { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+        @keyframes desktopFloat { 0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); } 50% { transform: translate3d(0, -12px, 0) rotate(-1deg); } }
+        @keyframes desktopFloatAlt { 0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); } 50% { transform: translate3d(0, -9px, 0) rotate(1deg); } }
+        @keyframes shimmerSweep { from { transform: translateX(-130%) rotate(12deg); } to { transform: translateX(130%) rotate(12deg); } }
         @keyframes pulseSoft { 0%, 100% { transform: scale(1); opacity: .8; } 50% { transform: scale(1.08); opacity: 1; } }
         @keyframes modalSlideIn { from { opacity: .35; transform: translateX(var(--slide-start)) scale(.985); } to { opacity: 1; transform: translateX(0) scale(1); } }
 
         .scroll-reveal {
           opacity: 0;
-          transform: translate3d(0, 30px, 0) scale(0.985);
-          filter: blur(4px);
+          transform: translate3d(0, 34px, 0) scale(0.975);
+          filter: blur(6px);
           transition:
-            opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-            transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-            filter 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+            opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+            filter 0.85s cubic-bezier(0.22, 1, 0.36, 1);
           transition-delay: var(--scroll-reveal-delay, 0ms);
           will-change: opacity, transform, filter;
         }
@@ -1458,30 +1461,65 @@ export default function App() {
 
         @media (min-width: 1024px) {
           .scroll-reveal {
-            transform: translate3d(0, 46px, 0) scale(0.975);
-            filter: blur(7px);
-            transition-duration: 0.95s;
+            transform: translate3d(0, 64px, 0) scale(0.96);
+            filter: blur(10px);
+            transition-duration: 1.05s;
           }
 
           .scroll-reveal--right {
-            transform: translate3d(58px, 0, 0) scale(0.975);
+            transform: translate3d(76px, 0, 0) scale(0.96);
           }
 
           .scroll-reveal--left {
-            transform: translate3d(-58px, 0, 0) scale(0.975);
+            transform: translate3d(-76px, 0, 0) scale(0.96);
           }
 
           .scroll-reveal--scale {
-            transform: translate3d(0, 24px, 0) scale(0.92);
+            transform: translate3d(0, 34px, 0) scale(0.9);
+          }
+
+          .desktop-float {
+            animation: desktopFloat 6.5s ease-in-out infinite;
+            animation-delay: var(--desktop-float-delay, 0ms);
+            will-change: transform;
+          }
+
+          .desktop-float-alt {
+            animation: desktopFloatAlt 7.5s ease-in-out infinite;
+            animation-delay: var(--desktop-float-delay, 0ms);
+            will-change: transform;
+          }
+
+          .desktop-shimmer::after {
+            content: "";
+            position: absolute;
+            inset: -35% -55%;
+            width: 55%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.34), transparent);
+            opacity: 0;
+            pointer-events: none;
+          }
+
+          .scroll-reveal.is-revealed .desktop-shimmer::after,
+          .desktop-shimmer:hover::after {
+            animation: shimmerSweep 1.15s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
+            opacity: 1;
           }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .scroll-reveal {
+          .scroll-reveal,
+          .desktop-float,
+          .desktop-float-alt {
             opacity: 1;
             transform: none;
+            animation: none;
             filter: none;
             transition: none;
+          }
+
+          .desktop-shimmer::after {
+            content: none;
           }
         }
       `}</style>
@@ -1500,7 +1538,7 @@ export default function App() {
         <div className="absolute -left-24 top-28 h-72 w-72 rounded-full bg-[#16C1C1]/20 blur-3xl animate-[pulseSoft_5s_ease-in-out_infinite]" />
         <div className="absolute -right-20 top-20 h-80 w-80 rounded-full bg-[#ff6f31]/20 blur-3xl animate-[pulseSoft_6s_ease-in-out_infinite]" />
         <div className="mx-auto grid max-w-7xl items-center gap-0 px-4 pb-8 pt-1 sm:gap-5 sm:px-6 sm:pb-6 sm:pt-1 md:pb-8 lg:grid-cols-2 lg:gap-8 lg:px-8">
-          <ScrollReveal direction="left" className="relative mx-auto -mt-3 w-[88%] max-w-[390px] sm:-mt-4 sm:w-full sm:max-w-lg lg:mx-0 lg:max-w-none"><div className="relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]"><div className="aspect-[4/5] min-h-[330px] sm:min-h-0"><img src="/hero-image.png" alt="Miinii custom 3D mini figure" className="h-full w-full scale-105 object-contain sm:scale-100" /></div></div></ScrollReveal>
+          <ScrollReveal direction="left" className="relative mx-auto -mt-3 w-[88%] max-w-[390px] sm:-mt-4 sm:w-full sm:max-w-lg lg:mx-0 lg:max-w-none"><div className="desktop-float relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]"><div className="aspect-[4/5] min-h-[330px] sm:min-h-0"><img src="/hero-image.png" alt="Miinii custom 3D mini figure" className="h-full w-full scale-105 object-contain sm:scale-100" /></div></div></ScrollReveal>
           <div className="-mt-8 text-center sm:mt-0 lg:text-left">
             <ScrollReveal direction="right" delay={80}><h1 className="text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">Turn your photos into <span className="text-[#ff6f31]">custom 3D mini figures</span>.</h1></ScrollReveal>
             <ScrollReveal direction="right" delay={140}><p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-600 lg:mx-0">Miinii creates handcrafted 3D mini figures based on real people and pets. Each piece is carefully sculpted, resin printed, and hand-painted into a one-of-a-kind keepsake.</p></ScrollReveal>
@@ -1514,7 +1552,7 @@ export default function App() {
           <SectionHeader eyebrow="How it works" title="From photo to mini figure" text="A simple production flow that turns your favorite people and pets into handcrafted 3D keepsakes." />
           <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
             {processSteps.map((step, index) => (
-              <ScrollReveal key={step.title} delay={index * 90} className="h-full">
+              <ScrollReveal key={step.title} delay={index * 90} className="h-full" style={{ "--desktop-float-delay": `${index * 140}ms` }}>
                 <ProcessCard step={step} index={index} />
               </ScrollReveal>
             ))}
@@ -1547,6 +1585,7 @@ export default function App() {
                     data-product-index={index}
                     delay={index * 100}
                     direction="scale"
+                    style={{ "--desktop-float-delay": `${index * 120}ms` }}
                     className="h-full w-[var(--product-slide-w)] max-w-none shrink-0 snap-start px-5 py-10"
                   >
                     <ProductCard product={product} onClick={() => setActiveProductIndex(index)} />
@@ -1582,6 +1621,7 @@ export default function App() {
                       data-gallery-index={index}
                       delay={index * 100}
                       direction="scale"
+                      style={{ "--desktop-float-delay": `${index * 130}ms` }}
                       className="h-full w-[85vw] max-w-[400px] shrink-0 snap-center snap-always px-2 lg:w-[var(--gallery-slide-w)] lg:max-w-none lg:snap-start lg:px-3"
                     >
                       <GalleryCard item={item} onClick={() => setActiveGalleryIndex(index)} />
