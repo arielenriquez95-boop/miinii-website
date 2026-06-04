@@ -122,6 +122,34 @@
     transform: translate3d(0, 0, 0);
   }
 
+  .section-scroll-reveal .section-title-eyebrow,
+  .section-scroll-reveal .section-title-heading,
+  .section-scroll-reveal .section-title-text {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+    transition:
+      opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .section-scroll-reveal.is-revealed .section-title-eyebrow {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    transition-delay: 0.15s;
+  }
+
+  .section-scroll-reveal.is-revealed .section-title-heading {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    transition-delay: 0.28s;
+  }
+
+  .section-scroll-reveal.is-revealed .section-title-text {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    transition-delay: 0.4s;
+  }
+
   .scroll-reveal,
   .scroll-reveal--right,
   .scroll-reveal--left,
@@ -171,6 +199,9 @@
 @media (prefers-reduced-motion: reduce) {
   .section-scroll-reveal,
   .section-scroll-reveal.is-revealed,
+  .section-scroll-reveal .section-title-eyebrow,
+  .section-scroll-reveal .section-title-heading,
+  .section-scroll-reveal .section-title-text,
   .scroll-reveal,
   .desktop-float,
   .desktop-float-alt {

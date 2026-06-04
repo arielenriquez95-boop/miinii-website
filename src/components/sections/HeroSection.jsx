@@ -17,13 +17,13 @@ export function HeroSection() {
           </div>
         </ScrollReveal>
         <div className="-mt-8 text-center sm:mt-0 lg:text-left">
-          <ScrollReveal direction="right" delay={80}>
-            <h1 className="text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">
+          <ScrollReveal direction="right" delay={80} className="max-lg:block lg:contents">
+            <h1 className="section-title-heading text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">
               Turn your photos into <span className="text-[#ff6f31]">custom 3D mini figures</span>.
             </h1>
           </ScrollReveal>
-          <ScrollReveal direction="right" delay={140}>
-            <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-600 lg:mx-0">
+          <ScrollReveal direction="right" delay={140} className="max-lg:block lg:contents">
+            <p className="section-title-text mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-600 lg:mx-0">
               Miinii creates handcrafted 3D mini figures based on real people and pets. Each piece is carefully sculpted, resin printed, and hand-painted into a one-of-a-kind keepsake.
             </p>
           </ScrollReveal>

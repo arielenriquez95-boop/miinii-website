@@ -31,8 +31,8 @@ export function AboutSection() {
 
               <div className="flex flex-col justify-center p-4 md:p-10 lg:p-12">
                 <div className="hidden md:block">
-                  <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">About us</p>
-                  <h2 className="text-5xl font-black tracking-tight text-slate-950">
+                  <p className="section-title-eyebrow mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">About us</p>
+                  <h2 className="section-title-heading text-5xl font-black tracking-tight text-slate-950">
                     Meet the artist
                     <br />
                     behind Miinii.

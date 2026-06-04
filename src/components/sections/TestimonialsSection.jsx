@@ -20,10 +20,10 @@ export function TestimonialsSection({ pagedScroll }) {
       <div className="absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-[#ff6f31]/20 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <ScrollReveal className="mx-auto mb-8 max-w-2xl text-center">
-          <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-white/80">Testimonials</p>
-          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">Kind words from Miinii clients</h2>
-          <p className="mt-3 text-base leading-7 text-white/80">Heartfelt notes from customers who turned meaningful moments into custom keepsakes.</p>
+        <ScrollReveal className="mx-auto mb-8 max-w-2xl text-center max-lg:block lg:contents">
+          <p className="section-title-eyebrow mb-3 text-sm font-bold uppercase tracking-[0.25em] text-white/80">Testimonials</p>
+          <h2 className="section-title-heading text-3xl font-black tracking-tight text-white sm:text-4xl">Kind words from Miinii clients</h2>
+          <p className="section-title-text mt-3 text-base leading-7 text-white/80">Heartfelt notes from customers who turned meaningful moments into custom keepsakes.</p>
         </ScrollReveal>
 
         <div
