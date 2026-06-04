@@ -132,7 +132,11 @@ function SocialIcon({ type, className = "h-5 w-5" }) {
   return <svg {...common}><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" /></svg>;
 }
 
-function Reveal({ children, className = "", delay = 0, direction = "up", once = true, ...props }) {
+function Reveal({ children, className = "", ...props }) {
+  return <div {...props} className={`animate-[fadeUp_.7s_ease-out_both] ${className}`}>{children}</div>;
+}
+
+function ScrollReveal({ children, className = "", delay = 0, direction = "up", ...props }) {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -140,52 +144,33 @@ function Reveal({ children, className = "", delay = 0, direction = "up", once = 
     const element = ref.current;
     if (!element) return;
 
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion || !("IntersectionObserver" in window)) {
-      setIsVisible(true);
-      return;
-    }
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          if (once) observer.unobserve(entry.target);
-        } else if (!once) {
-          setIsVisible(false);
+          observer.unobserve(element);
         }
       },
-      {
-        threshold: 0.12,
-        rootMargin: "0px 0px -8% 0px",
-      }
+      { threshold: 0.18 }
     );
 
     observer.observe(element);
     return () => observer.disconnect();
-  }, [once]);
+  }, []);
 
-  const hiddenPosition = direction === "right" ? "translate-x-10 opacity-0" : direction === "left" ? "-translate-x-10 opacity-0" : "translate-y-8 opacity-0";
+  const hiddenPosition = direction === "right" ? "translate-x-12 opacity-0" : "translate-y-8 opacity-0";
 
   return (
     <div
       ref={ref}
       {...props}
-      style={{ transitionDelay: `${delay}ms`, ...(props.style || {}) }}
-      className={`${className} transform-gpu transition-all duration-700 ease-[cubic-bezier(.22,1,.36,1)] will-change-transform ${
+      style={{ transitionDelay: `${delay}ms` }}
+      className={`${className} transform-gpu transition-all duration-1000 ease-[cubic-bezier(.22,1,.36,1)] ${
         isVisible ? "translate-x-0 translate-y-0 opacity-100" : hiddenPosition
       }`}
     >
       {children}
     </div>
-  );
-}
-
-function ScrollReveal({ children, className = "", delay = 0, direction = "up", ...props }) {
-  return (
-    <Reveal className={className} delay={delay} direction={direction} {...props}>
-      {children}
-    </Reveal>
   );
 }
 
@@ -427,8 +412,6 @@ export default function App() {
   const productsScrollRef = useRef(null);
   const testimonialsScrollRef = useRef(null);
   const faqsScrollRef = useRef(null);
-  const testimonialTouchStartRef = useRef(null);
-  const faqTouchStartRef = useRef(null);
 
   const scrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId);
@@ -553,35 +536,6 @@ export default function App() {
     });
 
     setActiveFaqPage(pageIndex);
-  };
-
-  const rememberCarouselTouch = (touchRef, event) => {
-    const touch = event.touches[0];
-    if (!touch) return;
-
-    touchRef.current = {
-      x: touch.clientX,
-      y: touch.clientY,
-    };
-  };
-
-  const handleCarouselSwipe = ({ touchRef, event, activePage, pageCount, goToPage }) => {
-    const start = touchRef.current;
-    touchRef.current = null;
-
-    const touch = event.changedTouches[0];
-    if (!start || !touch) return;
-
-    const deltaX = touch.clientX - start.x;
-    const deltaY = touch.clientY - start.y;
-    const isHorizontalSwipe = Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.15;
-
-    if (!isHorizontalSwipe) return;
-
-    const nextPage = deltaX < 0 ? activePage + 1 : activePage - 1;
-    const safePage = Math.max(0, Math.min(pageCount - 1, nextPage));
-
-    if (safePage !== activePage) goToPage(safePage);
   };
 
   useEffect(() => {
@@ -778,9 +732,7 @@ export default function App() {
 
           <div
             ref={testimonialsScrollRef}
-            onTouchStart={(event) => rememberCarouselTouch(testimonialTouchStartRef, event)}
-            onTouchEnd={(event) => handleCarouselSwipe({ touchRef: testimonialTouchStartRef, event, activePage: activeTestimonialPage, pageCount: testimonialPages.length, goToPage: scrollTestimonialsToPage })}
-            className="-mx-4 flex snap-x snap-mandatory touch-pan-y select-none gap-4 overflow-x-auto overscroll-y-auto scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-4 lg:overflow-visible lg:px-0 lg:pb-0 lg:touch-auto lg:select-auto [&::-webkit-scrollbar]:hidden"
+            className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-3 lg:grid-rows-2 lg:gap-4 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
           >
             {testimonialPages.map((page, pageIndex) => (
               <div
@@ -841,9 +793,7 @@ export default function App() {
 
           <div
             ref={faqsScrollRef}
-            onTouchStart={(event) => rememberCarouselTouch(faqTouchStartRef, event)}
-            onTouchEnd={(event) => handleCarouselSwipe({ touchRef: faqTouchStartRef, event, activePage: activeFaqPage, pageCount: faqPages.length, goToPage: scrollFaqsToPage })}
-            className="-mx-4 flex snap-x snap-mandatory touch-pan-y select-none gap-4 overflow-x-auto overscroll-y-auto scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-4 lg:grid-rows-2 lg:gap-4 lg:overflow-visible lg:px-0 lg:pb-0 lg:touch-auto lg:select-auto [&::-webkit-scrollbar]:hidden"
+            className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-4 lg:grid-rows-2 lg:gap-4 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
           >
             {faqPages.map((page, pageIndex) => (
               <div
