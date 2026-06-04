@@ -204,23 +204,14 @@ function GalleryModal({ items, index, setIndex, onClose }) {
   const [slideDirection, setSlideDirection] = useState("next");
   const item = items[index];
 
-  const getLoopedIndex = (targetIndex) => {
-    if (!items.length) return 0;
-    return (targetIndex + items.length) % items.length;
-  };
-
-  const changeSlide = (targetIndex, direction) => {
-    const safeIndex = getLoopedIndex(targetIndex);
-    setSlideDirection(direction);
-    setIndex(safeIndex);
-  };
-
   const previous = () => {
-    changeSlide(index - 1, "previous");
+    setSlideDirection("previous");
+    setIndex((current) => (current === 0 ? items.length - 1 : current - 1));
   };
 
   const next = () => {
-    changeSlide(index + 1, "next");
+    setSlideDirection("next");
+    setIndex((current) => (current === items.length - 1 ? 0 : current + 1));
   };
 
   useEffect(() => {
@@ -232,36 +223,18 @@ function GalleryModal({ items, index, setIndex, onClose }) {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [index, items.length]);
+  }, [index]);
 
   const goToSlide = (dotIndex) => {
-    if (dotIndex === index) return;
-    const isWrappingForward = index === items.length - 1 && dotIndex === 0;
-    const isWrappingBackward = index === 0 && dotIndex === items.length - 1;
-    const direction = isWrappingBackward ? "previous" : isWrappingForward || dotIndex > index ? "next" : "previous";
-
-    changeSlide(dotIndex, direction);
-  };
-
-  const onTouchStart = (event) => {
-    const touch = event.touches[0];
-    setTouchStart({ x: touch.clientX, y: touch.clientY });
+    setSlideDirection(dotIndex > index ? "next" : "previous");
+    setIndex(dotIndex);
   };
 
   const onTouchEnd = (event) => {
-    if (!touchStart) return;
-
-    const touch = event.changedTouches[0];
-    const distanceX = touchStart.x - touch.clientX;
-    const distanceY = touchStart.y - touch.clientY;
-
-    // Only treat clear side swipes as gallery navigation.
-    // This prevents diagonal/vertical mobile gestures from confusing the active dot.
-    if (Math.abs(distanceX) > 45 && Math.abs(distanceX) > Math.abs(distanceY) * 1.25) {
-      if (distanceX > 0) next();
-      if (distanceX < 0) previous();
-    }
-
+    if (touchStart === null) return;
+    const distance = touchStart - event.changedTouches[0].clientX;
+    if (distance > 45) next();
+    if (distance < -45) previous();
     setTouchStart(null);
   };
 
@@ -272,9 +245,9 @@ function GalleryModal({ items, index, setIndex, onClose }) {
       <button type="button" onClick={onClose} className="absolute right-4 top-4 z-30 flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-2xl font-bold text-white shadow-lg backdrop-blur transition hover:bg-white/25" aria-label="Close gallery preview">×</button>
       <button type="button" onClick={previous} className="absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-3xl font-bold text-white backdrop-blur transition hover:bg-white/20 sm:flex" aria-label="Previous gallery item">‹</button>
 
-      <div className="w-full max-w-5xl touch-pan-y" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+      <div className="w-full max-w-5xl" onTouchStart={(event) => setTouchStart(event.touches[0].clientX)} onTouchEnd={onTouchEnd}>
         <div className="relative mx-auto aspect-[4/5] max-h-[82vh] w-full max-w-[min(82vw,520px)] overflow-hidden rounded-[1.5rem] bg-slate-900 shadow-2xl shadow-black/40">
-          <MediaPreview key={`${item.title}-${index}`} src={item.image} alt={`${item.title} full preview`} className={`h-full w-full object-contain animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] ${slideDirection === "next" ? "[--slide-start:18%]" : "[--slide-start:-18%]"}`} />
+          <MediaPreview key={item.title} src={item.image} alt={`${item.title} full preview`} className={`h-full w-full object-contain animate-[modalSlideIn_.45s_cubic-bezier(.22,1,.36,1)_both] ${slideDirection === "next" ? "[--slide-start:18%]" : "[--slide-start:-18%]"}`} />
         </div>
         <div className="mt-4 flex items-center justify-center gap-2">
           {items.map((dot, dotIndex) => <button key={dot.title} type="button" onClick={() => goToSlide(dotIndex)} className={`h-2.5 rounded-full transition ${dotIndex === index ? "w-8 bg-[#16C1C1]" : "w-2.5 bg-white/30 hover:bg-white/50"}`} aria-label={`Open ${dot.title}`} />)}
