@@ -1,4 +1,5 @@
 import { collageItems } from "../../data/content";
+import { useVerticalWheelPassthrough } from "../../hooks/useVerticalWheelPassthrough";
 import { GalleryCard } from "../cards/GalleryCard";
 import { CarouselArrow } from "../CarouselArrow";
 import { CarouselDots } from "../CarouselDots";
@@ -8,6 +9,8 @@ import { SectionHeader } from "../SectionHeader";
 
 export function GallerySection({ carousel, onOpenGallery }) {
   const { carouselRef, activeIndex, getMaxIndex, scrollPrevious, scrollNext, scrollToSafeIndex } = carousel;
+
+  useVerticalWheelPassthrough(carouselRef);
 
   return (
     <SectionScrollReveal id="gallery" className="bg-[#070B18] py-16 text-white sm:py-24">
@@ -38,7 +41,7 @@ export function GallerySection({ carousel, onOpenGallery }) {
 
           <div
             ref={carouselRef}
-            className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:2.5rem] [scrollbar-width:none] [-ms-overflow-style:none] px-6 sm:px-8 lg:px-4 [&::-webkit-scrollbar]:hidden"
+            className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:2.5rem] [scrollbar-width:none] [-ms-overflow-style:none] px-6 sm:px-8 lg:overscroll-y-auto lg:px-4 [&::-webkit-scrollbar]:hidden"
           >
             <div className="flex w-max gap-3 px-[calc(50%-min(42.5vw,200px))] sm:gap-4 lg:gap-4 lg:px-2">
               {collageItems.map((item, index) => (
