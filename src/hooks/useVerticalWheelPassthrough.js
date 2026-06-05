@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import { DESKTOP_BREAKPOINT } from "../constants/layout";
 
-export const MOBILE_CAROUSEL_TOUCH_CLASS = "max-lg:touch-pan-y max-lg:overscroll-y-auto";
+export const MOBILE_CAROUSEL_TOUCH_CLASS = "max-lg:overscroll-y-auto";
+
+const AXIS_LOCK_THRESHOLD = 8;
+const VERTICAL_GESTURE_COOLDOWN_MS = 120;
 
 export function useVerticalWheelPassthrough(ref) {
   useEffect(() => {
@@ -12,23 +15,40 @@ export function useVerticalWheelPassthrough(ref) {
     let touchStartX = 0;
     let touchStartY = 0;
     let touchAxis = null;
+    let verticalCooldownTimer = null;
 
     const isMobile = () => !desktopQuery.matches;
+    const defaultTouchAction = () => (isMobile() ? "pan-x pan-y pinch-zoom" : "");
 
     const clearScrollAxis = () => {
       delete element.dataset.scrollAxis;
       element.style.overflowX = "";
       element.style.scrollSnapType = "";
+      element.style.touchAction = defaultTouchAction();
+    };
+
+    const applyVerticalLock = () => {
+      element.dataset.scrollAxis = "y";
+      element.style.touchAction = "pan-y pinch-zoom";
+      element.style.overflowX = "hidden";
+      element.style.scrollSnapType = "none";
+    };
+
+    const applyHorizontalLock = () => {
+      element.dataset.scrollAxis = "x";
+      element.style.touchAction = "pan-x pinch-zoom";
+      element.style.overflowX = "";
+      element.style.scrollSnapType = "";
     };
 
     const syncTouchAction = () => {
-      element.style.touchAction = isMobile() ? "pan-y pinch-zoom" : "";
       clearScrollAxis();
     };
 
     const onTouchStart = (event) => {
       if (!isMobile()) return;
 
+      window.clearTimeout(verticalCooldownTimer);
       touchStartX = event.touches[0].clientX;
       touchStartY = event.touches[0].clientY;
       touchAxis = null;
@@ -42,23 +62,29 @@ export function useVerticalWheelPassthrough(ref) {
       const deltaY = Math.abs(event.touches[0].clientY - touchStartY);
 
       if (touchAxis === null) {
-        if (deltaX < 8 && deltaY < 8) return;
+        if (deltaX < AXIS_LOCK_THRESHOLD && deltaY < AXIS_LOCK_THRESHOLD) return;
         touchAxis = deltaY > deltaX ? "y" : "x";
       }
 
-      element.dataset.scrollAxis = touchAxis;
-
       if (touchAxis === "y") {
-        element.style.overflowX = "hidden";
-        element.style.scrollSnapType = "none";
+        applyVerticalLock();
       } else {
-        element.style.overflowX = "";
-        element.style.scrollSnapType = "";
+        applyHorizontalLock();
       }
     };
 
     const resetTouch = () => {
+      const endedAxis = touchAxis;
       touchAxis = null;
+
+      if (endedAxis === "y") {
+        applyVerticalLock();
+        verticalCooldownTimer = window.setTimeout(() => {
+          clearScrollAxis();
+        }, VERTICAL_GESTURE_COOLDOWN_MS);
+        return;
+      }
+
       clearScrollAxis();
     };
 
@@ -79,6 +105,7 @@ export function useVerticalWheelPassthrough(ref) {
     element.addEventListener("wheel", onWheel, { passive: false });
 
     return () => {
+      window.clearTimeout(verticalCooldownTimer);
       desktopQuery.removeEventListener("change", syncTouchAction);
       element.style.touchAction = "";
       clearScrollAxis();
