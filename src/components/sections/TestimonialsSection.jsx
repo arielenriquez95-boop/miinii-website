@@ -1,4 +1,5 @@
 import { testimonials } from "../../data/content";
+import { MOBILE_CAROUSEL_TOUCH_CLASS, useVerticalWheelPassthrough } from "../../hooks/useVerticalWheelPassthrough";
 import { TestimonialCard } from "../cards/TestimonialCard";
 import { CarouselDots } from "../CarouselDots";
 import { ScrollReveal } from "../ScrollReveal";
@@ -15,6 +16,8 @@ export function TestimonialsSection({ pagedScroll }) {
   const testimonialPages = chunkItems(testimonials, 2);
   const { carouselRef, activePage, scrollToPage } = pagedScroll;
 
+  useVerticalWheelPassthrough(carouselRef);
+
   return (
     <SectionScrollReveal id="testimonials" className="relative overflow-hidden bg-gradient-to-br from-[#0F766E] via-[#16C1C1] to-[#0E7490] py-10 text-white sm:py-14 lg:py-16">
       <div className="absolute -left-24 top-10 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
@@ -29,7 +32,7 @@ export function TestimonialsSection({ pagedScroll }) {
 
         <div
           ref={carouselRef}
-          className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-5 touch-pan-x [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:hidden [&::-webkit-scrollbar]:hidden"
+          className={`-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:hidden [&::-webkit-scrollbar]:hidden ${MOBILE_CAROUSEL_TOUCH_CLASS}`}
         >
           {testimonialPages.map((page, pageIndex) => (
             <div
