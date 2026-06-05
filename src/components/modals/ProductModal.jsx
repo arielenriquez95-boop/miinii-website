@@ -103,20 +103,16 @@ export function ProductModal({ products, index, setIndex, onClose }) {
               {String(index + 1).padStart(2, "0")} / {String(products.length).padStart(2, "0")}
             </div>
 
-            <div className="relative flex flex-1 items-center justify-center p-10 xl:p-12">
-              <div className="desktop-float relative w-full max-w-[min(100%,380px)] xl:max-w-[420px]">
-                <div className="absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-[#16C1C1]/20 via-transparent to-[#ff6f31]/15 blur-2xl" aria-hidden="true" />
-                <div className="relative overflow-hidden rounded-[1.75rem] bg-white/5 p-4 ring-1 ring-white/15 backdrop-blur-sm xl:p-5">
-                  <img src={product.image} alt={`${product.title} preview`} className="block h-full w-full object-contain" />
-                </div>
-              </div>
-            </div>
+            <img
+              src={product.image}
+              alt={`${product.title} preview`}
+              className="absolute inset-0 h-full w-full object-cover object-center"
+            />
           </div>
 
           <div className="flex min-h-0 flex-col bg-white">
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-8 py-9 xl:px-10 xl:py-10">
-              <p className="text-xs font-bold uppercase tracking-[0.28em] text-[#16C1C1]">Custom figure</p>
-              <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-950 xl:text-[2.75rem] xl:leading-[1.05]">{product.title}</h2>
+              <h2 className="text-3xl font-black tracking-tight text-slate-950 xl:text-[2.75rem] xl:leading-[1.05]">{product.title}</h2>
               <p className="mt-4 max-w-xl text-base leading-7 text-slate-600 xl:text-lg xl:leading-8">{product.shortText}</p>
 
               <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -129,10 +125,7 @@ export function ProductModal({ products, index, setIndex, onClose }) {
               </div>
 
               <div className="mt-8 border-l-2 border-[#16C1C1]/30 pl-6">
-                <h3 className="text-xs font-bold uppercase tracking-[0.22em] text-slate-400">What&apos;s included</h3>
-                <div className="mt-4">
-                  <ProductDetailsList product={product} size="desktop" />
-                </div>
+                <ProductDetailsList product={product} size="desktop" />
               </div>
             </div>
 
