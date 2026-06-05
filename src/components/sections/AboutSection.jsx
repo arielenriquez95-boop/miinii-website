@@ -1,4 +1,4 @@
-import { SectionReveal } from "../ScrollReveal";
+import { SectionContentReveal } from "../SectionContentReveal";
 import { SectionScrollReveal } from "../SectionScrollReveal";
 
 export function AboutSection() {
@@ -8,10 +8,10 @@ export function AboutSection() {
       <div className="pointer-events-none absolute bottom-0 right-0 h-72 w-72 rounded-full bg-[#ff6f31]/10 blur-3xl" aria-hidden="true" />
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <SectionReveal>
-          <div className="overflow-hidden rounded-2xl border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)] sm:rounded-[2rem] [transform:translateZ(0)]">
+        <div className="overflow-hidden rounded-2xl border border-slate-100 bg-[#fff8f3] shadow-[0_18px_60px_rgba(15,23,42,0.08)] sm:rounded-[2rem] [transform:translateZ(0)]">
             {/* Mobile & tablet */}
-            <div className="flex flex-col gap-4 p-4 sm:gap-5 sm:p-6 lg:hidden">
+            <SectionContentReveal delay={80} className="lg:hidden">
+            <div className="flex flex-col gap-4 p-4 sm:gap-5 sm:p-6">
               <div className="flex items-center gap-4">
                 <div className="relative size-[7.75rem] shrink-0 overflow-hidden rounded-full border-2 border-white bg-white shadow-md ring-1 ring-slate-100 sm:size-32">
                   <img src="/about-portrait.png" alt="Miinii artist portrait" className="h-full w-full object-cover object-top" />
@@ -34,17 +34,18 @@ export function AboutSection() {
                 Each Miinii is carefully made through digital sculpting, resin 3D printing, hand painting, finishing, and packaging. As Miinii continues to grow, we’re working toward building a bigger creative team so we can create more personalized mini figures for everyone while keeping the same care, quality, and handmade feel in every piece.
               </p>
             </div>
+            </SectionContentReveal>
 
             {/* Desktop */}
             <div className="hidden lg:grid lg:grid-cols-[minmax(280px,320px)_1fr] lg:items-center lg:gap-14 lg:p-12 lg:pr-14">
-              <div className="relative flex justify-center">
+              <SectionContentReveal delay={160} direction="left" className="relative flex justify-center">
                 <div className="absolute -inset-4 rounded-full bg-gradient-to-br from-[#16C1C1]/25 via-transparent to-[#ff6f31]/20 blur-sm" aria-hidden="true" />
                 <div className="relative size-72 overflow-hidden rounded-full border-4 border-white bg-white shadow-[0_24px_60px_rgba(15,23,42,0.14)] ring-1 ring-slate-200/80 xl:size-80">
                   <img src="/about-portrait.png" alt="Miinii artist portrait" className="h-full w-full object-cover object-top" />
                 </div>
-              </div>
+              </SectionContentReveal>
 
-              <div className="min-w-0">
+              <SectionContentReveal delay={240} direction="right" className="min-w-0">
                 <p className="section-title-eyebrow mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#16C1C1]">About us</p>
                 <h2 className="section-title-heading text-4xl font-black leading-[1.08] tracking-tight text-slate-950 xl:text-5xl">
                   Meet the artist
@@ -59,10 +60,9 @@ export function AboutSection() {
                 <p className="mt-4 text-base leading-7 text-slate-500">
                   Each Miinii is carefully made through digital sculpting, resin 3D printing, hand painting, finishing, and packaging. As Miinii continues to grow, we’re working toward building a bigger creative team so we can create more personalized mini figures for everyone while keeping the same care, quality, and handmade feel in every piece.
                 </p>
-              </div>
+              </SectionContentReveal>
             </div>
           </div>
-        </SectionReveal>
       </div>
     </SectionScrollReveal>
   );

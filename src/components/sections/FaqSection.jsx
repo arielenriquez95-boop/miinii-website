@@ -2,6 +2,7 @@ import { faqs } from "../../data/content";
 import { FaqCard } from "../cards/FaqCard";
 import { CarouselDots } from "../CarouselDots";
 import { ScrollReveal } from "../ScrollReveal";
+import { SectionContentReveal } from "../SectionContentReveal";
 import { SectionScrollReveal } from "../SectionScrollReveal";
 import { SectionHeader } from "../SectionHeader";
 
@@ -47,9 +48,9 @@ export function FaqSection({ pagedScroll }) {
 
         <div className="hidden gap-4 lg:grid lg:grid-cols-4 lg:grid-rows-2">
           {faqs.map((faq, index) => (
-            <ScrollReveal key={faq.q} delay={index * 70} direction="scale" className="h-full min-w-0">
+            <SectionContentReveal key={faq.q} delay={index * 60} direction="scale" className="h-full min-w-0">
               <FaqCard faq={faq} />
-            </ScrollReveal>
+            </SectionContentReveal>
           ))}
         </div>
 

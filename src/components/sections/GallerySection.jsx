@@ -2,7 +2,7 @@ import { collageItems } from "../../data/content";
 import { GalleryCard } from "../cards/GalleryCard";
 import { CarouselArrow } from "../CarouselArrow";
 import { CarouselDots } from "../CarouselDots";
-import { ScrollReveal } from "../ScrollReveal";
+import { SectionContentReveal } from "../SectionContentReveal";
 import { SectionScrollReveal } from "../SectionScrollReveal";
 import { SectionHeader } from "../SectionHeader";
 
@@ -42,16 +42,16 @@ export function GallerySection({ carousel, onOpenGallery }) {
           >
             <div className="flex w-max gap-3 px-[calc(50%-min(42.5vw,200px))] sm:gap-4 lg:gap-4 lg:px-2">
               {collageItems.map((item, index) => (
-                <ScrollReveal
+                <SectionContentReveal
                   key={item.title}
                   data-gallery-index={index}
-                  delay={index * 100}
+                  delay={index * 80}
                   direction="scale"
                   style={{ "--desktop-float-delay": `${index * 130}ms` }}
                   className="h-full w-[85vw] max-w-[400px] shrink-0 snap-center snap-always px-2 lg:w-[var(--gallery-slide-w)] lg:max-w-none lg:snap-start lg:px-3"
                 >
                   <GalleryCard item={item} onClick={() => onOpenGallery(index)} />
-                </ScrollReveal>
+                </SectionContentReveal>
               ))}
             </div>
           </div>

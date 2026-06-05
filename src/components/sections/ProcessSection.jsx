@@ -1,6 +1,6 @@
 import { processSteps } from "../../data/content";
 import { ProcessCard } from "../cards/ProcessCard";
-import { ScrollReveal } from "../ScrollReveal";
+import { SectionContentReveal } from "../SectionContentReveal";
 import { SectionScrollReveal } from "../SectionScrollReveal";
 import { SectionHeader } from "../SectionHeader";
 
@@ -15,9 +15,9 @@ export function ProcessSection() {
         />
         <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           {processSteps.map((step, index) => (
-            <ScrollReveal key={step.title} delay={index * 90} className="h-full" style={{ "--desktop-float-delay": `${index * 140}ms` }}>
+            <SectionContentReveal key={step.title} delay={index * 80} className="h-full" style={{ "--desktop-float-delay": `${index * 140}ms` }}>
               <ProcessCard step={step} index={index} />
-            </ScrollReveal>
+            </SectionContentReveal>
           ))}
         </div>
       </div>

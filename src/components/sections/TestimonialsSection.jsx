@@ -2,6 +2,7 @@ import { testimonials } from "../../data/content";
 import { TestimonialCard } from "../cards/TestimonialCard";
 import { CarouselDots } from "../CarouselDots";
 import { ScrollReveal } from "../ScrollReveal";
+import { SectionContentReveal } from "../SectionContentReveal";
 import { SectionScrollReveal } from "../SectionScrollReveal";
 
 function chunkItems(items, size) {
@@ -50,9 +51,9 @@ export function TestimonialsSection({ pagedScroll }) {
 
         <div className="hidden gap-4 lg:grid lg:grid-cols-3 lg:grid-rows-2">
           {testimonials.map((testimonial, index) => (
-            <ScrollReveal key={testimonial.name} delay={index * 90} direction="scale" className="h-full min-w-0">
+            <SectionContentReveal key={testimonial.name} delay={index * 70} direction="scale" className="h-full min-w-0">
               <TestimonialCard testimonial={testimonial} />
-            </ScrollReveal>
+            </SectionContentReveal>
           ))}
         </div>
 

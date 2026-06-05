@@ -1,4 +1,5 @@
 import { ScrollReveal } from "../ScrollReveal";
+import { SectionContentReveal } from "../SectionContentReveal";
 import { SectionScrollReveal } from "../SectionScrollReveal";
 import { ArrowIcon } from "../icons/ArrowIcon";
 import { scrollToSection } from "../../utils/scroll";
@@ -9,13 +10,13 @@ export function HeroSection() {
       <div className="absolute -left-24 top-28 h-72 w-72 rounded-full bg-[#16C1C1]/20 blur-3xl animate-[pulseSoft_5s_ease-in-out_infinite]" />
       <div className="absolute -right-20 top-20 h-80 w-80 rounded-full bg-[#ff6f31]/20 blur-3xl animate-[pulseSoft_6s_ease-in-out_infinite]" />
       <div className="mx-auto grid max-w-7xl items-center gap-0 px-4 pb-8 pt-1 sm:gap-5 sm:px-6 sm:pb-6 sm:pt-1 md:pb-8 lg:grid-cols-2 lg:gap-8 lg:px-8">
-        <ScrollReveal direction="left" className="relative mx-auto -mt-3 w-[88%] max-w-[390px] sm:-mt-4 sm:w-full sm:max-w-lg lg:mx-0 lg:max-w-none">
+        <SectionContentReveal direction="left" delay={120} className="relative mx-auto -mt-3 w-[88%] max-w-[390px] sm:-mt-4 sm:w-full sm:max-w-lg lg:mx-0 lg:max-w-none">
           <div className="desktop-float relative overflow-visible rounded-[2.5rem] bg-transparent p-0 animate-[floatSoft_5s_ease-in-out_infinite]">
             <div className="aspect-[4/5] min-h-[330px] sm:min-h-0">
               <img src="/hero-image.png" alt="Miinii custom 3D mini figure" className="h-full w-full scale-105 object-contain sm:scale-100" />
             </div>
           </div>
-        </ScrollReveal>
+        </SectionContentReveal>
         <div className="-mt-8 text-center sm:mt-0 lg:text-left">
           <ScrollReveal direction="right" delay={80} className="max-lg:block lg:contents">
             <h1 className="section-title-heading text-5xl font-black leading-[1.02] tracking-tight text-slate-950 sm:text-5xl md:text-6xl lg:text-7xl">
@@ -27,7 +28,7 @@ export function HeroSection() {
               Miinii creates handcrafted 3D mini figures based on real people and pets. Each piece is carefully sculpted, resin printed, and hand-painted into a one-of-a-kind keepsake.
             </p>
           </ScrollReveal>
-          <ScrollReveal direction="right" delay={200}>
+          <SectionContentReveal direction="right" delay={200}>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
               <button
                 type="button"
@@ -45,7 +46,7 @@ export function HeroSection() {
                 View Process
               </button>
             </div>
-          </ScrollReveal>
+          </SectionContentReveal>
         </div>
       </div>
     </SectionScrollReveal>

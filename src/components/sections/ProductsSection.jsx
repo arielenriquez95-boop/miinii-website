@@ -2,7 +2,8 @@ import { products } from "../../data/content";
 import { ProductDeckCarousel } from "../carousel/ProductDeckCarousel";
 import { ProductCard } from "../cards/ProductCard";
 import { CarouselArrow } from "../CarouselArrow";
-import { ScrollReveal, SectionReveal } from "../ScrollReveal";
+import { SectionReveal } from "../ScrollReveal";
+import { SectionContentReveal } from "../SectionContentReveal";
 import { SectionScrollReveal } from "../SectionScrollReveal";
 import { SectionHeader } from "../SectionHeader";
 
@@ -42,16 +43,16 @@ export function ProductsSection({ carousel, onOpenProduct }) {
             >
               <div className="flex w-max items-stretch gap-4 lg:px-4">
                 {products.map((product, index) => (
-                  <ScrollReveal
+                  <SectionContentReveal
                     key={product.title}
                     data-product-index={index}
-                    delay={index * 100}
+                    delay={index * 80}
                     direction="scale"
                     style={{ "--desktop-float-delay": `${index * 120}ms` }}
                     className="h-full w-[var(--product-slide-w)] max-w-none shrink-0 snap-start px-5 py-10"
                   >
                     <ProductCard product={product} onClick={() => onOpenProduct(index)} />
-                  </ScrollReveal>
+                  </SectionContentReveal>
                 ))}
               </div>
             </div>
