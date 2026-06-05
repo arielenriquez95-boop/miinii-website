@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { PRODUCT_DECK_SWIPE_THRESHOLD } from "../../constants/layout";
 import { getProductDeckCardStyle } from "../../utils/productDeck";
+import { CarouselArrow, productCarouselArrowClass } from "../CarouselArrow";
 import { ProductCard } from "../cards/ProductCard";
 
 export function ProductDeckCarousel({ products, activeIndex, onIndexChange, onOpenProduct }) {
@@ -63,10 +64,30 @@ export function ProductDeckCarousel({ products, activeIndex, onIndexChange, onOp
     dragAxis.current = null;
   };
 
+  const canGoPrevious = activeIndex > 0;
+  const canGoNext = activeIndex < products.length - 1;
+
   return (
-    <div className="lg:hidden">
+    <div className="relative mx-auto w-full max-w-[360px] px-11 lg:hidden">
+      {canGoPrevious && (
+        <CarouselArrow
+          direction="previous"
+          onClick={() => goToIndex(activeIndex - 1)}
+          label="Previous product"
+          className={`${productCarouselArrowClass} absolute left-0 top-[calc(50%+0.5rem)] z-50 -translate-y-1/2 hover:-translate-x-0.5 hover:-translate-y-1/2`}
+        />
+      )}
+      {canGoNext && (
+        <CarouselArrow
+          direction="next"
+          onClick={() => goToIndex(activeIndex + 1)}
+          label="Next product"
+          className={`${productCarouselArrowClass} absolute right-0 top-[calc(50%+0.5rem)] z-50 -translate-y-1/2 hover:translate-x-0.5 hover:-translate-y-1/2`}
+        />
+      )}
+
       <div
-        className="relative mx-auto w-[84vw] max-w-[290px] touch-pan-y select-none py-8"
+        className="relative mx-auto w-full max-w-[290px] touch-pan-y select-none py-8"
         style={{ height: "calc(84vw * 1.35 + 4rem)", maxHeight: "430px" }}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}

@@ -1,7 +1,7 @@
 import { products } from "../../data/content";
 import { ProductDeckCarousel } from "../carousel/ProductDeckCarousel";
 import { ProductCard } from "../cards/ProductCard";
-import { CarouselArrow } from "../CarouselArrow";
+import { CarouselArrow, productCarouselArrowClass } from "../CarouselArrow";
 import { SectionReveal } from "../ScrollReveal";
 import { SectionContentReveal } from "../SectionContentReveal";
 import { SectionScrollReveal } from "../SectionScrollReveal";
@@ -15,28 +15,28 @@ export function ProductsSection({ carousel, onOpenProduct }) {
       <div className="mx-auto max-w-7xl overflow-visible px-4 sm:px-6 lg:px-8">
         <SectionHeader eyebrow="What we make" title="Mini figures for every story" text="Choose the Miinii style that fits your gift, collection, or special memory." />
         <div className="relative overflow-visible">
-          {activeIndex > 0 && (
-            <CarouselArrow
-              direction="previous"
-              onClick={scrollPrevious}
-              label="Scroll products left"
-              className="absolute left-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-bold text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:-translate-x-0.5 hover:bg-[#f05f20] lg:flex"
-            />
-          )}
-          {activeIndex < getMaxIndex() && (
-            <CarouselArrow
-              direction="next"
-              onClick={scrollNext}
-              label="Scroll products right"
-              className="absolute right-0 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-[#ff6f31] text-2xl font-bold text-white shadow-xl shadow-orange-300/60 ring-1 ring-white/70 backdrop-blur transition hover:translate-x-0.5 hover:bg-[#f05f20] lg:flex"
-            />
-          )}
-
           <SectionReveal delay={80} className="lg:hidden">
             <ProductDeckCarousel products={products} activeIndex={activeIndex} onIndexChange={setActiveIndex} onOpenProduct={onOpenProduct} />
           </SectionReveal>
 
           <div className="relative hidden overflow-visible lg:block">
+            {activeIndex > 0 && (
+              <CarouselArrow
+                direction="previous"
+                onClick={scrollPrevious}
+                label="Scroll products left"
+                className={`${productCarouselArrowClass} absolute left-0 top-1/2 z-50 -translate-y-1/2 hover:-translate-x-0.5 hover:-translate-y-1/2`}
+              />
+            )}
+            {activeIndex < getMaxIndex() && (
+              <CarouselArrow
+                direction="next"
+                onClick={scrollNext}
+                label="Scroll products right"
+                className={`${productCarouselArrowClass} absolute right-0 top-1/2 z-50 -translate-y-1/2 hover:translate-x-0.5 hover:-translate-y-1/2`}
+              />
+            )}
+
             <div
               ref={carouselRef}
               className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth py-2 [overflow-clip-margin:4rem] [scrollbar-width:none] [-ms-overflow-style:none] px-8 py-4 [&::-webkit-scrollbar]:hidden"
