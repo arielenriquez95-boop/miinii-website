@@ -1,4 +1,5 @@
 import { faqs } from "../../data/content";
+import { MOBILE_CAROUSEL_TOUCH_CLASS, useVerticalWheelPassthrough } from "../../hooks/useVerticalWheelPassthrough";
 import { FaqCard } from "../cards/FaqCard";
 import { CarouselDots } from "../CarouselDots";
 import { ScrollReveal } from "../ScrollReveal";
@@ -16,6 +17,8 @@ export function FaqSection({ pagedScroll }) {
   const faqPages = chunkItems(faqs, 4);
   const { carouselRef, activePage, scrollToPage } = pagedScroll;
 
+  useVerticalWheelPassthrough(carouselRef);
+
   return (
     <SectionScrollReveal id="faq" className="relative overflow-hidden py-16 sm:py-24">
       <div className="absolute left-0 top-20 h-64 w-64 rounded-full bg-[#16C1C1]/10 blur-3xl" />
@@ -26,7 +29,7 @@ export function FaqSection({ pagedScroll }) {
 
         <div
           ref={carouselRef}
-          className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-5 touch-pan-x [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:hidden [&::-webkit-scrollbar]:hidden"
+          className={`-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain scroll-smooth px-4 pb-5 [scrollbar-width:none] [-ms-overflow-style:none] sm:-mx-6 sm:px-6 lg:hidden [&::-webkit-scrollbar]:hidden ${MOBILE_CAROUSEL_TOUCH_CLASS}`}
         >
           {faqPages.map((page, pageIndex) => (
             <div

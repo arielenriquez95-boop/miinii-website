@@ -70,7 +70,11 @@ export function usePagedSnapScroll({ pageAttribute, datasetKey }) {
       setActivePage(pageIndex);
     };
 
+    const isVerticalGesture = () => carousel.dataset.scrollAxis === "y";
+
     const snapToNearestPage = (behavior = "smooth") => {
+      if (isVerticalGesture()) return;
+
       const { pageIndex, page } = getNearestMobilePage(carousel, pageAttribute, datasetKey);
       setActivePage(pageIndex);
       if (page) {
@@ -79,9 +83,11 @@ export function usePagedSnapScroll({ pageAttribute, datasetKey }) {
     };
 
     const scheduleSnap = () => {
+      if (isVerticalGesture()) return;
+
       window.clearTimeout(snapTimer);
       snapTimer = window.setTimeout(() => {
-        if (!isPointerDown) snapToNearestPage();
+        if (!isPointerDown && !isVerticalGesture()) snapToNearestPage();
       }, 90);
     };
 
