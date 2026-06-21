@@ -195,6 +195,13 @@
     transform: translate3d(0, 22px, 0);
   }
 
+  .section-scroll-reveal .section-content-item .section-title-eyebrow,
+  .section-scroll-reveal .section-content-item .section-title-heading,
+  .section-scroll-reveal .section-content-item .section-title-text {
+    opacity: 1;
+    transform: none;
+  }
+
   .section-scroll-reveal.is-revealed .section-title-eyebrow {
     animation: sectionRevealUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     animation-delay: calc(var(--section-reveal-delay, 0ms) + 0.15s);
@@ -208,6 +215,12 @@
   .section-scroll-reveal.is-revealed .section-title-text {
     animation: sectionRevealUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     animation-delay: calc(var(--section-reveal-delay, 0ms) + 0.4s);
+  }
+
+  .section-scroll-reveal.is-revealed .section-content-item .section-title-eyebrow,
+  .section-scroll-reveal.is-revealed .section-content-item .section-title-heading,
+  .section-scroll-reveal.is-revealed .section-content-item .section-title-text {
+    animation: none;
   }
 
   .section-scroll-reveal .section-content-item {
@@ -228,20 +241,20 @@
     transform: translate3d(0, 18px, 0) scale(0.96);
   }
 
-  .section-scroll-reveal.is-revealed .section-content-item {
+  .section-scroll-reveal .section-content-item.is-content-revealed {
     animation: sectionRevealUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    animation-delay: calc(0.48s + var(--section-content-delay, 0ms));
+    animation-delay: var(--section-content-delay, 0ms);
   }
 
-  .section-scroll-reveal.is-revealed .section-content-item--left {
+  .section-scroll-reveal .section-content-item--left.is-content-revealed {
     animation-name: sectionRevealLeft;
   }
 
-  .section-scroll-reveal.is-revealed .section-content-item--right {
+  .section-scroll-reveal .section-content-item--right.is-content-revealed {
     animation-name: sectionRevealRight;
   }
 
-  .section-scroll-reveal.is-revealed .section-content-item--scale {
+  .section-scroll-reveal .section-content-item--scale.is-content-revealed {
     animation-name: sectionRevealScale;
   }
 

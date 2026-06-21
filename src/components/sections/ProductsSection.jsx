@@ -48,6 +48,7 @@ export function ProductsSection({ carousel, onOpenProduct }) {
                     data-product-index={index}
                     delay={index * 80}
                     direction="scale"
+                    scrollRoot={carouselRef}
                     style={{ "--desktop-float-delay": `${index * 120}ms` }}
                     className="h-full w-[var(--product-slide-w)] max-w-none shrink-0 snap-start px-5 py-10"
                   >
