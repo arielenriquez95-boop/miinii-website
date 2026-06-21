@@ -50,6 +50,7 @@ export function GallerySection({ carousel, onOpenGallery }) {
                   data-gallery-index={index}
                   delay={index * 80}
                   direction="scale"
+                  scrollRoot={carouselRef}
                   style={{ "--desktop-float-delay": `${index * 130}ms` }}
                   className="h-full w-[85vw] max-w-[400px] shrink-0 snap-center snap-always px-2 lg:w-[var(--gallery-slide-w)] lg:max-w-none lg:snap-start lg:px-3"
                 >

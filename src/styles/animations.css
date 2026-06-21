@@ -71,6 +71,50 @@
   }
 }
 
+@keyframes sectionRevealUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes sectionRevealLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(-24px, 20px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes sectionRevealRight {
+  from {
+    opacity: 0;
+    transform: translate3d(24px, 20px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes sectionRevealScale {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
 .scroll-reveal {
   opacity: 0;
   transform: translate3d(0, 34px, 0) scale(0.975);
@@ -140,18 +184,8 @@
 
 @media (min-width: 1024px) {
   .section-scroll-reveal {
-    opacity: 0;
-    transform: translate3d(0, 40px, 0);
-    transition:
-      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-    transition-delay: var(--section-reveal-delay, 0ms);
-    will-change: opacity, transform;
-  }
-
-  .section-scroll-reveal.is-revealed {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
+    transform: none;
   }
 
   .section-scroll-reveal .section-title-eyebrow,
@@ -159,36 +193,39 @@
   .section-scroll-reveal .section-title-text {
     opacity: 0;
     transform: translate3d(0, 22px, 0);
-    transition:
-      opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .section-scroll-reveal .section-content-item .section-title-eyebrow,
+  .section-scroll-reveal .section-content-item .section-title-heading,
+  .section-scroll-reveal .section-content-item .section-title-text {
+    opacity: 1;
+    transform: none;
   }
 
   .section-scroll-reveal.is-revealed .section-title-eyebrow {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-    transition-delay: 0.15s;
+    animation: sectionRevealUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: calc(var(--section-reveal-delay, 0ms) + 0.15s);
   }
 
   .section-scroll-reveal.is-revealed .section-title-heading {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-    transition-delay: 0.28s;
+    animation: sectionRevealUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: calc(var(--section-reveal-delay, 0ms) + 0.28s);
   }
 
   .section-scroll-reveal.is-revealed .section-title-text {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-    transition-delay: 0.4s;
+    animation: sectionRevealUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: calc(var(--section-reveal-delay, 0ms) + 0.4s);
+  }
+
+  .section-scroll-reveal.is-revealed .section-content-item .section-title-eyebrow,
+  .section-scroll-reveal.is-revealed .section-content-item .section-title-heading,
+  .section-scroll-reveal.is-revealed .section-content-item .section-title-text {
+    animation: none;
   }
 
   .section-scroll-reveal .section-content-item {
     opacity: 0;
     transform: translate3d(0, 26px, 0);
-    transition:
-      opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-    transition-delay: calc(0.48s + var(--section-content-delay, 0ms));
     will-change: opacity, transform;
   }
 
@@ -204,9 +241,21 @@
     transform: translate3d(0, 18px, 0) scale(0.96);
   }
 
-  .section-scroll-reveal.is-revealed .section-content-item {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
+  .section-scroll-reveal .section-content-item.is-content-revealed {
+    animation: sectionRevealUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: var(--section-content-delay, 0ms);
+  }
+
+  .section-scroll-reveal .section-content-item--left.is-content-revealed {
+    animation-name: sectionRevealLeft;
+  }
+
+  .section-scroll-reveal .section-content-item--right.is-content-revealed {
+    animation-name: sectionRevealRight;
+  }
+
+  .section-scroll-reveal .section-content-item--scale.is-content-revealed {
+    animation-name: sectionRevealScale;
   }
 
   .scroll-reveal,
@@ -219,11 +268,6 @@
     filter: none;
     transition: none;
     will-change: auto;
-  }
-
-  .scroll-reveal.is-revealed .desktop-shimmer::after {
-    content: none;
-    animation: none;
   }
 
   .desktop-float {
@@ -248,7 +292,7 @@
     pointer-events: none;
   }
 
-  .scroll-reveal.is-revealed .desktop-shimmer::after,
+  .section-scroll-reveal.is-revealed .desktop-shimmer::after,
   .desktop-shimmer:hover::after {
     animation: shimmerSweep 1.15s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
     opacity: 1;
